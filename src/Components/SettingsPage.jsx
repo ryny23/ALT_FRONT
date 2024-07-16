@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const SimpleToggle = ({ isEnabled, setIsEnabled }) => (
   <button
@@ -17,17 +18,44 @@ const SimpleToggle = ({ isEnabled, setIsEnabled }) => (
 );
 
 const SettingsPage = () => {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState(false);
   const [selectedDomains, setSelectedDomains] = useState([]);
   const [notifications, setNotifications] = useState(false);
+  const [saveMessage, setSaveMessage] = useState('');
 
   useEffect(() => {
-    if (theme === 'dark') {
+    if (theme) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
   }, [theme]);
+
+  useEffect(() => {
+    // Fetch user data from the WordPress API
+    axios.get('http://52.207.130.7/wp-json/wp/v2/users/me', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}` // Assumes token is stored in localStorage
+      }
+    })
+    .then(response => {
+      const userData = response.data;
+      if (userData.acf) {
+        if (userData.acf.preferences) {
+          setSelectedDomains(userData.acf.preferences);
+        }
+        if (userData.acf.notifemail !== undefined) {
+          setNotifications(userData.acf.notifemail);
+        }
+        if (userData.acf.theme !== undefined) {
+          setTheme(userData.acf.theme);
+        }
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching user data:', error);
+    });
+  }, []);
 
   const legalDomains = [
     'Droit des affaires',
@@ -49,6 +77,31 @@ const SettingsPage = () => {
     }
   };
 
+  const handleSave = () => {
+    // Save user preferences to the WordPress API
+    axios.post('http://52.207.130.7/wp-json/wp/v2/users/me', {
+      acf: {
+        preferences: selectedDomains,
+        notifemail: notifications,
+        theme: theme,
+      }
+    }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}` // Assumes token is stored in localStorage
+      }
+    })
+    .then(response => {
+      console.log('Preferences saved successfully:', response.data);
+      setSaveMessage('Sauvegarde effectuée avec succès!');
+      setTimeout(() => setSaveMessage(''), 3000); // Hide message after 3 seconds
+    })
+    .catch(error => {
+      console.error('Error saving preferences:', error);
+      setSaveMessage('Erreur lors de la sauvegarde.');
+      setTimeout(() => setSaveMessage(''), 3000); // Hide message after 3 seconds
+    });
+  };
+
   return (
     <div className="min-h-screen bg-light-background dark:bg-dark-background p-8">
       <h1 className="text-3xl font-bold text-light-text dark:text-dark-text mb-6">Paramètres</h1>
@@ -58,7 +111,7 @@ const SettingsPage = () => {
         <h2 className="text-2xl font-semibold text-light-text dark:text-dark-text mb-4">Affichage et Accessibilité</h2>
         <div className="flex items-center space-x-4">
           <span className="text-light-text dark:text-dark-text">Thème:</span>
-          <SimpleToggle isEnabled={theme === 'dark'} setIsEnabled={(enabled) => setTheme(enabled ? 'dark' : 'light')} />
+          <SimpleToggle isEnabled={theme} setIsEnabled={setTheme} />
         </div>
       </section>
 
@@ -95,9 +148,19 @@ const SettingsPage = () => {
       </section>
 
       {/* Bouton de Sauvegarde */}
-      <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200">
+      <button 
+        onClick={handleSave}
+        className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200"
+      >
         Sauvegarder
       </button>
+
+      {/* Message de Sauvegarde */}
+      {saveMessage && (
+        <div className="mt-4 p-4 bg-green-100 text-green-700 rounded-md">
+          {saveMessage}
+        </div>
+      )}
     </div>
   );
 };

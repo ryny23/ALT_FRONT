@@ -10,7 +10,6 @@ import RenderAcceuil from '../Components/RenderAcceuil';
 import RenderArticle from '../Components/RenderArticle';
 import { FaSignOutAlt } from 'react-icons/fa';
 import Footer from '../Components/Footer';
-import { NavLink } from 'react-router-dom';
 import ProfileSettings from '../Components/ProfileSettings';
 import SettingsPage from '../Components/SettingsPage';
 
@@ -330,15 +329,15 @@ const Dashboard = () => {
                     <div>
                       
                       <div className="relative cursor-pointer flex items-center justify-between bg-bg-transparent group">
-                        <NavLink to="#" className="text-white menu-hover text-base white mx-2">
+                        <Link to="#" className="text-white menu-hover text-base white mx-2">
                         <img className="w-14 h-14 rounded-full" src={logo} alt="user photo"/>
-                        </NavLink>
+                        </Link>
                         
                         <div className="top-[50px] z-20 absolute left-[-65px] w-[150px] mt-1 bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
                           <div className="py-[20px]">
                             <div onClick={() => setSelectedMenu('profils')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</div>
-                            <NavLink onClick={() => setSelectedMenu('parametres')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Parametres</NavLink>
-                            <NavLink onClick={() => setShowConfirm(true)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Deconnexion</NavLink>
+                            <Link onClick={() => setSelectedMenu('parametres')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Parametres</Link>
+                            <Link onClick={() => setShowConfirm(true)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Deconnexion</Link>
                             
                           </div>
                         </div>
