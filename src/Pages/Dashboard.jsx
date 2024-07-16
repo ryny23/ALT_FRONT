@@ -174,9 +174,9 @@ const Dashboard = () => {
                   </svg>
                 </button>
               </h3>
-              <div>
+              <div >
                 {loading ? (
-                  <p><Spinner /></p>
+                  <p ><Spinner /></p>
                 ) : error ? (
                   <p>{error}</p>
                 ) : (
