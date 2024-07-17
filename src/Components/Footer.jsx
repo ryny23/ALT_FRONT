@@ -132,22 +132,22 @@ export default function App() {
               className="mb-4 flex justify-center font-semibold uppercase md:justify-start">
               Nos Services
             </h6>
-            <p className="mb-4">
+            <div className="mb-4">
               <NavLink to='/cabinets-avocats' className="text-white dark:text-neutral-200 cursor-pointer"
               >Avocats</NavLink>
-            </p>
-            <p className="mb-4">
+            </div>
+            <div className="mb-4">
               <NavLink to='/fonctionnalites' className="text-white dark:text-neutral-200 cursor-pointer"
               >Foctionnalités</NavLink>
-            </p>
-            <p className="mb-4">
+            </div>
+            <div className="mb-4">
               <NavLink to='/mini-series' className="text-white dark:text-neutral-200 cursor-pointer"
               >African Legal TV</NavLink>
-            </p>
-            <p>
+            </div>
+            <div>
               <a className="text-white dark:text-neutral-200 cursor-pointer"
               >Envoyer une décision</a>
-            </p>
+            </div>
           </div>
           {/* <!-- Liens Importants NavLinks section --> */}
           <div className="">
@@ -155,22 +155,22 @@ export default function App() {
               className="mb-4 flex justify-center font-semibold uppercase md:justify-start">
               Liens importants
             </h6>
-            <p className="mb-4">
+            <div className="mb-4">
               <NavLink to='/' className="text-white dark:text-neutral-200 cursor-pointer"
               >Acceuil</NavLink>
-            </p>
-            <p className="mb-4">
+            </div>
+            <div className="mb-4">
               <NavLink to='' className="text-white dark:text-neutral-200 cursor-pointer"
               >A propos</NavLink>
-            </p>
-            <p className="mb-4">
+            </div>
+            <div className="mb-4">
               <NavLink to='' className="text-white dark:text-neutral-200 cursor-pointer"
               >Nous Contacter</NavLink>
-            </p>
-            <p>
+            </div>
+            <div>
               <NavLink to='/tarifs' className="text-white dark:text-neutral-200 cursor-pointer"
               >Tarifs</NavLink>
-            </p>
+            </div>
           </div>
           {/* <!-- Contact section --> */}
           <div>

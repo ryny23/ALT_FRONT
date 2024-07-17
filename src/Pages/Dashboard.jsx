@@ -16,11 +16,52 @@ import anime from '../assets/anime.svg'
 import { FaUserAlt } from 'react-icons/fa';
 import RenderDecision from '../Components/RenderDecision';
 import RenderLegislation from '../Components/RenderLegislation';
+import { Navigate } from 'react-router-dom';
 
 
 const Dashboard = () => {
 
-    
+  const [avatarUrl, setAvatarUrl] = useState('');
+  const [avatarId, setAvatarId] = useState(null);
+  const [theme, setTheme] = useState('');
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get('http://52.207.130.7/wp-json/wp/v2/users/me', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const userData = response.data;
+            setTheme(userData.acf.theme);
+           
+
+            const avatarId = userData.acf.avatar;
+            if (avatarId) {
+                setAvatarId(avatarId);
+                const avatarResponse = await axios.get(`http://52.207.130.7/wp-json/wp/v2/media/${avatarId}`);
+                setAvatarUrl(avatarResponse.data.source_url);
+            }
+
+            
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+        setLoading(false);
+    };
+
+    fetchUserData();
+}, []);
+
+useEffect(() => {
+  if (theme) {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+}, [theme]);
   
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -53,12 +94,21 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
   
+
+
+    
+
+    
+  
     useEffect(() => {
+
       if (['posts', 'articles', 'legislations', 'decisions'].includes(selectedMenu)) {
         fetchData(selectedMenu);
       }
     }, [selectedMenu]);
   
+    
+
     const fetchData = async (menu) => {
       setLoading(true);
       setError('');
@@ -279,11 +329,11 @@ const Dashboard = () => {
                       
                       <div className="relative cursor-pointer flex items-center justify-between bg-bg-transparent group">
                         <Link to="#" className="text-white menu-hover text-base white mx-2">
-                        <FaUserAlt className="text-gray-500 w-14 h-6" />
-                        {/* <img className="w-14 h-14 rounded-full" src={logo} alt="user photo"/> */}
+                        {/* <FaUserAlt className="text-gray-500 w-14 h-6" /> */}
+                        <img className="w-14 h-14 rounded-full" src={avatarUrl || "https://placehold.co/96x96"} alt="user photo"/>
                         </Link>
                         
-                        <div className="top-[20px] z-20 absolute left-[-65px] w-[150px] mt-1 bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
+                        <div className="top-[50px] z-20 absolute left-[-65px] w-[150px] mt-1 bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
                           <div className="py-[20px]">
                             <div onClick={() => setSelectedMenu('profils')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</div>
                             <Link onClick={() => setSelectedMenu('parametres')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Parametres</Link>
@@ -423,7 +473,7 @@ const Dashboard = () => {
 const ResultsList = ({ results }) => {
   const [articleExcerpts, setArticleExcerpts] = useState({});
   const [legislationTitles, setLegislationTitles] = useState({});
-  const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
     const fetchArticleExcerpt = async (articleId) => {
@@ -485,7 +535,7 @@ const ResultsList = ({ results }) => {
             title: legislationTitle,
             id: legislationId,
           },
-        })); setLoading(false);
+        })); 
       } catch (error) {
         console.error(`Failed to fetch legislation for article ${articleId}:`, error);
         setLegislationTitles((prevTitles) => ({
@@ -507,15 +557,7 @@ const ResultsList = ({ results }) => {
     return <p className="text-gray-500">No results found</p>;
   }
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-      
-        <img src={anime}></img>
-      
-    </div>
-    );
-  }
+  
 
   return (
     <div className="grid grid-cols-1 gap-4">
