@@ -7,11 +7,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FiSearch, FiX } from 'react-icons/fi';
 import { Spinner } from "@material-tailwind/react";
 import RenderAcceuil from '../Components/RenderAcceuil';
-import RenderArticle from '../Components/RenderArticle';
+import RenderArticle from '../Components/RenderDecision';
 import { FaSignOutAlt } from 'react-icons/fa';
 import Footer from '../Components/Footer';
 import ProfileSettings from '../Components/ProfileSettings';
 import SettingsPage from '../Components/SettingsPage';
+import anime from '../assets/anime.svg'
+import { FaUserAlt } from 'react-icons/fa';
+import RenderDecision from '../Components/RenderDecision';
+import RenderLegislation from '../Components/RenderLegislation';
 
 
 const Dashboard = () => {
@@ -100,66 +104,11 @@ const Dashboard = () => {
           );
         case 'decisions':
           return (
-            <div>
-      <div className="mr-6 lg:w-[1200px] lg:h-[500px] mt-8 py-2 flex-shrink-0 flex flex-col bg-white dark:bg-gray-600 rounded-lg">
-        <h3 className="flex items-center pt-1 pb-1 px-8 text-lg font-semibold capitalize dark:text-gray-300">
-          <span>Decisions</span>
-          <button className="ml-2">
-            <svg className="h-5 w-5 fill-current" viewBox="0 0 256 512">
-              <path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path>
-            </svg>
-          </button>
-        </h3>
-        <div>
-          {loading ? (
-            <p>Loading decisions...</p>
-          ) : error ? (
-            <p>{error}</p>
-          ) : (
-            <ul className="pt-1 pb-2 px-3 overflow-y-auto">
-              {decisions.map((decision) => (
-                <li key={decision.id} className="mt-2">
-                  <Link to={`/decision/${decision.id}`} className="p-5 flex flex-col justify-between bg-gray-100 dark:bg-gray-200 rounded-lg">
-                    <div className="flex items-center justify-between font-semibold capitalize dark:text-gray-700">
-                      <span>{decision.title?.rendered || 'No Title'}</span>
-                    </div>
-                    <p className="text-sm font-medium leading-snug text-gray-600 my-3">
-                      {parse(decision.excerpt?.rendered) || 'No Excerpt'}
-                    </p>
-                    
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
-    </div>
+            <RenderDecision/>
           );
         case 'legislations':
           return (
-            <div>
-              <h3 className="mt-8 flex items-center pt-1 pb-1 px-8 text-lg font-semibold capitalize dark:text-gray-300">
-          <span>Legislations</span>
-          <button className="ml-2">
-            <svg className="h-5 w-5 fill-current" viewBox="0 0 256 512">
-              <path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path>
-            </svg>
-          </button>
-        </h3>
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
-      <div className="flex flex-wrap">
-        {legislations.map((legislation, index) => (
-          <div key={index} className="w-full md:w-1/2 p-2 box-border">
-            <h3 className="text-x">
-              <Link to={`/legislation/${legislation.id}`}>{legislation.title.rendered}</Link>
-            </h3>
-            
-          </div>
-        ))}
-      </div>
-    </div>
+            <RenderLegislation/>
 
           );
         case 'articles':
@@ -330,10 +279,11 @@ const Dashboard = () => {
                       
                       <div className="relative cursor-pointer flex items-center justify-between bg-bg-transparent group">
                         <Link to="#" className="text-white menu-hover text-base white mx-2">
-                        <img className="w-14 h-14 rounded-full" src={logo} alt="user photo"/>
+                        <FaUserAlt className="text-gray-500 w-14 h-6" />
+                        {/* <img className="w-14 h-14 rounded-full" src={logo} alt="user photo"/> */}
                         </Link>
                         
-                        <div className="top-[50px] z-20 absolute left-[-65px] w-[150px] mt-1 bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
+                        <div className="top-[20px] z-20 absolute left-[-65px] w-[150px] mt-1 bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
                           <div className="py-[20px]">
                             <div onClick={() => setSelectedMenu('profils')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</div>
                             <Link onClick={() => setSelectedMenu('parametres')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Parametres</Link>
@@ -429,7 +379,7 @@ const Dashboard = () => {
         
         
         <div className="p-4 sm:ml-64">
-           <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
+           <div className="p-4 rounded-lg mt-14">
         
             {/*popup deconnexion*/}
            {showConfirm && (
@@ -473,6 +423,7 @@ const Dashboard = () => {
 const ResultsList = ({ results }) => {
   const [articleExcerpts, setArticleExcerpts] = useState({});
   const [legislationTitles, setLegislationTitles] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchArticleExcerpt = async (articleId) => {
@@ -482,7 +433,7 @@ const ResultsList = ({ results }) => {
         setArticleExcerpts((prevExcerpts) => ({
           ...prevExcerpts,
           [articleId]: excerpt,
-        }));
+        })); 
       } catch (error) {
         console.error(`Failed to fetch excerpt for article ${articleId}:`, error);
         setArticleExcerpts((prevExcerpts) => ({
@@ -534,7 +485,7 @@ const ResultsList = ({ results }) => {
             title: legislationTitle,
             id: legislationId,
           },
-        }));
+        })); setLoading(false);
       } catch (error) {
         console.error(`Failed to fetch legislation for article ${articleId}:`, error);
         setLegislationTitles((prevTitles) => ({
@@ -554,6 +505,16 @@ const ResultsList = ({ results }) => {
 
   if (results.length === 0) {
     return <p className="text-gray-500">No results found</p>;
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+      
+        <img src={anime}></img>
+      
+    </div>
+    );
   }
 
   return (
@@ -577,9 +538,12 @@ const ResultsList = ({ results }) => {
               >
                 {legislationTitles[result.id].title}
               </Link>
+              
             ) : (
               'Loading...'
+              
             )}
+            
           </p>
           <p className="text-gray-700">
             {result.subtype === 'article' && articleExcerpts[result.id] ? (

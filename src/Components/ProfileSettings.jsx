@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
+import anime from '../assets/anime.svg'
 
 function ProfileSettings() {
 
@@ -21,6 +22,11 @@ function ProfileSettings() {
   const [company, setCompany] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
   const [avatarId, setAvatarId] = useState(null);
+
+  const [state, setState] = useState({
+    loading: true,
+    error: ''
+  });
   
 
   const professions = [
@@ -184,6 +190,7 @@ function ProfileSettings() {
           } catch (error) {
               console.error('Error fetching user data:', error);
           }
+          setState({ loading: false, error: '' });
       };
 
       fetchUserData();
@@ -219,6 +226,24 @@ function ProfileSettings() {
   useEffect(() => {
       setPasswordsMatch(passwordNew === passwordConfirm);
   }, [passwordNew, passwordConfirm]);
+
+
+  const { loading } = state;
+
+  if (loading) {
+    return (
+      // <div className="flex justify-center items-center h-screen">
+      //   <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500" role="status">
+      //     <span className="visually-hidden">Loading...</span>
+      //   </div>
+      // </div>
+      <div className="flex justify-center items-center h-screen">
+      
+        <img src={anime}></img>
+      
+    </div>
+    );
+  }
 
 
   return (

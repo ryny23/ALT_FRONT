@@ -66,7 +66,7 @@ const AuthForm = () => {
   })
   .then(res => {
       console.log(res.data);
-      window.location.href = "/authform";
+      navigate('/authform'); // Redirection programmative
   })
   .catch(err => {
       setError(err.response.data.message);

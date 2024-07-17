@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Nav from '../Components/Nav';
 import Footer from '../Components/Footer';
+import anime from '../assets/anime.svg'
 
 const LegislationDetail = () => {
   const { id } = useParams();
@@ -70,7 +71,20 @@ const LegislationDetail = () => {
     }
   };
   
-  if (loading) return <p className="text-center text-gray-500">Loading...</p>;
+  if (loading) {
+    return (
+      // <div className="flex justify-center items-center h-screen">
+      //   <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500" role="status">
+      //     <span className="visually-hidden">Loading...</span>
+      //   </div>
+      // </div>
+      <div className="flex justify-center items-center h-screen">
+      
+        <img src={anime}></img>
+      
+    </div>
+    );
+  }
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (

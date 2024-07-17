@@ -4,6 +4,7 @@ import axios from 'axios';
 import parse from 'html-react-parser';
 import Nav from '../Components/Nav';
 import Footer from '../Components/Footer';
+import anime from '../assets/anime.svg'
 
 const SingleArticle = () => {
   const { id } = useParams();
@@ -94,7 +95,20 @@ const SingleArticle = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) {
+    return (
+      // <div className="flex justify-center items-center h-screen">
+      //   <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500" role="status">
+      //     <span className="visually-hidden">Loading...</span>
+      //   </div>
+      // </div>
+      <div className="flex justify-center items-center h-screen">
+      
+        <img src={anime}></img>
+      
+    </div>
+    );
+  }
   if (error) return <div>{error}</div>;
   if (!article) return <div>No article found</div>;
 
