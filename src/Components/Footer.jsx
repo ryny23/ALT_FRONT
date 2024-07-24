@@ -1,6 +1,6 @@
 import React from 'react';
 import logo from './../assets/logo.png'
-import {NavLink} from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 export default function App() {
     
@@ -109,7 +109,7 @@ export default function App() {
       </form>
     </div>
 
-      {/* <!-- Main container div: holds the entire content of the footer, including four sections (Products, Useful NavLinks, and Contact), with responsive styling and appropriate padding/margins. --> */}
+      {/* <!-- Main container div: holds the entire content of the footer, including four sections (Products, Useful links, and Contact), with responsive styling and appropriate padding/margins. --> */}
       <div className="mx-6 py-10 text-center md:text-left">
         <div className="grid-1 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
 
@@ -132,45 +132,45 @@ export default function App() {
               className="mb-4 flex justify-center font-semibold uppercase md:justify-start">
               Nos Services
             </h6>
-            <div className="mb-4">
-              <NavLink to='/cabinets-avocats' className="text-white dark:text-neutral-200 cursor-pointer"
-              >Avocats</NavLink>
-            </div>
-            <div className="mb-4">
-              <NavLink to='/fonctionnalites' className="text-white dark:text-neutral-200 cursor-pointer"
-              >Foctionnalités</NavLink>
-            </div>
-            <div className="mb-4">
-              <NavLink to='/mini-series' className="text-white dark:text-neutral-200 cursor-pointer"
-              >African Legal TV</NavLink>
-            </div>
-            <div>
+            <p className="mb-4">
+              <Link to='/cabinets-avocats' className="text-white dark:text-neutral-200 cursor-pointer"
+              >Avocats</Link>
+            </p>
+            <p className="mb-4">
+              <Link to='/fonctionnalites' className="text-white dark:text-neutral-200 cursor-pointer"
+              >Foctionnalités</Link>
+            </p>
+            <p className="mb-4">
+              <Link to='/mini-series' className="text-white dark:text-neutral-200 cursor-pointer"
+              >African Legal TV</Link>
+            </p>
+            <p>
               <a className="text-white dark:text-neutral-200 cursor-pointer"
               >Envoyer une décision</a>
-            </div>
+            </p>
           </div>
-          {/* <!-- Liens Importants NavLinks section --> */}
+          {/* <!-- Liens Importants links section --> */}
           <div className="">
             <h6
               className="mb-4 flex justify-center font-semibold uppercase md:justify-start">
               Liens importants
             </h6>
-            <div className="mb-4">
-              <NavLink to='/' className="text-white dark:text-neutral-200 cursor-pointer"
-              >Acceuil</NavLink>
-            </div>
-            <div className="mb-4">
-              <NavLink to='' className="text-white dark:text-neutral-200 cursor-pointer"
-              >A propos</NavLink>
-            </div>
-            <div className="mb-4">
-              <NavLink to='' className="text-white dark:text-neutral-200 cursor-pointer"
-              >Nous Contacter</NavLink>
-            </div>
-            <div>
-              <NavLink to='/tarifs' className="text-white dark:text-neutral-200 cursor-pointer"
-              >Tarifs</NavLink>
-            </div>
+            <p className="mb-4">
+              <Link to='/' className="text-white dark:text-neutral-200 cursor-pointer"
+              >Acceuil</Link>
+            </p>
+            <p className="mb-4">
+              <Link to='pourquoi-nous' className="text-white dark:text-neutral-200 cursor-pointer"
+              >A propos</Link>
+            </p>
+            <p className="mb-4">
+              <Link to='' className="text-white dark:text-neutral-200 cursor-pointer"
+              >Nous Contacter</Link>
+            </p>
+            <p>
+              <Link to='/tarifs' className="text-white dark:text-neutral-200 cursor-pointer"
+              >Tarifs</Link>
+            </p>
           </div>
           {/* <!-- Contact section --> */}
           <div>
@@ -237,10 +237,10 @@ export default function App() {
       {/* <!--Copyright section--> */}
       <div className=" bg-[#000000] p-2 text-[14px] text-center dark:bg-neutral-700">
         <span>© 2024 Copyright: </span>
-        <NavLink to="/"
+        <a
           className="font-semibold text-slate-500 dark:text-neutral-400 ml-2" 
-          
-        >African Legal Tech</NavLink>
+          href="/"
+        >African Legal Tech</a>
       </div>
     </footer>
   );

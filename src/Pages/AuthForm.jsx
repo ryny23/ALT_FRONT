@@ -66,6 +66,7 @@ const AuthForm = () => {
   })
   .then(res => {
       console.log(res.data);
+      alert('Inscription reussi!');
       navigate('/authform'); // Redirection programmative
   })
   .catch(err => {
@@ -92,20 +93,20 @@ const AuthForm = () => {
 
     const professions = [
         'Ingénieur',
-        'Docteur',
+        'Médécin',
         'Avocat',
         'Enseignant',
         'Designer',
         'Développeur',
         'Architecte',
-        'Artiste',
+        'Notaire',
         'Journaliste',
         'Psychologue',
         'Pilote',
         'Infirmier',
         'Entrepreneur',
         'Scientifique',
-        'Étudiant'
+        'Huissier'
     ];
 
 

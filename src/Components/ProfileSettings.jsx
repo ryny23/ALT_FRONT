@@ -30,21 +30,21 @@ function ProfileSettings() {
   
 
   const professions = [
-      'Ingenieur',
-      'Docteur',
-      'Avocat',
-      'Enseignant',
-      'Designer',
-      'Developpeur',
-      'Architecte',
-      'Artiste',
-      'Journaliste',
-      'Psychologue',
-      'Pilote',
-      'Infirmier',
-      'Entrepreneur',
-      'Scientifique',
-      'Etudiant'
+        'Ingénieur',
+        'Médécin',
+        'Avocat',
+        'Enseignant',
+        'Designer',
+        'Développeur',
+        'Architecte',
+        'Notaire',
+        'Journaliste',
+        'Psychologue',
+        'Pilote',
+        'Infirmier',
+        'Entrepreneur',
+        'Scientifique',
+        'Huissier'
   ];
 
   const fileInputRef = useRef(null);
@@ -280,7 +280,7 @@ function ProfileSettings() {
                               Nom d'utilisateur
                           </label>
                           <input
-                              className="bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text cursor-not-allowed bg-input border border-border rounded-lg w-full py-2 px-3"
+                              className="bg-gray-200 cursor-not-allowed dark:bg-dark-background text-light-text dark:text-dark-text cursor-not-allowed bg-input border border-border rounded-lg w-full py-2 px-3"
                               type="text"
                               id="username"
                               value={username}
@@ -293,7 +293,7 @@ function ProfileSettings() {
                               E-mail
                           </label>
                           <input
-                              className="bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text cursor-not-allowed bg-input border border-border rounded-lg w-full py-2 px-3"
+                              className="bg-gray-200 cursor-not-allowed dark:bg-dark-background text-light-text dark:text-dark-text cursor-not-allowed bg-input border border-border rounded-lg w-full py-2 px-3"
                               type="email"
                               id="email"
                               value={email}
