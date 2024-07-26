@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import anime from '../assets/anime.svg'
 
 const SimpleToggle = ({ isEnabled, setIsEnabled }) => (
   <button
@@ -22,6 +23,11 @@ const SettingsPage = () => {
   const [selectedDomains, setSelectedDomains] = useState([]);
   const [notifications, setNotifications] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
+
+  const [state, setState] = useState({
+    loading: true,
+    error: ''
+  });
 
   useEffect(() => {
     if (theme) {
@@ -51,6 +57,7 @@ const SettingsPage = () => {
           setTheme(userData.acf.theme);
         }
       }
+      setState({ loading: false, error: '' });
     })
     .catch(error => {
       console.error('Error fetching user data:', error);
@@ -101,6 +108,23 @@ const SettingsPage = () => {
       setTimeout(() => setSaveMessage(''), 3000); // Hide message after 3 seconds
     });
   };
+
+  const { loading, error } = state;
+
+  if (loading) {
+    return (
+      // <div className="flex justify-center items-center h-screen">
+      //   <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500" role="status">
+      //     <span className="visually-hidden">Loading...</span>
+      //   </div>
+      // </div>
+      <div className="flex justify-center items-center h-screen">
+      
+        <img src={anime}></img>
+      
+    </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-light-background dark:bg-dark-background p-8">
