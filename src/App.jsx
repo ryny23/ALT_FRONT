@@ -10,14 +10,18 @@ import AuthForm from './Pages/AuthForm'
 import ForgotPassword from './Components/ForgotPassword'
 import Dashboard from './Pages/Dashboard'
 import ProtectedRoute from './Components/ProtectedRoute'
-
+import Test from './Pages/Test'
 import SinglePost from './Components/SinglePost';
 import SingleArticle from './Components/SingleArticle';
 import LegislationDetail from './Components/LegislationDetail';
 import SingleDecision from './Components/SingleDecision'
+import SearchExperts from './Pages/SearchExperts'
+import ExpertsProfile from './Components/RenderProfilExpert'
+import SingleCommentaire from './Components/SingleCommentaire'
 
-import Test from './Pages/Test'
-import TermsConditions from './Pages/TermsConditions'
+
+
+// import Test from './Pages/Test'
 // import Test2 from './Pages/Test2'
 
 const App = () => {
@@ -38,8 +42,7 @@ const App = () => {
           <Route path="/cabinets-avocats" element={<CabinetsAvocats/>}/>
           <Route path="/directions-entreprises" element={<DirEntre/>}/>
           <Route path="/directions-juridiques-du-secteur-public" element={<DirJur/>}/>
-          <Route path="/directions-sinistres" element={<DirSin/>}/>          
-          <Route path="/conditions-generales" element={<TermsConditions/>}/>          
+          <Route path="/directions-sinistres" element={<DirSin/>}/>
 
 
 
@@ -49,8 +52,12 @@ const App = () => {
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>}/>
           <Route path="/post/:id" element={<SinglePost />} />
           <Route path="/article/:id" element={<SingleArticle />} />
+          <Route path="/commentaire/:id" element={<SingleCommentaire />} />
           <Route path="/legislation/:id" element={<LegislationDetail />} />
           <Route path="/decision/:id" element={<SingleDecision />} />
+          <Route path="/user/:userId" element={<ExpertsProfile />} />
+          <Route path="/search" element={<SearchExperts />} />
+          
 
           <Route path="/test" element={<Test/>}/>
           {/* <Route path="/test2" element={<Test2/>}/> */}
