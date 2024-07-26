@@ -3,53 +3,53 @@ import axios from 'axios';
 import Select from 'react-select';
 
 const DecisionForm = () => {
-  const [decisions, setDecisions] = useState([]);
-  const [selectedDecisions, setSelectedDecisions] = useState({
-      decision1: null,
-      decision2: null,
-      decision3: null
-  });
-  const userId = 3;  // ID de l'utilisateur à mettre à jour
-  const token = localStorage.getItem('token');  // Remplacez par le token réel
-  
-  useEffect(() => {
-      const fetchDecisions = async () => {
-          try {
-              // Fetch all decisions from WordPress
-              const response = await axios.get('http://52.207.130.7/wp-json/wp/v2/decisions');
-              const options = response.data.map(decision => ({
-                  value: decision.id,
-                  label: decision.title.rendered
-              }));
-              setDecisions(options);
-  
-              // Fetch user data from WordPress
-              const userResponse = await axios.get(`http://52.207.130.7/wp-json/wp/v2/users/${userId}`, {
-                  headers: {
-                      'Authorization': `Bearer ${token}`
-                  }
-              });
-              const user = userResponse.data;
-              setSelectedDecisions({
-                  decision1: options.find(option => option.value === user.acf.decision1) || null,
-                  decision2: options.find(option => option.value === user.acf.decision2) || null,
-                  decision3: options.find(option => option.value === user.acf.decision3) || null
-              });
-          } catch (error) {
-              console.error('Error fetching data:', error);
-          }
-      };
-  
-      fetchDecisions();
-  }, [token, userId]);
-  
-  const handleSelectChange = (name, selectedOption) => {
-      setSelectedDecisions(prevState => ({
-          ...prevState,
-          [name]: selectedOption
-      }));
-  };
-  
+    const [decisions, setDecisions] = useState([]);
+    const [selectedDecisions, setSelectedDecisions] = useState({
+        decision1: null,
+        decision2: null,
+        decision3: null
+    });
+    const userId = 3;  // ID de l'utilisateur à mettre à jour
+    const token = localStorage.getItem('token');  // Remplacez par le token réel
+
+    useEffect(() => {
+        const fetchDecisions = async () => {
+            try {
+                // Fetch all decisions from WordPress
+                const response = await axios.get('http://52.207.130.7/wp-json/wp/v2/decisions');
+                const options = response.data.map(decision => ({
+                    value: decision.id,
+                    label: decision.title.rendered
+                }));
+                setDecisions(options);
+
+                // Fetch user data from WordPress
+                const userResponse = await axios.get(`http://52.207.130.7/wp-json/wp/v2/users/${userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const user = userResponse.data;
+                setSelectedDecisions({
+                    decision1: options.find(option => option.value === user.acf.decision1) || null,
+                    decision2: options.find(option => option.value === user.acf.decision2) || null,
+                    decision3: options.find(option => option.value === user.acf.decision3) || null
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchDecisions();
+    }, [token, userId]);
+
+    const handleSelectChange = (selectedOption, { name }) => {
+        setSelectedDecisions({
+            ...selectedDecisions,
+            [name]: selectedOption
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const updatedData = {

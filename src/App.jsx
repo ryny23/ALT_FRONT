@@ -20,6 +20,7 @@ import ExpertsProfile from './Components/RenderProfilExpert'
 import SingleCommentaire from './Components/SingleCommentaire'
 
 
+
 // import Test from './Pages/Test'
 // import Test2 from './Pages/Test2'
 
@@ -56,6 +57,7 @@ const App = () => {
           <Route path="/decision/:id" element={<SingleDecision />} />
           <Route path="/user/:userId" element={<ExpertsProfile />} />
           <Route path="/search" element={<SearchExperts />} />
+          
 
           <Route path="/test" element={<Test/>}/>
           {/* <Route path="/test2" element={<Test2/>}/> */}
