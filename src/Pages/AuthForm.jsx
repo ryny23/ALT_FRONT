@@ -325,7 +325,7 @@ const AuthForm = () => {
                                         required
                                     />
                                     <span className="ml-2 text-sm text-gray-700">
-                                        J'accepte les <a href="#" className="text-green-600 hover:underline">termes et conditions générales</a>
+                                        J'accepte les <a href="/terms-conditions" className="text-green-600 hover:underline">termes et conditions générales</a>
                                     </span>
                                 </label>
                             </div>

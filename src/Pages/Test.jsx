@@ -1,19 +1,40 @@
-import React from 'react'
-import Set2 from '../Components/Set2'
-import TextReveal from '../Components/TextReveal'
-import TextGenerateEffect from '../Components/TextGenerateEffect'
+import React, { useState, useEffect } from 'react';
+import ExpertsProfileSettings from '../Components/ExpertsProfileSettings'
+import ExpertsProfile from '../Components/ExpertsProfile'
+import RechercheExperts from '../Components/RechercheExperts'
+import SearchExperts from '../Components/SearchExperts'
+import TermsConditions from './TermsConditions'
+import RenderDossiers from '../Components/RenderDossiers'
+import RenderAlertes from '../Components/RenderAlertes'
+import Loader from '../Components/Loader'
 
-
-  const text = `Oxygen gets you high. In a catastrophic emergency, we're taking giant, panicked breaths. 
-                Suddenly you become euphoric, docile. You accept your fate. It's all right here. 
-                Emergency water landing, six hundred miles an hour. Blank faces, calm as Hindu cows.`;
 
 const Test = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simuler un chargement de données
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 950);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+
   return (
     <div>
-        <Set2/>
-        <TextReveal/>
-        <TextGenerateEffect words={text} />
+      {/* <RechercheExperts/> */}
+      {/* <ExpertsProfileSettings/> */}
+      <div>
+        <TermsConditions/>
+        <RenderDossiers />
+        <RenderAlertes/>
+      </div>
     </div>
   )
 }

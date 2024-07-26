@@ -20,9 +20,15 @@ const features = [
     icon: ArrowPathIcon,
   },
   {
-    name: 'Section Témoignages',
+    name: 'Page experts (avocats, notaires)',
     description:
-      "Ils ont choisi ALT pour gagner en productivité Contenu : Mettez en avant 2-3 témoignages percutants d'utilisateurs satisfaits (cabinets, entreprises, etc.)",
+      "Sur la plateforme ALT, vous avez un accès direct à un annuaire complet d'experts juridiques, comprenant avocats, notaires et autres professionnels du droit. Chaque profil d'expert présente en détail leurs qualifications, expériences, spécialités et avis des clients, vous permettant de choisir le professionnel le mieux adapté à vos besoins. En plus de consulter les profils, vous pouvez également vérifier la disponibilité des experts et prendre rendez-vous en ligne pour des consultations juridiques, que ce soit à distance ou en personne. Cette fonctionnalité garantit que vous recevez des conseils précis et personnalisés, exactement quand vous en avez besoin, vous assurant ainsi un accompagnement juridique de qualité en toute confiance. ",
+    icon: FingerPrintIcon,
+  },
+  {
+    name: 'Modèles de documents à télécharger',
+    description:
+      "Nous mettons à votre disposition une vaste bibliothèque de modèles de documents juridiques téléchargeables : que vous ayez besoin de contrats, de baux, de lettres officielles ou d'autres types de documents, vous trouverez des modèles conformes aux exigences légales et prêts à être utilisés. Vous pouvez télécharger ces documents en différents formats, tels que PDF et Word, pour une utilisation immédiate. Cette fonctionnalité vous aide à gagner du temps et à garantir que vos documents sont juridiquement solides et bien préparés. ",
     icon: FingerPrintIcon,
   },
 ]

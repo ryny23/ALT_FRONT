@@ -12,6 +12,7 @@ import { FaSignOutAlt } from 'react-icons/fa';
 import Footer from '../Components/Footer';
 import ProfileSettings from '../Components/ProfileSettings';
 import SettingsPage from '../Components/SettingsPage';
+import AidePage from './AidePage';
 
 
 const Dashboard = () => {
@@ -218,6 +219,10 @@ const Dashboard = () => {
           return(
             <SettingsPage/>
           )
+        case 'aide' :
+          return(
+            <AidePage/>
+          )
         case 'search':
             return (
               <div>
@@ -279,8 +284,8 @@ const Dashboard = () => {
                     </svg>
                  </button>
                 <a href="/" className="flex ms-2 md:me-24">
-                  <img src={logo} className="h-14 w-14 me-3" alt=" Logo" />
-                  <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">African Legal Tech</span>
+                  <img src={logo} className=" rounded-full h-14 w-14 me-3" alt=" Logo" />
+                  <span className="self-center text-xl text-slate-900 font-semibold sm:text-2xl whitespace-nowrap dark:text-white">African Legal Tech</span>
                 </a>    
               </div>
               <div>
@@ -326,17 +331,41 @@ const Dashboard = () => {
                  </div>    
               <div className="flex items-center">
                   <div className="flex items-center ms-3">
-                    <div>
+                    <div className='flex items-center justify-center gap-10'>
+                        <div className="flex flex-col items-center text-center">
+                        <Link to="/Alertes" className="flex flex-col items-center">
+                          <svg className="w-6 h-6 text-gray-700 dark:text-gray-300" viewBox="0 0 24 24" fill="none">
+                            <path
+                              d="M12 22C13.1 22 14 21.1 14 20H10C10 21.1 10.9 22 12 22ZM18 16V11C18 7.93 16.36 5.36 13.5 4.68V4C13.5 3.17 12.83 2.5 12 2.5C11.17 2.5 10.5 3.17 10.5 4V4.68C7.63 5.36 6 7.92 6 11V16L4 18V19H20V18L18 16Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                          <span className="text-sm text-gray-700 dark:text-gray-300">Alertes</span>
+                        </Link>
+                      </div>
+                      <div className="flex flex-col items-center text-center">
+                        <Link to="/dossiers" className="flex flex-col items-center">
+                          <svg className="w-6 h-6 text-gray-700 dark:text-gray-300" viewBox="0 0 24 24" fill="none">
+                            <path
+                              d="M10 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V8C22 6.9 21.1 6 20 6H12L10 4Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                          <span className="text-sm text-gray-700 dark:text-gray-300">Dossiers</span>
+                        </Link>
+                      </div>
                       
-                      <div className="relative cursor-pointer flex items-center justify-between bg-bg-transparent group">
-                        <Link to="#" className="text-white menu-hover text-base white mx-2">
-                        <img className="w-14 h-14 rounded-full" src={logo} alt="user photo"/>
+                      <div className="flex flex-col items-center relative cursor-pointer group">
+                        <Link to="#" className="flex flex-col items-center">
+                          <img className="w-7 h-7 rounded-full" src={logo} alt="user photo" />
+                          <span className=" text-center text-sm text-gray-700 dark:text-gray-300">Compte</span>
                         </Link>
                         
-                        <div className="top-[50px] z-20 absolute left-[-65px] w-[150px] mt-1 bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
+                        <div className="top-[40px] z-20 absolute left-[-65px] w-[150px] mt-1 bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
                           <div className="py-[20px]">
                             <div onClick={() => setSelectedMenu('profils')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</div>
                             <Link onClick={() => setSelectedMenu('parametres')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Parametres</Link>
+                            <Link onClick={() => setSelectedMenu('aide')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Aide</Link>
                             <Link onClick={() => setShowConfirm(true)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Deconnexion</Link>
                             
                           </div>

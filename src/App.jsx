@@ -16,7 +16,8 @@ import SingleArticle from './Components/SingleArticle';
 import LegislationDetail from './Components/LegislationDetail';
 import SingleDecision from './Components/SingleDecision'
 
-// import Test from './Pages/Test'
+import Test from './Pages/Test'
+import TermsConditions from './Pages/TermsConditions'
 // import Test2 from './Pages/Test2'
 
 const App = () => {
@@ -37,7 +38,8 @@ const App = () => {
           <Route path="/cabinets-avocats" element={<CabinetsAvocats/>}/>
           <Route path="/directions-entreprises" element={<DirEntre/>}/>
           <Route path="/directions-juridiques-du-secteur-public" element={<DirJur/>}/>
-          <Route path="/directions-sinistres" element={<DirSin/>}/>
+          <Route path="/directions-sinistres" element={<DirSin/>}/>          
+          <Route path="/conditions-generales" element={<TermsConditions/>}/>          
 
 
 
@@ -50,7 +52,7 @@ const App = () => {
           <Route path="/legislation/:id" element={<LegislationDetail />} />
           <Route path="/decision/:id" element={<SingleDecision />} />
 
-          {/* <Route path="/test" element={<Test/>}/> */}
+          <Route path="/test" element={<Test/>}/>
           {/* <Route path="/test2" element={<Test2/>}/> */}
         </Routes>
       </Router>

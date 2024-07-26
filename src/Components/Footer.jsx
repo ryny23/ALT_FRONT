@@ -1,5 +1,6 @@
 import React from 'react';
 import logo from './../assets/logo.png'
+import { Link } from 'react-router-dom';
 
 export default function App() {
     
@@ -132,16 +133,16 @@ export default function App() {
               Nos Services
             </h6>
             <p className="mb-4">
-              <a href='/cabinets-avocats' className="text-white dark:text-neutral-200 cursor-pointer"
-              >Avocats</a>
+              <Link to='/cabinets-avocats' className="text-white dark:text-neutral-200 cursor-pointer"
+              >Avocats</Link>
             </p>
             <p className="mb-4">
-              <a href='/fonctionnalites' className="text-white dark:text-neutral-200 cursor-pointer"
-              >Foctionnalités</a>
+              <Link to='/fonctionnalites' className="text-white dark:text-neutral-200 cursor-pointer"
+              >Foctionnalités</Link>
             </p>
             <p className="mb-4">
-              <a href='/mini-series' className="text-white dark:text-neutral-200 cursor-pointer"
-              >African Legal TV</a>
+              <Link to='/mini-series' className="text-white dark:text-neutral-200 cursor-pointer"
+              >African Legal TV</Link>
             </p>
             <p>
               <a className="text-white dark:text-neutral-200 cursor-pointer"
@@ -155,20 +156,20 @@ export default function App() {
               Liens importants
             </h6>
             <p className="mb-4">
-              <a href='/' className="text-white dark:text-neutral-200 cursor-pointer"
-              >Acceuil</a>
+              <Link to='/' className="text-white dark:text-neutral-200 cursor-pointer"
+              >Acceuil</Link>
             </p>
             <p className="mb-4">
-              <a href='' className="text-white dark:text-neutral-200 cursor-pointer"
-              >A propos</a>
+              <Link to='pourquoi-nous' className="text-white dark:text-neutral-200 cursor-pointer"
+              >A propos</Link>
             </p>
             <p className="mb-4">
-              <a href='' className="text-white dark:text-neutral-200 cursor-pointer"
-              >Nous Contacter</a>
+              <Link to='' className="text-white dark:text-neutral-200 cursor-pointer"
+              >Nous Contacter</Link>
             </p>
             <p>
-              <a href='/tarifs' className="text-white dark:text-neutral-200 cursor-pointer"
-              >Tarifs</a>
+              <Link to='/tarifs' className="text-white dark:text-neutral-200 cursor-pointer"
+              >Tarifs</Link>
             </p>
           </div>
           {/* <!-- Contact section --> */}
