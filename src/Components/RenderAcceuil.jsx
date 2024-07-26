@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Spinner } from "@material-tailwind/react";
-import anime from '../assets/anime.svg'
 
 const RenderAcceuil = () => {
 
@@ -44,22 +43,7 @@ const RenderAcceuil = () => {
     fetchArticles();
   }, []);
 
-  
-
-  if (loading) {
-    return (
-      // <div className="flex justify-center items-center h-screen">
-      //   <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500" role="status">
-      //     <span className="visually-hidden">Loading...</span>
-      //   </div>
-      // </div>
-      <div className="flex justify-center items-center h-screen">
-      
-        <img src={anime}></img>
-      
-    </div>
-    );
-  }
+  if (loading) return <div><Spinner /></div>;
   if (error) return <div>{error}</div>;
 
   return (

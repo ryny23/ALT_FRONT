@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import wellcome from '../assets/wellcome.jpg';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { useLocation, Link, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 
 
@@ -66,8 +66,7 @@ const AuthForm = () => {
   })
   .then(res => {
       console.log(res.data);
-      alert('Inscription reussi!');
-      navigate('/authform'); // Redirection programmative
+      window.location.href = "/authform";
   })
   .catch(err => {
       setError(err.response.data.message);
@@ -93,25 +92,24 @@ const AuthForm = () => {
 
     const professions = [
         'Ingénieur',
-        'Médécin',
+        'Docteur',
         'Avocat',
         'Enseignant',
         'Designer',
         'Développeur',
         'Architecte',
-        'Notaire',
+        'Artiste',
         'Journaliste',
         'Psychologue',
         'Pilote',
         'Infirmier',
         'Entrepreneur',
         'Scientifique',
-        'Huissier'
+        'Étudiant'
     ];
 
 
     const location = useLocation();
-    const navigate = useNavigate();
     useEffect(() => {
       const searchParams = new URLSearchParams(location.search);
       const tab = searchParams.get('tab');
@@ -201,7 +199,7 @@ const AuthForm = () => {
         });
 
         // Redirection programmative vers le tableau de bord
-        navigate('/dashboard');
+        window.location.href = "/dashboard";
       })
       .catch(err => {
         // Gestion des erreurs
@@ -221,7 +219,7 @@ const AuthForm = () => {
   const { conUsername, conPassword, conLoggedIn, conError, conRememberMe } = conState;
 
   if (conLoggedIn || localStorage.getItem('token') || Cookies.get('token')) {
-    navigate('/authform'); // Redirection programmative
+    window.location.href = "/dashboard"; // Redirection programmative
     return null;
   } else {
     return (
@@ -327,7 +325,7 @@ const AuthForm = () => {
                                         required
                                     />
                                     <span className="ml-2 text-sm text-gray-700">
-                                        J'accepte les <a href="#" className="text-green-600 hover:underline">termes et conditions générales</a>
+                                        J'accepte les <a href="/terms-conditions" className="text-green-600 hover:underline">termes et conditions générales</a>
                                     </span>
                                 </label>
                             </div>

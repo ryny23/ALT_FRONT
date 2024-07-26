@@ -54,7 +54,7 @@ const Astuces = ({ page }) => {
   };
 
   return (
-    <div className="flex items-center justify-start my-4">
+    <div className="flex items-center justify-center min-h-screen bg-zinc-100">
       <div className="max-w-2xl w-full p-4 bg-white shadow-md rounded-md">
         <h1 className="text-2xl font-bold mb-4 capitalize">{page}</h1>
         <div className="p-4 bg-blue-50 rounded-md">

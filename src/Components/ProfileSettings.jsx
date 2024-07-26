@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
-import anime from '../assets/anime.svg'
 
 function ProfileSettings() {
 
@@ -22,29 +21,24 @@ function ProfileSettings() {
   const [company, setCompany] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
   const [avatarId, setAvatarId] = useState(null);
-
-  const [state, setState] = useState({
-    loading: true,
-    error: ''
-  });
   
 
   const professions = [
-        'Ingénieur',
-        'Médécin',
-        'Avocat',
-        'Enseignant',
-        'Designer',
-        'Développeur',
-        'Architecte',
-        'Notaire',
-        'Journaliste',
-        'Psychologue',
-        'Pilote',
-        'Infirmier',
-        'Entrepreneur',
-        'Scientifique',
-        'Huissier'
+      'Ingenieur',
+      'Docteur',
+      'Avocat',
+      'Enseignant',
+      'Designer',
+      'Developpeur',
+      'Architecte',
+      'Artiste',
+      'Journaliste',
+      'Psychologue',
+      'Pilote',
+      'Infirmier',
+      'Entrepreneur',
+      'Scientifique',
+      'Etudiant'
   ];
 
   const fileInputRef = useRef(null);
@@ -190,7 +184,6 @@ function ProfileSettings() {
           } catch (error) {
               console.error('Error fetching user data:', error);
           }
-          setState({ loading: false, error: '' });
       };
 
       fetchUserData();
@@ -228,24 +221,6 @@ function ProfileSettings() {
   }, [passwordNew, passwordConfirm]);
 
 
-  const { loading } = state;
-
-  if (loading) {
-    return (
-      // <div className="flex justify-center items-center h-screen">
-      //   <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500" role="status">
-      //     <span className="visually-hidden">Loading...</span>
-      //   </div>
-      // </div>
-      <div className="flex justify-center items-center h-screen">
-      
-        <img src={anime}></img>
-      
-    </div>
-    );
-  }
-
-
   return (
       <div className="text-foreground min-h-screen flex items-center justify-center p-4">
           <div className="grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
@@ -280,7 +255,7 @@ function ProfileSettings() {
                               Nom d'utilisateur
                           </label>
                           <input
-                              className="bg-gray-200 cursor-not-allowed dark:bg-dark-background text-light-text dark:text-dark-text cursor-not-allowed bg-input border border-border rounded-lg w-full py-2 px-3"
+                              className="bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text cursor-not-allowed bg-input border border-border rounded-lg w-full py-2 px-3"
                               type="text"
                               id="username"
                               value={username}
@@ -293,7 +268,7 @@ function ProfileSettings() {
                               E-mail
                           </label>
                           <input
-                              className="bg-gray-200 cursor-not-allowed dark:bg-dark-background text-light-text dark:text-dark-text cursor-not-allowed bg-input border border-border rounded-lg w-full py-2 px-3"
+                              className="bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text cursor-not-allowed bg-input border border-border rounded-lg w-full py-2 px-3"
                               type="email"
                               id="email"
                               value={email}

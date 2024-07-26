@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Nav from '../Components/Nav';
 import Footer from '../Components/Footer';
-import anime from '../assets/anime.svg'
 
 const LegislationDetail = () => {
   const { id } = useParams();
@@ -71,16 +70,7 @@ const LegislationDetail = () => {
     }
   };
   
-  if (loading) {
-    return (
-      
-      <div className="flex justify-center items-center h-screen">
-      
-        <img src={anime}></img>
-      
-    </div>
-    );
-  }
+  if (loading) return <p className="text-center text-gray-500">Loading...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
