@@ -18,11 +18,8 @@ import SingleDecision from './Components/SingleDecision'
 import SearchExperts from './Pages/SearchExperts'
 import ExpertsProfile from './Components/RenderProfilExpert'
 import SingleCommentaire from './Components/SingleCommentaire'
-<<<<<<< HEAD
 import TermsConditions from './Pages/TermsConditions'
-=======
 import LegislationDetail1 from './Pages/LegislationDetail'
->>>>>>> back_feature
 
 
 
