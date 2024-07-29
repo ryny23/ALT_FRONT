@@ -671,32 +671,8 @@ const ResultsList = ({ results }) => {
         const articleResponse = await axios.get(`${altUrl}/wp-json/wp/v2/articles/${articleId}`);
         const articleData = articleResponse.data;
     
-        // Extract section ID from article data
-        const sectionId = articleData.acf.section; // Assuming 'section' is a custom field storing section ID
-        if (!sectionId) throw new Error("Section ID not found");
-    
-        // Fetch section details using section ID
-        const sectionResponse = await axios.get(`${altUrl}/wp-json/wp/v2/sections/${sectionId}`);
-        const sectionData = sectionResponse.data;
-    
-        // Extract chapter ID from section data
-        const chapterId = sectionData.acf.chapitre; // Assuming 'chapitre' is a custom field storing chapter ID
-        if (!chapterId) throw new Error("Chapter ID not found");
-    
-        // Fetch chapter details using chapter ID
-        const chapterResponse = await axios.get(`${altUrl}/wp-json/wp/v2/chapitres/${chapterId}`);
-        const chapterData = chapterResponse.data;
-    
-        // Extract titre ID from chapter data
-        const titreId = chapterData.acf.titre; // Assuming 'titre' is a custom field storing titre ID
-        if (!titreId) throw new Error("Titre ID not found");
-    
-        // Fetch titre details using titre ID
-        const titreResponse = await axios.get(`${altUrl}/wp-json/wp/v2/titres/${titreId}`);
-        const titreData = titreResponse.data;
-    
         // Extract legislation ID from titre data
-        const legislationId = titreData.acf.legislation; // Assuming 'legislation' is a custom field storing legislation ID
+        const legislationId = articleData.acf.Legislation_ou_titre_ou_chapitre_ou_section; // Assuming 'legislation' is a custom field storing legislation ID
         if (!legislationId) throw new Error("Legislation ID not found");
     
         // Fetch legislation details using legislation ID
