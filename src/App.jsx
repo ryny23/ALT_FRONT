@@ -18,7 +18,11 @@ import SingleDecision from './Components/SingleDecision'
 import SearchExperts from './Pages/SearchExperts'
 import ExpertsProfile from './Components/RenderProfilExpert'
 import SingleCommentaire from './Components/SingleCommentaire'
+<<<<<<< HEAD
 import TermsConditions from './Pages/TermsConditions'
+=======
+import LegislationDetail1 from './Pages/LegislationDetail'
+>>>>>>> back_feature
 
 
 
@@ -55,10 +59,11 @@ const App = () => {
           <Route path="/post/:id" element={<SinglePost />} />
           <Route path="/article/:id" element={<SingleArticle />} />
           <Route path="/commentaire/:id" element={<SingleCommentaire />} />
-          <Route path="/legislation/:id" element={<LegislationDetail />} />
+          <Route path="/legislation/:id" element={<LegislationDetail1 />} />
           <Route path="/decision/:id" element={<SingleDecision />} />
           <Route path="/user/:userId" element={<ExpertsProfile />} />
           <Route path="/search" element={<SearchExperts />} />
+          <Route path="/legislationdetail" element={<LegislationDetail1 />} />
           
 
           <Route path="/test" element={<Test/>}/>
