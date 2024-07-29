@@ -473,8 +473,9 @@ useEffect(() => {
                           <div className="py-[20px]">
                             <div onClick={() => setSelectedMenu('profils')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</div>
                             <Link onClick={() => setSelectedMenu('parametres')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Parametres</Link>
-
+                            {isExpert && (
                             <Link onClick={() => setSelectedMenu('parametresExpert')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Paramètres experts</Link>
+                            )}
                             {/* {isProfileMenuOpen && (
                                 <ul className="absolute left-0 w-full mt-1 space-y-2 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700">
                                     {isExpert && (

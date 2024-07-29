@@ -20,6 +20,7 @@ import ExpertsProfile from './Components/RenderProfilExpert'
 import SingleCommentaire from './Components/SingleCommentaire'
 import TermsConditions from './Pages/TermsConditions'
 import LegislationDetail1 from './Pages/LegislationDetail'
+import ArticleDetail from './Pages/ArticleDetail'
 
 
 
@@ -54,7 +55,7 @@ const App = () => {
 
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>}/>
           <Route path="/post/:id" element={<SinglePost />} />
-          <Route path="/article/:id" element={<SingleArticle />} />
+          <Route path="/article/:id" element={<ArticleDetail />} />
           <Route path="/commentaire/:id" element={<SingleCommentaire />} />
           <Route path="/legislation/:id" element={<LegislationDetail1 />} />
           <Route path="/decision/:id" element={<SingleDecision />} />
