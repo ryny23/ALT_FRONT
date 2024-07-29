@@ -1,0 +1,183 @@
+[33mcommit ed6008f0507ccbe99a9936521f5311823fce13fb[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfront_feature[m[33m, [m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m
+Merge: c47fc80 85e3cc8
+Author: ryny23 <166703602+ryny23@users.noreply.github.com>
+Date:   Fri Jul 26 15:36:03 2024 +0100
+
+    Merge pull request #6 from ryny23/back_feature
+    
+    Back feature
+
+[33mcommit 85e3cc8b5894cdb895adf86af743653d95cd477a[m
+Author: QilinsaMaxime <maxime.epopa@qilinsa.com>
+Date:   Fri Jul 26 15:26:52 2024 +0100
+
+    commit 14
+
+[33mcommit 9cc963395f88187f179a105aea3550f886a5b1e5[m
+Merge: 04fc401 2a69ce7
+Author: QilinsaMaxime <maxime.epopa@qilinsa.com>
+Date:   Fri Jul 26 15:24:09 2024 +0100
+
+    Merge remote-tracking branch 'origin/back_feature' into back_feature
+
+[33mcommit 04fc4012f673de265800536cd6c0d8c56ec5bb6e[m
+Author: QilinsaMaxime <maxime.epopa@qilinsa.com>
+Date:   Fri Jul 26 14:55:13 2024 +0100
+
+    commit 14
+
+[33mcommit c47fc80ae184cdcae4345e175c79ec902cad9d47[m
+Merge: 22df966 847dc84
+Author: unknown <ryannyamsi23@gmail.com>
+Date:   Fri Jul 26 14:52:05 2024 +0100
+
+    Merge branch 'main' of https://github.com/ryny23/ALT_FRONT
+
+[33mcommit 22df966011d99e8a78b35e931d26aeeb7078e7c5[m
+Author: unknown <ryannyamsi23@gmail.com>
+Date:   Fri Jul 26 14:51:06 2024 +0100
+
+    delete src.rar folder
+
+[33mcommit 847dc847ffbd2d5daae6a4fe1e7905785b06c144[m
+Merge: 4638b74 2a69ce7
+Author: ryny23 <166703602+ryny23@users.noreply.github.com>
+Date:   Fri Jul 26 14:44:26 2024 +0100
+
+    Merge pull request #5 from ryny23/back_feature
+    
+    Back + front
+
+[33mcommit 2a69ce7cb1229b736f66fed4b537e5f1cb67fbfc[m[33m ([m[1;31morigin/back_feature[m[33m, [m[1;32mback_feature[m[33m)[m
+Merge: 4638b74 21cf058
+Author: unknown <ryannyamsi23@gmail.com>
+Date:   Fri Jul 26 12:37:08 2024 +0100
+
+    Merge remote-tracking branch 'origin/back_feature'
+
+[33mcommit 4638b7462b7df2325b7d38b861bf5d7092cb9db2[m
+Merge: 69d3b80 a1af629
+Author: ryny23 <166703602+ryny23@users.noreply.github.com>
+Date:   Fri Jul 26 12:24:02 2024 +0100
+
+    Merge pull request #4 from ryny23/front_feature
+    
+    Front feature
+
+[33mcommit a1af62928b4268b1cb81826750e56d67084015e4[m[33m ([m[1;31morigin/front_feature[m[33m)[m
+Merge: 84edab4 b5cde05
+Author: unknown <ryannyamsi23@gmail.com>
+Date:   Fri Jul 26 12:03:26 2024 +0100
+
+    commit 14
+
+[33mcommit 84edab4bee97aa22256f1df7886f0dc38ed34b03[m
+Author: unknown <ryannyamsi23@gmail.com>
+Date:   Fri Jul 26 11:43:09 2024 +0100
+
+    first commit
+
+[33mcommit 21cf0580089268a7a48d7e4b2b44f46690f17c21[m
+Merge: 0bfd0c8 b5cde05
+Author: EpopaMaxime <108335524+EpopaMaxime@users.noreply.github.com>
+Date:   Fri Jul 26 11:28:05 2024 +0100
+
+    Merge pull request #3 from ryny23/front_feature
+    
+    Merge pull request #2 from ryny23/back_feature
+
+[33mcommit b5cde05a5004d8b8db0eac61830911d576f7fe25[m
+Merge: 55a3838 0bfd0c8
+Author: EpopaMaxime <108335524+EpopaMaxime@users.noreply.github.com>
+Date:   Fri Jul 26 11:22:25 2024 +0100
+
+    Merge pull request #2 from ryny23/back_feature
+    
+    Back feature
+
+[33mcommit 69d3b80a164afa2ce730de9ae0cd058722198fc8[m
+Merge: 33669e9 0bfd0c8
+Author: EpopaMaxime <108335524+EpopaMaxime@users.noreply.github.com>
+Date:   Fri Jul 26 11:13:10 2024 +0100
+
+    Merge pull request #1 from ryny23/back_feature
+    
+    commit 13
+
+[33mcommit 0bfd0c8a27f803edac10de70edbf13c84eb21ba8[m
+Author: QilinsaMaxime <maxime.epopa@qilinsa.com>
+Date:   Fri Jul 26 11:10:47 2024 +0100
+
+    commit 13
+
+[33mcommit 33669e99700c8e68e4484dbbb99531a306b591c3[m
+Author: QilinsaMaxime <maxime.epopa@qilinsa.com>
+Date:   Wed Jul 24 09:40:03 2024 +0100
+
+    commit 12
+
+[33mcommit 8b1ae57ccc3b5de2f58dc6c3d5ecf5a14c1691ea[m
+Author: QilinsaMaxime <maxime.epopa@qilinsa.com>
+Date:   Wed Jul 24 09:37:54 2024 +0100
+
+    commit 11
+
+[33mcommit a4cfe4f90c20feb729866a07f6670ba0f068ccb6[m
+Author: QilinsaMaxime <maxime.epopa@qilinsa.com>
+Date:   Wed Jul 17 15:29:33 2024 +0100
+
+    commit 10
+
+[33mcommit 7245f903d4e221b8537c9146d4aaedf5e722d66e[m
+Author: QilinsaMaxime <maxime.epopa@qilinsa.com>
+Date:   Wed Jul 17 13:19:55 2024 +0100
+
+    commit 9
+
+[33mcommit bdf6656bbfcdd018982d54019888ba3cefde016c[m
+Author: QilinsaMaxime <maxime.epopa@qilinsa.com>
+Date:   Wed Jul 17 08:44:47 2024 +0100
+
+    commit 8
+
+[33mcommit d13d856026b65c3736712718641dbcd8a25b88b0[m
+Author: QilinsaMaxime <maxime.epopa@qilinsa.com>
+Date:   Tue Jul 16 12:05:34 2024 +0100
+
+    commit 7
+
+[33mcommit a4d916d7dc6c9ab41011ab710b4906824fcbab66[m
+Author: QilinsaMaxime <maxime.epopa@qilinsa.com>
+Date:   Tue Jul 16 12:02:56 2024 +0100
+
+    commit 6
+
+[33mcommit 645d0815bb7978b0aa021b8dff8ecdffd8cd5a8a[m
+Author: QilinsaMaxime <maxime.epopa@qilinsa.com>
+Date:   Tue Jul 16 11:07:51 2024 +0100
+
+    commit 5
+
+[33mcommit 55a38389fd5794892c04ff26c87e94713337e9a5[m
+Author: unknown <ryannyamsi23@gmail.com>
+Date:   Tue Jul 16 10:26:38 2024 +0100
+
+    commit 4
+
+[33mcommit 23da2a35c03e287ddc3947ea0f01f6c468b6699e[m
+Author: unknown <ryannyamsi23@gmail.com>
+Date:   Tue Jul 16 09:21:58 2024 +0100
+
+    third commit
+
+[33mcommit 12f4b5e606290413d32fcd1de77907c0926d77c0[m
+Author: unknown <ryannyamsi23@gmail.com>
+Date:   Mon Jul 15 18:14:15 2024 +0100
+
+    second commit
+
+[33mcommit a4b7c948100d062f942d031bc3594298867f8e92[m
+Author: unknown <ryannyamsi23@gmail.com>
+Date:   Mon Jul 15 17:46:26 2024 +0100
+
+    first commit

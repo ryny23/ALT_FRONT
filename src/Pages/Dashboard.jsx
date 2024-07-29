@@ -15,6 +15,7 @@ import ExpertsProfileSettings from '../Components/ExpertsProfileSettings'
 import RenderProfilExpert from '../Components/RenderProfilExpert';
 import SearchExperts from '../Pages/SearchExperts'
 import anime from '../assets/anime.svg'
+import AidePage from './AidePage';
 
 
 const Dashboard = () => {
@@ -224,6 +225,10 @@ useEffect(() => {
               <ExpertsProfileSettings/>
   
         );
+        case 'aide' :
+          return(
+            <AidePage/>
+          );
         
         case 'commentaires':
           return (
@@ -393,19 +398,53 @@ useEffect(() => {
                  </div>    
               <div className="flex items-center">
                   <div className="flex items-center ms-3">
-                    <div>
-                      
-                      <div className="relative cursor-pointer flex items-center justify-between bg-bg-transparent group">
-                        <NavLink to="#" className="text-white menu-hover text-base white mx-2">
+                  <div className='flex items-center justify-center gap-10'>
+                    <div className="flex flex-col items-center text-center">
+                        <Link to="/Alertes" className="flex flex-col items-center">
+                          <svg className="w-7 h-7 text-gray-700 dark:text-gray-300" viewBox="0 0 24 24" fill="none">
+                            <path
+                              d="M12 22C13.1 22 14 21.1 14 20H10C10 21.1 10.9 22 12 22ZM18 16V11C18 7.93 16.36 5.36 13.5 4.68V4C13.5 3.17 12.83 2.5 12 2.5C11.17 2.5 10.5 3.17 10.5 4V4.68C7.63 5.36 6 7.92 6 11V16L4 18V19H20V18L18 16Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                          <span className="text-sm text-gray-700 dark:text-gray-300">Alertes</span>
+                        </Link>
+                      </div>
+                      <div className="flex flex-col items-center text-center">
+                        <Link to="/dossiers" className="flex flex-col items-center">
+                          <svg className="w-7 h-7 text-gray-700 dark:text-gray-300" viewBox="0 0 24 24" fill="none">
+                            <path
+                              d="M10 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V8C22 6.9 21.1 6 20 6H12L10 4Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                          <span className="text-sm text-gray-700 dark:text-gray-300">Dossiers</span>
+                        </Link>
+                      </div>
+                      <div className="flex flex-col items-center relative cursor-pointer group">
+                        <NavLink to="#" className="flex flex-col items-center">
                         {/* <FaUserAlt className="text-gray-500 w-14 h-6" /> */}
-                        <img className="w-14 h-14 rounded-full" src={avatarUrl || "https://placehold.co/96x96"} alt="user photo"/>
+                        <img className="w-7 h-7 rounded-full" src={avatarUrl || "https://placehold.co/96x96"} alt="user photo"/>
+                        <span className=" text-center text-sm text-gray-700 dark:text-gray-300">Compte</span>
                         </NavLink>
                         
-                        <div className="top-[50px] z-20 absolute left-[-65px] w-[150px] mt-1 bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
+                        <div className="top-[40px] z-20 absolute left-[-65px] w-[150px] mt-1 bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
                           <div className="py-[20px]">
                             <div onClick={() => setSelectedMenu('profils')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</div>
-                            <NavLink onClick={() => setSelectedMenu('parametres')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Parametres</NavLink>
-                            <NavLink onClick={() => setShowConfirm(true)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Deconnexion</NavLink>
+                            <Link onClick={() => setSelectedMenu('parametres')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Parametres</Link>
+
+                            <Link onClick={() => setSelectedMenu('parametresExpert')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Paramètres experts</Link>
+                            {/* {isProfileMenuOpen && (
+                                <ul className="absolute left-0 w-full mt-1 space-y-2 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700">
+                                    {isExpert && (
+                                    <li onClick={() => setSelectedMenu('parametresExpert')}>
+                                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Parametre expert</a>
+                                    </li>
+                                    )}
+                                </ul>
+                            )} */}
+                            <Link onClick={() => setSelectedMenu('aide')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Aide</Link>
+                            <Link onClick={() => setShowConfirm(true)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Deconnexion</Link>
                             
                           </div>
                         </div>
@@ -475,12 +514,12 @@ useEffect(() => {
                                 <svg className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
                                     <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
                                 </svg>
-                                <span className="flex-1 ms-3 whitespace-nowrap mx-32">Expert</span>
-                                <svg className={`w-5 h-5 text-gray-500 transition-transform ${isProfileMenuOpen ? 'rotate-180' : 'rotate-0'}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <Link to="/search" className="flex-1 ms-3 whitespace-nowrap mx-32">Expert</Link>
+                                {/* <svg className={`w-5 h-5 text-gray-500 transition-transform ${isProfileMenuOpen ? 'rotate-180' : 'rotate-0'}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                                </svg>
+                                </svg> */}
                             </button>
-                            {isProfileMenuOpen && (
+                            {/* {isProfileMenuOpen && (
                                 <ul className="absolute left-0 w-full mt-1 space-y-2 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700">
                                     <li>
                                         <Link to="/search" className="block px-4 py-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Experts</Link>
@@ -491,7 +530,7 @@ useEffect(() => {
                                     </li>
                                     )}
                                 </ul>
-                            )}
+                            )} */}
                         </li>
                         {/* <li>
                             <a href="#" className="flex  items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">

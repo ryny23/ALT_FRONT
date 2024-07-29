@@ -18,6 +18,7 @@ import SingleDecision from './Components/SingleDecision'
 import SearchExperts from './Pages/SearchExperts'
 import ExpertsProfile from './Components/RenderProfilExpert'
 import SingleCommentaire from './Components/SingleCommentaire'
+import TermsConditions from './Pages/TermsConditions'
 
 
 
@@ -43,6 +44,7 @@ const App = () => {
           <Route path="/directions-entreprises" element={<DirEntre/>}/>
           <Route path="/directions-juridiques-du-secteur-public" element={<DirJur/>}/>
           <Route path="/directions-sinistres" element={<DirSin/>}/>
+          <Route path="/conditions-generales" element={<TermsConditions/>}/>
 
 
 
@@ -68,3 +70,8 @@ const App = () => {
 };
 
 export default App
+
+
+
+
+

@@ -48,7 +48,7 @@ export default function Features2() {
           <img
             src={p1}
             alt="Product screenshot"
-            className="rounded-full w-[24rem] max-w-none shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
+            className="rounded-full w-[24rem] max-w-none shadow-xl ring-1 ring-gray-400/10 sm:w-[720px] md:-ml-4 lg:-ml-0"
             width={2432}
             height={1442}
           />
