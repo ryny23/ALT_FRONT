@@ -43,8 +43,7 @@ function ProfileSettings() {
         'Pilote',
         'Infirmier',
         'Entrepreneur',
-        'Scientifique',
-        'Huissier'
+        'Scientifique'
   ];
 
   const fileInputRef = useRef(null);
@@ -280,7 +279,7 @@ function ProfileSettings() {
                               Nom d'utilisateur
                           </label>
                           <input
-                              className="bg-gray-200 cursor-not-allowed dark:bg-dark-background text-light-text dark:text-dark-text cursor-not-allowed bg-input border border-border rounded-lg w-full py-2 px-3"
+                              className="bg-gray-200 dark:bg-dark-background text-light-text dark:text-dark-text cursor-not-allowed bg-input border border-border rounded-lg w-full py-2 px-3"
                               type="text"
                               id="username"
                               value={username}
@@ -293,7 +292,7 @@ function ProfileSettings() {
                               E-mail
                           </label>
                           <input
-                              className="bg-gray-200 cursor-not-allowed dark:bg-dark-background text-light-text dark:text-dark-text cursor-not-allowed bg-input border border-border rounded-lg w-full py-2 px-3"
+                              className="bg-gray-200 dark:bg-dark-background text-light-text dark:text-dark-text cursor-not-allowed bg-input border border-border rounded-lg w-full py-2 px-3"
                               type="email"
                               id="email"
                               value={email}

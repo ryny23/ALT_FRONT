@@ -27,7 +27,7 @@ export default function Component() {
       setError('');
       try {
         // Fetch experts data
-        const response = await axios.get('http://52.207.130.7/wp-json/wp/v2/users?professions=Avocat,Huissier,Notaire', {
+        const response = await axios.get('http://52.207.130.7/wp-json/wp/v2/users?professions=Avocat,Notaire', {
           headers: {
             Authorization: `Bearer ${authToken}`
           },
@@ -171,7 +171,6 @@ export default function Component() {
             <Dropdown label="Filtrer par type d'expert" color="slate">
               <Dropdown.Item onClick={() => setSelectedType('')}>Tous</Dropdown.Item>
               <Dropdown.Item onClick={() => setSelectedType('Avocat')}>Avocat</Dropdown.Item>
-              <Dropdown.Item onClick={() => setSelectedType('Huissier')}>Huissier</Dropdown.Item>
               <Dropdown.Item onClick={() => setSelectedType('Notaire')}>Notaire</Dropdown.Item>
             </Dropdown>
           </div>

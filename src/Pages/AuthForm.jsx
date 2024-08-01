@@ -105,8 +105,7 @@ const AuthForm = () => {
         'Pilote',
         'Infirmier',
         'Entrepreneur',
-        'Scientifique',
-        'Huissier'
+        'Scientifique'
     ];
 
 
