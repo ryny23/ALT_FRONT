@@ -366,7 +366,7 @@ const AuthForm = () => {
                                         
                                         <div className="text-sm">
                                     
-                                            <button
+                                            <Link to="/forgotpassword"
                                                 type="button"
                                                 onClick={() => {
                                                     // Logique pour afficher une modal ou une nouvelle vue pour la récupération de mot de passe
@@ -375,7 +375,7 @@ const AuthForm = () => {
                                                 className="text-red-600 hover:underline focus:outline-none object-cover"
                                             >
                                                 Mot de passe oublié ?
-                                            </button>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>

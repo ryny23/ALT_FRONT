@@ -21,6 +21,7 @@ import SingleCommentaire from './Components/SingleCommentaire'
 import TermsConditions from './Pages/TermsConditions'
 import LegislationDetail1 from './Pages/LegislationDetail'
 import ArticleDetail from './Pages/ArticleDetail'
+import ResetPassword from './Components/Resetpassword'
 
 
 
@@ -62,6 +63,8 @@ const App = () => {
           <Route path="/user/:userId" element={<ExpertsProfile />} />
           <Route path="/search" element={<SearchExperts />} />
           <Route path="/legislationdetail" element={<LegislationDetail1 />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/resetpassword" element={<ResetPassword />} />
           
 
           <Route path="/test" element={<Test/>}/>

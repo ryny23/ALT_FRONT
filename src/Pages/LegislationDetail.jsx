@@ -10,6 +10,7 @@ const LegislationDetail = () => {
   const { id } = useParams();
   const [legislation, setLegislation] = useState(null);
   const [details, setDetails] = useState([]);
+  const [decisions, setDecisions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -22,6 +23,7 @@ const LegislationDetail = () => {
         setLegislation(res.data);
 
         const identifiers = res.data.acf.titre_ou_chapitre_ou_section_ou_articles;
+        const decisionIdentifiers = res.data.acf.decision;
 
         const fetchData = async (id) => {
           for (let endpoint of endpoints) {
@@ -35,8 +37,20 @@ const LegislationDetail = () => {
           throw new Error('Data not found in any endpoint');
         };
 
+        const fetchDecisions = async (id) => {
+          try {
+            const res = await axios.get(`http://52.207.130.7/wp-json/wp/v2/decisions/${id}`);
+            return res.data;
+          } catch (err) {
+            throw new Error('Decision not found');
+          }
+        };
+
         const detailsData = await Promise.all(identifiers.map(fetchData));
+        const decisionsData = await Promise.all(decisionIdentifiers.map(fetchDecisions));
+
         setDetails(detailsData);
+        setDecisions(decisionsData);
       } catch (err) {
         setError('Failed to fetch legislation or details');
       } finally {
@@ -81,6 +95,28 @@ const LegislationDetail = () => {
                 </a>
               </li>
             ))}
+            {decisions.length > 0 && (
+              <li>
+                <a
+                  onClick={() => scrollToSection('decisions')}
+                  className="cursor-pointer text-xl font-bold mb-4"
+                >
+                  Décisions
+                </a>
+                <ul className="ml-4 space-y-2">
+                  {decisions.map((decision, index) => (
+                    <li key={index}>
+                      <a
+                        onClick={() => scrollToSection(`decision-${decision.id}`)}
+                        className="cursor-pointer text-blue-500 hover:underline"
+                      >
+                        {parse(decision.title.rendered)}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            )}
           </ul>
         </aside>
         <main className="lg:col-span-3 bg-white p-6 rounded shadow">
@@ -95,6 +131,17 @@ const LegislationDetail = () => {
                 </div>
               ))}
             </div>
+            {decisions.length > 0 && (
+              <div id="decisions" className="mt-8">
+                <h2 className="text-2xl font-bold mb-4">Décisions</h2>
+                {decisions.map((decision, index) => (
+                  <div key={index} className="mb-6" id={`decision-${decision.id}`}>
+                    <h3 className="text-xl font-semibold mb-2">{parse(decision.title.rendered)}</h3>
+                    <div dangerouslySetInnerHTML={{ __html: decision.content.rendered }} />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </main>
       </div>

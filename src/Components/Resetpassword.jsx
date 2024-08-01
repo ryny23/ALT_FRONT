@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import logo from './../assets/logo.png';
+import { useNavigate } from 'react-router-dom';
 
-const ForgotPassword = () => {
+
+const ResetPassword = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [code, setCode] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -15,15 +18,19 @@ const ForgotPassword = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://52.207.130.7/wp-json/bdpwr/v1/reset-password', {
-        email: email
+      const response = await axios.post('http://52.207.130.7/wp-json/bdpwr/v1/set-password', {
+        email: email,
+        code: code,
+        password: password
       });
 
       if (response.data.data.status === 200) {
-        setMessage('Un e-mail de réinitialisation de mot de passe a été envoyé.');
-        setTimeout(() => {
-          navigate('/resetpassword');  // Rediriger vers la page de connexion après 3 secondes
-        }, 3000);
+        alert('Mot de passe reinitialisé avec succes!.');
+        
+        
+        navigate('/authform');  // Rediriger vers la page de reset après 3 secondes
+        
+        
       } else {
         setError('Erreur lors de l\'envoi de l\'e-mail. Veuillez réessayer.');
       }
@@ -46,6 +53,19 @@ const ForgotPassword = () => {
                 Réinitialiser le mot de passe
               </h1>
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+              <div>
+                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">code</label>
+                  <input
+                    type="password"
+                    name="code"
+                    id="code"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Entrez le code envoyé par mail"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    required
+                  />
+                </div>
                 <div>
                   <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Votre email</label>
                   <input
@@ -56,6 +76,20 @@ const ForgotPassword = () => {
                     placeholder="name@company.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nouveau mot de passe</label>
+                  <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="name@company.com"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     required
                   />
                 </div>
@@ -74,4 +108,4 @@ const ForgotPassword = () => {
   );
 }
 
-export default ForgotPassword;
+export default ResetPassword;
