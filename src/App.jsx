@@ -26,7 +26,7 @@ import ResetPassword from './Components/Resetpassword'
 
 
 // import Test from './Pages/Test'
-// import Test2 from './Pages/Test2'
+import Test2 from './Pages/Test2'
 
 const App = () => {
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -68,7 +68,7 @@ const App = () => {
           
 
           <Route path="/test" element={<Test/>}/>
-          {/* <Route path="/test2" element={<Test2/>}/> */}
+          <Route path="/test2" element={<Test2/>}/>
         </Routes>
       </Router>
     </div>
