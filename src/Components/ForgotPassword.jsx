@@ -22,7 +22,11 @@ const ForgotPassword = () => {
       if (response.data.data.status === 200) {
         setMessage('Un e-mail de réinitialisation de mot de passe a été envoyé.');
         setTimeout(() => {
+<<<<<<< HEAD
           navigate('/resetpassword');  // Rediriger vers la page de connexion après 3 secondes
+=======
+          navigate('/resetpassword');  // Rediriger vers la page de reset après 3 secondes
+>>>>>>> back_feature
         }, 3000);
       } else {
         setError('Erreur lors de l\'envoi de l\'e-mail. Veuillez réessayer.');
