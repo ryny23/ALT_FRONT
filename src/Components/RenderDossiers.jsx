@@ -39,7 +39,7 @@ const RenderDossiers = () => {
     }, []);
 
     return (
-        <div className="flex items-center justify-center min-h-screen p-4">
+        <div className="flex items-center justify-center p-4">
             <div className="w-full max-w-md">
                 <h1 className="text-6xl font-semibold text-center">Dossiers</h1>
                 <button className="bg-green-500 text-white p-2 rounded-lg mt-2 hover:bg-primary/80 w-full">Créer un dossier</button>

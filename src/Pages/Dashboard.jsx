@@ -16,6 +16,8 @@ import RenderProfilExpert from '../Components/RenderProfilExpert';
 import SearchExperts from '../Pages/SearchExperts'
 import anime from '../assets/anime.svg'
 import AidePage from './AidePage';
+import RenderDossiers from '../Components/RenderDossiers';
+import RenderAlertes from '../Components/RenderAlertes';
 
 
 const Dashboard = () => {
@@ -270,6 +272,14 @@ useEffect(() => {
           return(
             <AidePage/>
           );
+        case 'dossiers' :
+          return(
+            <RenderDossiers />
+          );
+        case 'alertes' :
+          return(
+            <RenderAlertes />
+          );
         
         case 'commentaires':
           return (
@@ -441,7 +451,7 @@ useEffect(() => {
                   <div className="flex items-center ms-3">
                   <div className='flex items-center justify-center gap-10'>
                     <div className="flex flex-col items-center text-center">
-                        <Link to="/Alertes" className="flex flex-col items-center">
+                        <Link onClick={() => setSelectedMenu('alertes')} className="flex flex-col items-center">
                           <svg className="w-7 h-7 text-gray-700 dark:text-gray-300" viewBox="0 0 24 24" fill="none">
                             <path
                               d="M12 22C13.1 22 14 21.1 14 20H10C10 21.1 10.9 22 12 22ZM18 16V11C18 7.93 16.36 5.36 13.5 4.68V4C13.5 3.17 12.83 2.5 12 2.5C11.17 2.5 10.5 3.17 10.5 4V4.68C7.63 5.36 6 7.92 6 11V16L4 18V19H20V18L18 16Z"
@@ -452,7 +462,7 @@ useEffect(() => {
                         </Link>
                       </div>
                       <div className="flex flex-col items-center text-center">
-                        <Link to="/dossiers" className="flex flex-col items-center">
+                        <Link onClick={() => setSelectedMenu('dossiers')} className="flex flex-col items-center">
                           <svg className="w-7 h-7 text-gray-700 dark:text-gray-300" viewBox="0 0 24 24" fill="none">
                             <path
                               d="M10 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V8C22 6.9 21.1 6 20 6H12L10 4Z"
@@ -469,7 +479,7 @@ useEffect(() => {
                         <span className=" text-center text-sm text-gray-700 dark:text-gray-300">Compte</span>
                         </NavLink>
                         
-                        <div className="top-[40px] z-20 absolute left-[-65px] w-[150px] mt-1 bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
+                        <div className="top-[40px] z-20 absolute left-[-80px] w-[150px] mt-1 bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
                           <div className="py-[20px]">
                             <div onClick={() => setSelectedMenu('profils')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</div>
                             <Link onClick={() => setSelectedMenu('parametres')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Parametres</Link>
