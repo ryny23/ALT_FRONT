@@ -50,7 +50,7 @@ const LegislationDetail = () => {
 
         const fetchComments = async (id) => {
           try {
-            const res = await axios.get(`http://52.207.130.7/wp-json/wp/v2/commentaires/${id}`);
+            const res = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/commentaires/${id}`);
             return res.data;
           } catch (err) {
             throw new Error('Comment not found');
