@@ -11,6 +11,7 @@ const LegislationDetail = () => {
   const [legislation, setLegislation] = useState(null);
   const [details, setDetails] = useState([]);
   const [decisions, setDecisions] = useState([]);
+  const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -24,6 +25,7 @@ const LegislationDetail = () => {
 
         const identifiers = res.data.acf.titre_ou_chapitre_ou_section_ou_articles;
         const decisionIdentifiers = res.data.acf.decision;
+        const commentIdentifiers = res.data.acf.commentaire;
 
         const fetchData = async (id) => {
           for (let endpoint of endpoints) {
@@ -46,11 +48,22 @@ const LegislationDetail = () => {
           }
         };
 
+        const fetchComments = async (id) => {
+          try {
+            const res = await axios.get(`http://52.207.130.7/wp-json/wp/v2/commentaires/${id}`);
+            return res.data;
+          } catch (err) {
+            throw new Error('Comment not found');
+          }
+        };
+
         const detailsData = await Promise.all(identifiers.map(fetchData));
         const decisionsData = await Promise.all(decisionIdentifiers.map(fetchDecisions));
+        const commentsData = await Promise.all(commentIdentifiers.map(fetchComments));
 
         setDetails(detailsData);
         setDecisions(decisionsData);
+        setComments(commentsData);
       } catch (err) {
         setError('Failed to fetch legislation or details');
       } finally {
@@ -117,6 +130,28 @@ const LegislationDetail = () => {
                 </ul>
               </li>
             )}
+            {comments.length > 0 && (
+              <li>
+                <a
+                  onClick={() => scrollToSection('comments')}
+                  className="cursor-pointer text-xl font-bold mb-4"
+                >
+                  Commentaires
+                </a>
+                <ul className="ml-4 space-y-2">
+                  {comments.map((comment, index) => (
+                    <li key={index}>
+                      <a
+                        onClick={() => scrollToSection(`comment-${comment.id}`)}
+                        className="cursor-pointer text-blue-500 hover:underline"
+                      >
+                        {parse(comment.title.rendered)}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            )}
           </ul>
         </aside>
         <main className="lg:col-span-3 bg-white p-6 rounded shadow">
@@ -138,6 +173,17 @@ const LegislationDetail = () => {
                   <div key={index} className="mb-6" id={`decision-${decision.id}`}>
                     <h3 className="text-xl font-semibold mb-2">{parse(decision.title.rendered)}</h3>
                     <div dangerouslySetInnerHTML={{ __html: decision.content.rendered }} />
+                  </div>
+                ))}
+              </div>
+            )}
+            {comments.length > 0 && (
+              <div id="comments" className="mt-8">
+                <h2 className="text-2xl font-bold mb-4">Commentaires</h2>
+                {comments.map((comment, index) => (
+                  <div key={index} className="mb-6" id={`comment-${comment.id}`}>
+                    <h3 className="text-xl font-semibold mb-2">{parse(comment.title.rendered)}</h3>
+                    <div dangerouslySetInnerHTML={{ __html: comment.content.rendered }} />
                   </div>
                 ))}
               </div>
