@@ -15,23 +15,23 @@ const LegislationDetail = () => {
   useEffect(() => {
     const fetchLegislation = async () => {
       try {
-        const res = await axios.get(`http://52.207.130.7/wp-json/wp/v2/legislations/${id}`);
+        const res = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/legislations/${id}`);
         setLegislation(res.data);
 
         const titrePromises = res.data.acf.titre.map(async (titreId) => {
-          const titreRes = await axios.get(`http://52.207.130.7/wp-json/wp/v2/titres/${titreId}`);
+          const titreRes = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/titres/${titreId}`);
           const titreData = titreRes.data;
 
           const chapitrePromises = titreData.acf.chapitre.map(async (chapitreId) => {
-            const chapitreRes = await axios.get(`http://52.207.130.7/wp-json/wp/v2/chapitres/${chapitreId}`);
+            const chapitreRes = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/chapitres/${chapitreId}`);
             const chapitreData = chapitreRes.data;
 
             const sectionPromises = chapitreData.acf.section.map(async (sectionId) => {
-              const sectionRes = await axios.get(`http://52.207.130.7/wp-json/wp/v2/sections/${sectionId}`);
+              const sectionRes = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/sections/${sectionId}`);
               const sectionData = sectionRes.data;
 
               const articlePromises = sectionData.acf.article.map(articleId =>
-                axios.get(`http://52.207.130.7/wp-json/wp/v2/articles/${articleId}`)
+                axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/articles/${articleId}`)
               );
 
               const articleResults = await Promise.all(articlePromises);

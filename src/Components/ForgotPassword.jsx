@@ -15,7 +15,7 @@ const ForgotPassword = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://52.207.130.7/wp-json/bdpwr/v1/reset-password', {
+      const response = await axios.post('https://alt.back.qilinsa.com/wp-json/bdpwr/v1/reset-password', {
         email: email
       });
 

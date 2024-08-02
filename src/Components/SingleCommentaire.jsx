@@ -21,7 +21,7 @@ const SingleCommentaire = () => {
   useEffect(() => {
     const fetchcommentaire = async () => {
       try {
-        const altUrl = 'http://52.207.130.7';
+        const altUrl = 'https://alt.back.qilinsa.com';
 
         // Fetch commentaire details
         const commentaireResponse = await axios.get(`${altUrl}/wp-json/wp/v2/commentaires/${id}`);

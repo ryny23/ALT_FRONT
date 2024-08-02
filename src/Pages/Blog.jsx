@@ -18,7 +18,7 @@ const Blog = () => {
   const [visiblePosts, setVisiblePosts] = useState(3);
 
   useEffect(() => {
-    const altUrl = 'http://52.207.130.7';
+    const altUrl = 'https://alt.back.qilinsa.com';
     axios.get(`${altUrl}/wp-json/wp/v2/posts`)
       .then(async res => {
         const posts = res.data;
