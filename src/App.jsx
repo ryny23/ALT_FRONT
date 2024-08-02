@@ -22,6 +22,7 @@ import TermsConditions from './Pages/TermsConditions'
 import LegislationDetail1 from './Pages/LegislationDetail'
 import ArticleDetail from './Pages/ArticleDetail'
 import ResetPassword from './Components/Resetpassword'
+import Dossier from './Pages/Dossier'
 
 
 
@@ -65,8 +66,9 @@ const App = () => {
           <Route path="/legislationdetail" element={<LegislationDetail1 />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/resetpassword" element={<ResetPassword />} />
+          <Route path="/dossier" element={<Dossier />} />
           
-
+          
           <Route path="/test" element={<Test/>}/>
           <Route path="/test2" element={<Test2/>}/>
         </Routes>

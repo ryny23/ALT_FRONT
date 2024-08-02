@@ -16,7 +16,7 @@ import RenderProfilExpert from '../Components/RenderProfilExpert';
 import SearchExperts from '../Pages/SearchExperts'
 import anime from '../assets/anime.svg'
 import AidePage from './AidePage';
-import RenderDossiers from '../Components/RenderDossiers';
+import RenderDossiers from '../Pages/Dossier';
 import RenderAlertes from '../Components/RenderAlertes';
 import Avis from '../Components/Avis';
 

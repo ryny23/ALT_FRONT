@@ -1,41 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import logo from '../assets/logo.png';
 
 const Avis = () => {
   const [titreTemoignage, setTitreTemoignage] = useState('');
   const [temoignage, setTemoignage] = useState('');
+  
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  
 
-    const utilisateur = 'nom_utilisateur'; // c'est un exemple pour obtenir le nom de l'utilisateur
-    const data = {
-      title: titreTemoignage,
-      testimonial: temoignage,
-      username: utilisateur,
-    };
+  const handleSaveChanges = async (event) => {
+    event.preventDefault();
 
     try {
-      const response = await fetch('https://alt.back.qilinsa.com/wp-json/acf/v3/testimonials', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+        const token = localStorage.getItem('token');
 
-      if (response.ok) {
-        alert('Témoignage soumis avec succès!');
-        setTitreTemoignage('');
-        setTemoignage('');
-      } else {
-        alert('Erreur lors de la soumission du témoignage.');
-      }
+        const response = await axios.patch('https://alt.back.qilinsa.com/wp-json/wp/v2/users/me', {
+            acf: {
+                titreavis:titreTemoignage,
+                
+                desavis: temoignage,
+                
+              
+            },
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        console.log('Avis à jour', response.data);
+        alert('avis envoyé');
     } catch (error) {
-      console.error('Erreur:', error);
-      alert('Erreur lors de la soumission du témoignage.');
+        console.error('Error updating user information:', error);
+        setError('Erreur lors de la mise à jour des informations. Veuillez réessayer.');
     }
-  };
+};
 
   return (
     <div>
@@ -50,7 +50,7 @@ const Avis = () => {
               <p className="text-muted-foreground">
                 Nous aimerions entendre vos retours sur nos services. Laissez un avis pour nous aider à nous améliorer.
               </p>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSaveChanges} className="space-y-4">
                 <div>
                   <label htmlFor="titre-temoignage" className="block text-sm font-medium text-gray-700">
                     Titre du témoignage
