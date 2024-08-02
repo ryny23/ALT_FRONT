@@ -112,7 +112,7 @@ export default function Component() {
 
   return (
     <div className="w-full min-h-screen bg-gray-100">
-      <header className="bg-slate-950 text-white py-4 px-6 rounded-t-lg">
+      <header className="text-slate-950 bg-white py-4 px-6 rounded-t-lg">
         <h1 className="text-2xl font-bold">Trouvez un expert</h1>
         <div className="mt-4 space-y-4">
           <div className="relative">
