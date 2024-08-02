@@ -14,7 +14,7 @@ const SinglePost = () => {
   });
 
   useEffect(() => {
-    const altUrl = 'http://52.207.130.7';
+    const altUrl = 'https://alt.back.qilinsa.com';
     
     const fetchPost = async () => {
       try {

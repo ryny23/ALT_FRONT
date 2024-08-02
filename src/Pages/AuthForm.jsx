@@ -47,7 +47,7 @@ const AuthForm = () => {
       return;
     }
 
-    const siteUrl = 'http://52.207.130.7/'; // URL de l'API
+    const siteUrl = 'https://alt.back.qilinsa.com/'; // URL de l'API
 
     // Données d'inscription à envoyer à l'API
     const registerData = {
@@ -155,7 +155,7 @@ const AuthForm = () => {
   const onFormSubmitCon = (event) => {
     event.preventDefault(); // Empêche le comportement par défaut de soumission du formulaire
 
-    const siteUrl = 'http://52.207.130.7/'; // URL de l'API
+    const siteUrl = 'https://alt.back.qilinsa.com/'; // URL de l'API
 
     // Données de connexion à envoyer à l'API
     const loginData = {

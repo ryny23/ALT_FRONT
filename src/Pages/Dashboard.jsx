@@ -31,7 +31,7 @@ const Dashboard = () => {
     const fetchUserData = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://52.207.130.7/wp-json/wp/v2/users/me', {
+            const response = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/users/me', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -43,7 +43,7 @@ const Dashboard = () => {
             const avatarId = userData.acf.avatar;
             if (avatarId) {
                 setAvatarId(avatarId);
-                const avatarResponse = await axios.get(`http://52.207.130.7/wp-json/wp/v2/media/${avatarId}`);
+                const avatarResponse = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/media/${avatarId}`);
                 setAvatarUrl(avatarResponse.data.source_url);
             }
 
@@ -82,7 +82,7 @@ useEffect(() => {
     }
   
     try {
-      const response = await axios.get(`http://52.207.130.7/wp-json/wp/v2/search?search=${searchTerm}&subtype=article`);
+      const response = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/search?search=${searchTerm}&subtype=article`);
       setResults(response.data);
     } catch (error) {
       console.error('Failed to search:', error);
@@ -124,19 +124,19 @@ useEffect(() => {
         let res;
         switch (menu) {
           case 'acceuil':
-            res = await axios.get('http://52.207.130.7/wp-json/wp/v2/posts');
+            res = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/posts');
             setPosts(res.data);
             break;
           case 'commentaires':
-            res = await axios.get('http://52.207.130.7/wp-json/wp/v2/commentaires');
+            res = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/commentaires');
             setcommentaires(res.data);
             break;
           case 'legislations':
-            res = await axios.get('http://52.207.130.7/wp-json/wp/v2/legislations');
+            res = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/legislations');
             setLegislations(res.data);
             break;
           case 'decisions':
-            res = await axios.get('http://52.207.130.7/wp-json/wp/v2/decisions');
+            res = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/decisions');
             setDecisions(res.data);
             break;
           default:
@@ -624,7 +624,7 @@ const ResultsList = ({ results }) => {
   useEffect(() => {
     const fetchArticleExcerpt = async (articleId) => {
       try {
-        const response = await axios.get(`http://52.207.130.7/wp-json/wp/v2/articles/${articleId}`);
+        const response = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/articles/${articleId}`);
         const excerpt = response.data?.excerpt?.rendered || 'No Excerpt';
         setArticleExcerpts((prevExcerpts) => ({
           ...prevExcerpts,
@@ -641,7 +641,7 @@ const ResultsList = ({ results }) => {
 
     const fetchLegislationTitle = async (articleId) => {
       try {
-        const altUrl = 'http://52.207.130.7';
+        const altUrl = 'https://alt.back.qilinsa.com';
     
         // Fetch article details
         const articleResponse = await axios.get(`${altUrl}/wp-json/wp/v2/articles/${articleId}`);

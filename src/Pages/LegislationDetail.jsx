@@ -19,7 +19,7 @@ const LegislationDetail = () => {
   useEffect(() => {
     const fetchLegislation = async () => {
       try {
-        const res = await axios.get(`http://52.207.130.7/wp-json/wp/v2/legislations/${id}`);
+        const res = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/legislations/${id}`);
         setLegislation(res.data);
 
         const identifiers = res.data.acf.titre_ou_chapitre_ou_section_ou_articles;
@@ -28,7 +28,7 @@ const LegislationDetail = () => {
         const fetchData = async (id) => {
           for (let endpoint of endpoints) {
             try {
-              const res = await axios.get(`http://52.207.130.7/wp-json/wp/v2/${endpoint}/${id}`);
+              const res = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/${endpoint}/${id}`);
               if (res.data) return { ...res.data, endpoint };
             } catch (err) {
               // Continue to the next endpoint if not found
@@ -39,7 +39,7 @@ const LegislationDetail = () => {
 
         const fetchDecisions = async (id) => {
           try {
-            const res = await axios.get(`http://52.207.130.7/wp-json/wp/v2/decisions/${id}`);
+            const res = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/decisions/${id}`);
             return res.data;
           } catch (err) {
             throw new Error('Decision not found');
