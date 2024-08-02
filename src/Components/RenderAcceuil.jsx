@@ -16,14 +16,14 @@ const RenderAcceuil = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const res = await axios.get('http://52.207.130.7/wp-json/wp/v2/posts');
+        const res = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/posts');
         const articles = res.data;
 
         const articlesWithMedia = await Promise.all(
           articles.map(async (article) => {
             if (article.featured_media) {
               try {
-                const mediaRes = await axios.get(`http://52.207.130.7/wp-json/wp/v2/media/${article.featured_media}`);
+                const mediaRes = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/media/${article.featured_media}`);
                 return { ...article, featured_media: mediaRes.data };
               } catch (mediaError) {
                 return { ...article, featured_media: null };

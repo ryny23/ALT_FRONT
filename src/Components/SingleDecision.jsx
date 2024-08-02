@@ -14,7 +14,7 @@ const SingleDecision = () => {
   useEffect(() => {
     const fetchDecision = async () => {
       try {
-        const res = await axios.get(`http://52.207.130.7/wp-json/wp/v2/decisions/${id}`);
+        const res = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/decisions/${id}`);
         setDecision(res.data);
       } catch (err) {
         setError('Failed to fetch decision');

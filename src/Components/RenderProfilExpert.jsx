@@ -59,13 +59,13 @@ const ExpertsProfile = () => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`http://52.207.130.7/wp-json/wp/v2/users/${userId}`, {
+        const response = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/users/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        const response1 = await axios.get('http://52.207.130.7/wp-json/wp/v2/decisions');
+        const response1 = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/decisions');
         const options = response1.data.map(decision => ({
           value: decision.id,
           label: decision.title.rendered
@@ -99,7 +99,7 @@ const ExpertsProfile = () => {
         const avatarId = userData.acf.avatar;
         if (avatarId) {
           setAvatarId(avatarId);
-          const avatarResponse = await axios.get(`http://52.207.130.7/wp-json/wp/v2/media/${avatarId}`);
+          const avatarResponse = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/media/${avatarId}`);
           setAvatarUrl(avatarResponse.data.source_url);
         }
 

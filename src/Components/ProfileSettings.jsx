@@ -61,7 +61,7 @@ function ProfileSettings() {
 
           try {
               const token = localStorage.getItem('token');
-              const response = await axios.post('http://52.207.130.7/wp-json/wp/v2/media', formData, {
+              const response = await axios.post('https://alt.back.qilinsa.com/wp-json/wp/v2/media', formData, {
                   headers: {
                       'Content-Disposition': `attachment; filename="${file.name}"`,
                       Authorization: `Bearer ${token}`,
@@ -72,7 +72,7 @@ function ProfileSettings() {
               setAvatarId(uploadedImageId);
 
               // Update user acf avatar field
-              await axios.put('http://52.207.130.7/wp-json/wp/v2/users/me', {
+              await axios.put('https://alt.back.qilinsa.com/wp-json/wp/v2/users/me', {
                   acf: {
                       avatar: uploadedImageId,
                   },
@@ -100,7 +100,7 @@ function ProfileSettings() {
       try {
           const token = localStorage.getItem('token');
 
-          const response = await axios.put('http://52.207.130.7/wp-json/wp/v2/users/me', {
+          const response = await axios.put('https://alt.back.qilinsa.com/wp-json/wp/v2/users/me', {
               password: passwordNew,
           }, {
               headers: {
@@ -126,7 +126,7 @@ function ProfileSettings() {
       try {
           const token = localStorage.getItem('token');
 
-          const response = await axios.patch('http://52.207.130.7/wp-json/wp/v2/users/me', {
+          const response = await axios.patch('https://alt.back.qilinsa.com/wp-json/wp/v2/users/me', {
               acf: {
                   nom,
                   prenom,
@@ -156,7 +156,7 @@ function ProfileSettings() {
       const fetchUserData = async () => {
           try {
               const token = localStorage.getItem('token');
-              const response = await axios.get('http://52.207.130.7/wp-json/wp/v2/users/me', {
+              const response = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/users/me', {
                   headers: {
                       Authorization: `Bearer ${token}`,
                   },
@@ -174,7 +174,7 @@ function ProfileSettings() {
               const avatarId = userData.acf.avatar;
               if (avatarId) {
                   setAvatarId(avatarId);
-                  const avatarResponse = await axios.get(`http://52.207.130.7/wp-json/wp/v2/media/${avatarId}`);
+                  const avatarResponse = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/media/${avatarId}`);
                   setAvatarUrl(avatarResponse.data.source_url);
               }
 
@@ -203,7 +203,7 @@ function ProfileSettings() {
     try {
         const token = localStorage.getItem('token');
 
-        await axios.delete('http://52.207.130.7/wp-json/wp/v2/users/me', {
+        await axios.delete('https://alt.back.qilinsa.com/wp-json/wp/v2/users/me', {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

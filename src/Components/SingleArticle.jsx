@@ -23,7 +23,7 @@ const SingleArticle = () => {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const altUrl = 'http://52.207.130.7';
+        const altUrl = 'https://alt.back.qilinsa.com';
 
         // Fetch article details
         const articleResponse = await axios.get(`${altUrl}/wp-json/wp/v2/articles/${id}`);
@@ -97,7 +97,7 @@ const SingleArticle = () => {
         return;
       }
 
-      const altUrl = 'http://52.207.130.7';
+      const altUrl = 'https://alt.back.qilinsa.com';
 
       // Fetch the current legislation data again to get the correct link
       const legislationResponse = await axios.get(titreDataRef.current._links['acf:post'].find(link => link.href.includes('legislations')).href);

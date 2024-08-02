@@ -20,7 +20,7 @@ const ArticleDetail = () => {
   useEffect(() => {
     const fetchArticleAndLegislation = async () => {
       try {
-        const altUrl = 'http://52.207.130.7';
+        const altUrl = 'https://alt.back.qilinsa.com';
 
         // Fetch article details
         const articleResponse = await axios.get(`${altUrl}/wp-json/wp/v2/articles/${id}`);

@@ -39,7 +39,7 @@ const SettingsPage = () => {
 
   useEffect(() => {
     // Fetch user data from the WordPress API
-    axios.get('http://52.207.130.7/wp-json/wp/v2/users/me', {
+    axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/users/me', {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}` // Assumes token is stored in localStorage
       }
@@ -86,7 +86,7 @@ const SettingsPage = () => {
 
   const handleSave = () => {
     // Save user preferences to the WordPress API
-    axios.post('http://52.207.130.7/wp-json/wp/v2/users/me', {
+    axios.post('https://alt.back.qilinsa.com/wp-json/wp/v2/users/me', {
       acf: {
         preferences: selectedDomains,
         notifemail: notifications,

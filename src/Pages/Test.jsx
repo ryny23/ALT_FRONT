@@ -16,7 +16,7 @@ const DecisionForm = () => {
         const fetchDecisions = async () => {
             try {
                 // Fetch all decisions from WordPress
-                const response = await axios.get('http://52.207.130.7/wp-json/wp/v2/decisions');
+                const response = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/decisions');
                 const options = response.data.map(decision => ({
                     value: decision.id,
                     label: decision.title.rendered
@@ -24,7 +24,7 @@ const DecisionForm = () => {
                 setDecisions(options);
 
                 // Fetch user data from WordPress
-                const userResponse = await axios.get(`http://52.207.130.7/wp-json/wp/v2/users/${userId}`, {
+                const userResponse = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/users/${userId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -61,7 +61,7 @@ const DecisionForm = () => {
         };
 
         try {
-            const response = await axios.put(`http://52.207.130.7/wp-json/wp/v2/users/${userId}`, updatedData, {
+            const response = await axios.put(`https://alt.back.qilinsa.com/wp-json/wp/v2/users/${userId}`, updatedData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'

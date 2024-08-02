@@ -27,7 +27,7 @@ export default function Component() {
       setError('');
       try {
         // Fetch experts data
-        const response = await axios.get('http://52.207.130.7/wp-json/wp/v2/users?professions=Avocat,Notaire', {
+        const response = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/users?professions=Avocat,Notaire', {
           headers: {
             Authorization: `Bearer ${authToken}`
           },
@@ -38,7 +38,7 @@ export default function Component() {
         const avatarRequests = response.data.map(async (expert) => {
           if (expert.acf.avatar) {
             try {
-              const avatarResponse = await axios.get(`http://52.207.130.7/wp-json/wp/v2/media/${expert.acf.avatar}`, {
+              const avatarResponse = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/media/${expert.acf.avatar}`, {
                 headers: {
                   Authorization: `Bearer ${authToken}`
                 },
