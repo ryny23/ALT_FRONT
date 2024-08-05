@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const FormExperience = () => {
+const AddButton = () => {
   const [experiences, setExperiences] = useState([
     { titre: '', description: '' },
   ]);
@@ -73,4 +73,4 @@ const FormExperience = () => {
   );
 };
 
-export default FormExperience;
+export default AddButton;
