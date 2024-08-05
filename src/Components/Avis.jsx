@@ -17,10 +17,11 @@ const Avis = () => {
         setError('Authentication token is missing. Please log in.');
         return;
       }
-
+      const nom = localStorage.getItem('conUserName');
       const response = await axios.post('https://alt.back.qilinsa.com/wp-json/wp/v2/avis', {
         title: titreTemoignage ,
         content: temoignage,
+        acf: { nom: nom },
         status: 'pending',
         
       }, {
@@ -28,7 +29,7 @@ const Avis = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-
+      console.log(nom);
       console.log('Avis submitted', response.data);
       alert('Avis envoyé');
     } catch (error) {

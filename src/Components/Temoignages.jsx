@@ -36,13 +36,13 @@ const Temoignages = () => {
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{testimonial.title.rendered}</h3>
                 <p className="my-4">{parse(testimonial.content.rendered)}</p>
               </blockquote>
-              {/* <figcaption className="flex justify-center items-center space-x-3">
-                <img className="w-9 h-9 rounded-full" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/karen-nelson.png" alt="profile picture" />
+              <figcaption className="flex justify-center items-center space-x-3">
+                {/* <img className="w-9 h-9 rounded-full" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/karen-nelson.png" alt="profile picture" /> */}
                 <div className="space-y-0.5 font-medium dark:text-white text-left">
-                  <div>{testimonial.title.rendered}</div>
+                  <div>Auteur : {testimonial.acf.nom}</div>
                   <div className="text-sm font-light text-gray-500 dark:text-gray-400">{testimonial.acf.profession}</div>
                 </div>
-              </figcaption> */}
+              </figcaption>
             </figure>
           ))}
         </div>
