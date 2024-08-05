@@ -5,7 +5,6 @@ import Nav from '../Components/Nav';
 import Footer from '../Components/Footer';
 import anime from '../assets/anime.svg';
 import parse from 'html-react-parser';
-import { FaPlusCircle } from 'react-icons/fa';
 
 const LegislationDetail = () => {
   const { id } = useParams();
@@ -74,42 +73,6 @@ const LegislationDetail = () => {
 
     fetchLegislation();
   }, [id]);
-
-  const addToDossier = async (type, itemId) => {
-    try {
-      const token = localStorage.getItem('token'); // Assume token is stored in localStorage
-      const userRes = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/users/me', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const user = userRes.data;
-      const updatedDossier = { ...user.acf.dossier };
-
-      if (!updatedDossier[type].includes(itemId)) {
-        updatedDossier[type].push(itemId);
-
-        await axios.put(
-          'https://alt.back.qilinsa.com/wp-json/wp/v2/users/me',
-          {
-            acf: {
-              dossier: updatedDossier,
-            },
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        alert('Added to dossier');
-      } else {
-        alert('Already in dossier');
-      }
-    } catch (err) {
-      console.error('Error adding to dossier', err);
-    }
-  };
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
@@ -198,13 +161,7 @@ const LegislationDetail = () => {
             <div>
               {details.map((item, index) => (
                 <div key={index} className="mb-6" id={`detail-${item.id}`}>
-                  <h3 className="text-xl font-semibold mb-2">
-                    {parse(item.title.rendered)}
-                    <FaPlusCircle
-                      onClick={() => addToDossier('articles', item.id)}
-                      className="inline ml-2 cursor-pointer text-green-500 hover:text-green-700"
-                    />
-                  </h3>
+                  <h3 className="text-xl font-semibold mb-2">{parse(item.title.rendered)}</h3>
                   <div dangerouslySetInnerHTML={{ __html: item.content.rendered }} />
                 </div>
               ))}
@@ -214,13 +171,7 @@ const LegislationDetail = () => {
                 <h2 className="text-2xl font-bold mb-4">Décisions</h2>
                 {decisions.map((decision, index) => (
                   <div key={index} className="mb-6" id={`decision-${decision.id}`}>
-                    <h3 className="text-xl font-semibold mb-2">
-                      {parse(decision.title.rendered)}
-                      <FaPlusCircle
-                        onClick={() => addToDossier('decision', decision.id)}
-                        className="inline ml-2 cursor-pointer text-green-500 hover:text-green-700"
-                      />
-                    </h3>
+                    <h3 className="text-xl font-semibold mb-2">{parse(decision.title.rendered)}</h3>
                     <div dangerouslySetInnerHTML={{ __html: decision.content.rendered }} />
                   </div>
                 ))}

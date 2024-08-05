@@ -1,41 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import logo from '../assets/logo.png';
 
 const Avis = () => {
   const [titreTemoignage, setTitreTemoignage] = useState('');
   const [temoignage, setTemoignage] = useState('');
-  
-
-  
+  const [error, setError] = useState('');
 
   const handleSaveChanges = async (event) => {
     event.preventDefault();
 
     try {
-        const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token');
 
-        const response = await axios.patch('https://alt.back.qilinsa.com/wp-json/wp/v2/users/me', {
-            acf: {
-                titreavis:titreTemoignage,
-                
-                desavis: temoignage,
-                
-              
-            },
-        }, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+      if (!token) {
+        setError('Authentication token is missing. Please log in.');
+        return;
+      }
 
-        console.log('Avis à jour', response.data);
-        alert('avis envoyé');
+      const response = await axios.post('https://alt.back.qilinsa.com/wp-json/wp/v2/avis', {
+        title: titreTemoignage ,
+        content: temoignage,
+        status: 'pending',
+        
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log('Avis submitted', response.data);
+      alert('Avis envoyé');
     } catch (error) {
-        console.error('Error updating user information:', error);
-        setError('Erreur lors de la mise à jour des informations. Veuillez réessayer.');
+      console.error('Error submitting avis:', error);
+      if (error.response && error.response.status === 403) {
+        setError('Permission denied. Please check your user role and permissions.');
+      } else {
+        setError('Erreur lors de la soumission de l\'avis. Veuillez réessayer.');
+      }
     }
-};
+  };
 
   return (
     <div>
@@ -83,6 +87,7 @@ const Avis = () => {
                   Soumettre
                 </button>
               </form>
+              {error && <p className="text-red-600">{error}</p>}
             </div>
           </div>
         </div>
