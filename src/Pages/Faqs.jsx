@@ -6,11 +6,9 @@ import Footer from '../Components/Footer'
 const Faqs = () => {
   return (
     <div>
-      <div><Nav/></div>
       <div>
         <Faq/>
       </div>
-      <Footer/>
     </div>
   )
 }

@@ -13,7 +13,6 @@ const Webinaires = () => {
   return (
     <div>
       <div>
-        <Nav />
       </div>
       <main className="py-[24px] px-4 sm:p-6 md:py-10 md:px-8 my-[80px]">
   <div className="max-w-4xl mx-auto grid grid-cols-1 lg:max-w-5xl lg:gap-x-20 lg:grid-cols-2">
@@ -152,7 +151,6 @@ const Webinaires = () => {
   </div>
 </section>
 <CTA3/>
-<Footer/>
     </div>
   )
 }

@@ -11,7 +11,6 @@ const Fonctionnalites = () => {
   return (
     <div>
       <div>
-        <Nav/>
       </div>
       <Hero2 />
 
@@ -23,7 +22,6 @@ const Fonctionnalites = () => {
       <Features1/>
       <Temoignages1/>
       <CTA/>
-      <Footer/>
 
     </div>
   )

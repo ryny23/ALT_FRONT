@@ -68,7 +68,6 @@ const Blog = () => {
   return (
     <div>
       <div>
-        <Nav />
       </div>
       <div className="bg-white py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -82,7 +81,7 @@ const Blog = () => {
             {posts.slice(0, visiblePosts).map((post) => (
               <div key={post.id} className="flex max-w-xl flex-col items-start justify-between">
                 <div className="group relative">
-                  <Link to={`/post/${post.id}`}>
+                  <Link to={`post/${post.id}`}>
                     <div className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
                       <h1 className='text-4xl font-bold'>
                         <span className="absolute inset-0 cursor-pointer" />
@@ -116,7 +115,6 @@ const Blog = () => {
       <div className='mb-20 '>
       <CtaInscription/>
       </div>
-      <Footer/>
     </div>
   );
 };

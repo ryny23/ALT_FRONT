@@ -10,7 +10,6 @@ const PourquoiNous = () => {
   return (
     <div>
           <div>
-            <Nav/>
           </div>
 
           <div>
@@ -125,7 +124,6 @@ const PourquoiNous = () => {
           <div>
             <CTA1/>
           </div>
-          <Footer/>
     </div>
   )
 }

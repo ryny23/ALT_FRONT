@@ -10,7 +10,6 @@ const MiniSeries = () => {
     <div>
       <div>
       <div>
-        <Nav />
       </div>
      
       <section class="bg-white dark:bg-gray-900">
@@ -138,7 +137,6 @@ const MiniSeries = () => {
 </section>
 <CTA3/>
     </div>
-    <Footer/>
     </div>
   )
 }

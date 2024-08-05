@@ -8,14 +8,10 @@ const Tarifs = () => {
   return (
     <div>
       <div>
-        <Nav/>
-      </div>
-      <div>
         <h1 className='text-3xl font-semibold text-center mt-8'>Tarifs</h1>
         <PricingCard/>
       <CTA3/>
       </div>
-      <Footer/>
     </div>
   )
 }

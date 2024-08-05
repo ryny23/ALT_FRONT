@@ -12,7 +12,7 @@ export default function Widget() {
     };
 
     return (
-        <div className="p-6 bg-background">
+        <div className=" bg-background">
             <h1 className="text-2xl font-bold mb-4">Alertes</h1>
             <div className="flex space-x-2 mb-4">
                 {['Tout', 'Mots-clés', 'Entreprises', 'Avocats', 'Dossiers', 'Lois et règlements', 'Lois en discussion', 'Commentaires'].map((label) => (

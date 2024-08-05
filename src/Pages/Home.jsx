@@ -37,7 +37,6 @@ function Home() {
   return (
     <div className='scroll-smooth'>
       <div>
-        <Nav />
       </div>
 
       <div>
@@ -63,7 +62,6 @@ function Home() {
         <CtaInscription />
         <Newsletter />
       </div>
-      <Footer />
     </div>
   );
 }

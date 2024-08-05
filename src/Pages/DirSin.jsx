@@ -31,7 +31,6 @@ const DirSin = () => {
     <div>
 
       <div>
-        <Nav/>
       </div>
       
       
@@ -154,7 +153,6 @@ const DirSin = () => {
       </div>
 
     <CTA3/>
-    <Footer/>
     </div>
   )
 }

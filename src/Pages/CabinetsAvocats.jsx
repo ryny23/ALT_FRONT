@@ -30,7 +30,6 @@ const CabinetsAvocats = () => {
     <div className=' scroll-smooth'>
 
       <div>
-        <Nav/>
       </div>
       
       
@@ -202,7 +201,7 @@ const CabinetsAvocats = () => {
                 >
                   Commencez
                 </a>
-                <a href="/pourquoi-nous" className="text-sm font-semibold leading-6 text-white">
+                <a href="pourquoi-nous" className="text-sm font-semibold leading-6 text-white">
                   Lire plus <span aria-hidden="true">→</span>
                 </a>
               </div>
@@ -217,7 +216,6 @@ const CabinetsAvocats = () => {
         </div>
       </div>
     </div>
-    <Footer/>
     </div>
     )
   }

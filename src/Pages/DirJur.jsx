@@ -31,7 +31,6 @@ const DirJur = () => {
     <div>
 
       <div>
-        <Nav/>
       </div>
       
       
@@ -203,7 +202,7 @@ const DirJur = () => {
                 >
                   Commencez
                 </a>
-                <a href="/pourquoi-nous" className="text-sm font-semibold leading-6 text-white">
+                <a href="pourquoi-nous" className="text-sm font-semibold leading-6 text-white">
                   Lire plus <span aria-hidden="true">→</span>
                 </a>
               </div>
@@ -218,7 +217,6 @@ const DirJur = () => {
         </div>
       </div>
     </div>
-    <Footer/>
     </div>
     )
   }

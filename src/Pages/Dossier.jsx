@@ -71,7 +71,7 @@ const Dossier = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center">
         <img src={anime} alt="Loading animation" />
       </div>
     );
@@ -80,8 +80,7 @@ const Dossier = () => {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
-      <Nav />
+    <div className="flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
       <div className="flex-1 container mx-auto px-4 py-10">
         <h1 className="text-3xl font-bold mb-6">Mon Dossier</h1>
         <div className="space-y-6">
@@ -111,7 +110,6 @@ const Dossier = () => {
           </section>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };
