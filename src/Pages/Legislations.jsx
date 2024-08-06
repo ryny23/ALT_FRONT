@@ -4,33 +4,33 @@ import { Link } from 'react-router-dom';
 import parse from 'html-react-parser'; // Assurez-vous que vous avez installé cette dépendance
 import anime from '../assets/anime.svg'; // Assurez-vous que vous avez un spinner de chargement approprié
 
-const Decisions = () => {
-  const [decisions, setDecisions] = useState([]);
+const Legislations = () => {
+  const [Legislations, setLegislations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchDecisions = async () => {
+    const fetchLegislations = async () => {
       setLoading(true);
       setError('');
       try {
-        const res = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/decisions');
-        setDecisions(res.data);
+        const res = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/Legislations');
+        setLegislations(res.data);
       } catch (err) {
-        setError('Failed to fetch decisions');
+        setError('Failed to fetch Legislations');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchDecisions();
+    fetchLegislations();
   }, []);
 
   return (
     <div>
       <div className="mr-6 lg:w-[1200px] mt-8 py-2 flex-shrink-0 flex flex-col bg-white dark:bg-gray-600 rounded-lg">
         <h3 className="flex items-center pt-1 pb-1 px-8 text-lg font-semibold capitalize dark:text-gray-300">
-          <span>Decisions</span>
+          <span>Legislations</span>
           <button className="ml-2">
             <svg className="h-5 w-5 fill-current" viewBox="0 0 256 512">
               <path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path>
@@ -46,15 +46,15 @@ const Decisions = () => {
             <div>{error}</div>
           ) : (
             <ul className="pt-1 pb-2 px-3 overflow-y-auto">
-              {decisions.map((decision) => (
-                <li key={decision.id} className="mt-2">
-                  <Link to={`decision/${decision.id}`} className="pt-5 flex flex-col justify-between dark:bg-gray-200 rounded-lg">
+              {Legislations.map((legislation) => (
+                <li key={legislation.id} className="mt-2">
+                  <Link to={`legislation/${legislation.id}`} className="pt-5 flex flex-col justify-between dark:bg-gray-200 rounded-lg">
                     <div className="flex items-center justify-between font-semibold capitalize dark:text-gray-700">
-                      <span>{decision.title?.rendered || 'No Title'}</span>
+                      <span>{legislation.title?.rendered || 'No Title'}</span>
                     </div>
                   </Link>
                   <div className="text-sm font-medium leading-snug text-gray-600 my-3">
-                    {parse(decision.excerpt?.rendered || 'No Excerpt')}
+                    {parse(legislation.excerpt?.rendered || 'No Excerpt')}
                   </div>
                 </li>
               ))}
@@ -66,4 +66,4 @@ const Decisions = () => {
   );
 }
 
-export default Decisions;
+export default Legislations;

@@ -11,7 +11,7 @@ import ProtectedRoute from './Components/ProtectedRoute'
 import Test2 from './Pages/Test2'
 import SinglePost from './Components/SinglePost';
 // import SingleArticle from './Components/SingleArticle';
-import LegislationDetail from './Components/LegislationDetail';
+import LegislationDetail from './Pages/Legislations';
 import SingleDecision from './Components/SingleDecision'
 import SearchExperts from './Pages/SearchExperts'
 import ExpertsProfile from './Components/RenderProfilExpert'
@@ -27,7 +27,7 @@ import DashboardLayout from './layout/DashboardLayout';
 import AuthLayout from './layout/AuthLayout'; 
 import RenderAlertes from './Components/RenderAlertes'
 import Avis from './Components/Avis';
-import RenderCommentaire from "./Components/RenderCommentaire";
+import RenderCommentaire from "./Pages/Commentaires";
 import RenderDecision from "./Components/RenderDecision";
 import RenderLegislation from "./Components/RenderLegislation";
 import AidePage from './Pages/AidePage'

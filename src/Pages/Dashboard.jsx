@@ -5,6 +5,7 @@ import parse from 'html-react-parser';
 import { NavLink, Link } from 'react-router-dom';
 import { Spinner } from "@material-tailwind/react";
 import { FaUserAlt } from 'react-icons/fa';
+import RenderAcceuil from '../Components/RenderAcceuil';
 
 
 
@@ -84,7 +85,7 @@ useEffect(() => {
     
   
     const userName = localStorage.getItem('conUserName');
-    const [selectedMenu, setSelectedMenu] = useState('acceuil');
+    const [selectedMenu, setSelectedMenu] = useState('');
     const [posts, setPosts] = useState([]);
     const [commentaires, setcommentaires] = useState([]);
     const [legislations, setLegislations] = useState([]);
@@ -148,7 +149,7 @@ useEffect(() => {
         case 'acceuil':
           return (
             <div className='bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text '>
-                <RenderAcceuil/>
+                {/* <RenderAcceuil/> */}
             </div>
           );
         case 'decisions':
@@ -619,7 +620,7 @@ useEffect(() => {
                 <span className="ms-3">Acceuil</span>
               </Link>
             </li>
-            <li onClick={() => setSelectedMenu('decisions')}>
+            <li>
               <NavLink
                 to="decisions"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group"
@@ -638,7 +639,7 @@ useEffect(() => {
               </NavLink>
             </li>
 
-            <li onClick={() => setSelectedMenu('legislations')}>
+            <li>
               <NavLink
                 to="legislations"
                 data
@@ -771,6 +772,7 @@ useEffect(() => {
             </div>
           )}
         </div>
+        {/* {renderContent()} */}
       </div>
     </div>
   );
