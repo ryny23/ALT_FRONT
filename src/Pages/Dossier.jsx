@@ -3,6 +3,7 @@ import axios from 'axios';
 import Nav from '../Components/Nav';
 import Footer from '../Components/Footer';
 import anime from '../assets/anime.svg';
+import parse from 'html-react-parser';
 
 const Dossier = () => {
   const [dossier, setDossier] = useState(null);
@@ -81,7 +82,7 @@ const Dossier = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
-      <Nav />
+      
       <div className="flex-1 container mx-auto px-4 py-10">
         <h1 className="text-3xl font-bold mb-6">Mon Dossier</h1>
         <div className="space-y-6">
@@ -89,7 +90,7 @@ const Dossier = () => {
             <h2 className="text-2xl font-bold mb-4">Articles</h2>
             <ul className="space-y-2">
               {articles.map((article, index) => (
-                <li key={index}>{article.title.rendered}<br/>{article.excerpt.rendered}</li>
+                <li key={index}>{article.title.rendered}<br/>{parse(article.excerpt.rendered)}</li>
               ))}
             </ul>
           </section>
@@ -97,7 +98,7 @@ const Dossier = () => {
             <h2 className="text-2xl font-bold mb-4">Décisions</h2>
             <ul className="space-y-2">
               {decisions.map((decision, index) => (
-                <li key={index}>{decision.title.rendered}</li>
+                <li key={index}>{decision.title.rendered}<br/>{parse(decision.excerpt.rendered)}</li>
               ))}
             </ul>
           </section>
@@ -105,13 +106,13 @@ const Dossier = () => {
             <h2 className="text-2xl font-bold mb-4">Législations</h2>
             <ul className="space-y-2">
               {legislations.map((legislation, index) => (
-                <li key={index}>{legislation.title.rendered}</li>
+                <li key={index}>{legislation.title.rendered}<br/>{parse(legislation.excerpt.rendered)}</li>
               ))}
             </ul>
           </section>
         </div>
       </div>
-      <Footer />
+      
     </div>
   );
 };
