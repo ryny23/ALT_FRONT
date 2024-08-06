@@ -94,8 +94,8 @@ const router = createBrowserRouter(
                 <Route path="legislations" element={<LegislationDetail />} />
                 <Route path="forgotpassword" element={<ForgotPassword />} />
                 <Route path="resetpassword" element={<ResetPassword />} />
-                <Route path="parametres" element={<ProfileSettings />} />
-                <Route path="profil" element={<SettingsPage />} />
+                <Route path="profil" element={<ProfileSettings />} />
+                <Route path="parametres" element={<SettingsPage />} />
                 <Route path="parametres-expert" element={<ExpertsProfileSettings />} />
                 <Route path="aide" element={<AidePage />} />
                 <Route path="decisions" element={<Decisions />} />
