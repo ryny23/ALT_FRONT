@@ -1,16 +1,17 @@
-import React from 'react'
-import Dashboard from '../Pages/Dashboard'
 import { Outlet } from 'react-router-dom'
+import Dashboard from '../Pages/Dashboard'
+
 
 const DashboardLayout = () => {
   return (
-    <div>
+    <div className='min-h-screen bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text'>
         <Dashboard />
-    <div className='xl:ml-72 xl:mt[75px] p-4'>
-        <main>
-            <Outlet />
-        </main>
-    </div>
+        
+        <div className='xl:ml-64 xl:mt-[72px]'>
+            <main>
+                <Outlet />
+            </main>
+        </div>
     </div>
   )
 }

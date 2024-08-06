@@ -64,9 +64,9 @@ const RenderAcceuil = () => {
 
   return (
     <div>
-      <section className='bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text '>
+      <section className='pl-8 bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text '>
         <div className='bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text '>
-        <h2 className="text-2xl font-semibold mb-4">Bienvenue <span className='font-bold text-3xl text-green-700'>{userName}<span>,</span></span></h2>
+        <h2 className="text-2xl font-semibold mb-4">Bienvenue <span className='ml-1 font-bold text-4xl text-green-500 dark:text-green-300'>{userName}<span className='ml-1'>!</span></span></h2>
         </div>
         <div className="bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text  p-4 rounded mb-6">
           <h3 className="text-lg font-semibold mb-2">Une question sur une entreprise ?</h3>

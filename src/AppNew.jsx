@@ -8,10 +8,10 @@ import {
     } from './Pages'
 import ForgotPassword from './Components/ForgotPassword'
 import ProtectedRoute from './Components/ProtectedRoute'
-import Test from './Pages/Test'
+import Test2 from './Pages/Test2'
 import SinglePost from './Components/SinglePost';
 // import SingleArticle from './Components/SingleArticle';
-// import LegislationDetail from './Components/LegislationDetail';
+import LegislationDetail from './Components/LegislationDetail';
 import SingleDecision from './Components/SingleDecision'
 import SearchExperts from './Pages/SearchExperts'
 import ExpertsProfile from './Components/RenderProfilExpert'
@@ -30,6 +30,12 @@ import Avis from './Components/Avis';
 import RenderCommentaire from "./Components/RenderCommentaire";
 import RenderDecision from "./Components/RenderDecision";
 import RenderLegislation from "./Components/RenderLegislation";
+import AidePage from './Pages/AidePage'
+import ProfileSettings from './Components/ProfileSettings'
+import ExpertsProfileSettings from './Components/ExpertsProfileSettings'
+import SettingsPage from './Components/SettingsPage'
+import ExpertsLayout from "./layout/ExpertsLayout";
+import Decisions from "./Pages/Decisions";
 
 
 const router = createBrowserRouter(
@@ -54,6 +60,7 @@ const router = createBrowserRouter(
                 <Route path="avis-clients" element={<AvisClients/>}/>
                 <Route path="tarifs" element={<Tarifs/>}/>
                 <Route path="conditions-generales" element={<TermsConditions/>}/>
+                <Route path="test" element={<Test2/>}/>
             </Route>
 
 
@@ -65,9 +72,8 @@ const router = createBrowserRouter(
             </Route>
 
 
-            <Route path="dashboard" element={<DashboardLayout/>}>
-                <Route index element={<ProtectedRoute><Dashboard/></ProtectedRoute>}/>
-                <Route path="acceuil" element={<RenderAcceuil/>}/>
+            <Route path="dashboard" element={<ProtectedRoute><DashboardLayout/></ProtectedRoute>}>
+                <Route index element={<RenderAcceuil/>}/>
                 <Route path="avis" element={<Avis/>}/>
                 <Route path="dossier" element={<Dossier />}/>
                 <Route path="alertes" element={<RenderAlertes />}/>
@@ -75,14 +81,24 @@ const router = createBrowserRouter(
                 {/* <Route path="decisions" element={<RenderDecision />} /> */}
                 <Route path="article/:id" element={<ArticleDetail />} />
                 <Route path="commentaire/:id" element={<SingleCommentaire />} />
-                <Route path="legislations" element={<RenderLegislation />} />
+                {/* <Route path="legislations" element={<RenderLegislation />} /> */}
                 <Route path="legislation/:id" element={<LegislationDetail1 />} />
-                <Route path="decision/${decision.id" element={<SingleDecision />} />
-                <Route path="user/:userId" element={<ExpertsProfile />} />
-                <Route path="search" element={<SearchExperts />} />
-                <Route path="legislationdetail" element={<LegislationDetail1 />} />
+                {/* <Route path="decision/${decision.id" element={<SingleDecision />} /> */}
+
+                <Route path="search" element={<SearchExperts />}>
+                    {/* <Route index element={<ExpertsProfile />} /> */}
+                    <Route path="user/:userId" element={<ExpertsProfile />} />
+                </Route>
+
+
+                <Route path="legislations" element={<LegislationDetail />} />
                 <Route path="forgotpassword" element={<ForgotPassword />} />
                 <Route path="resetpassword" element={<ResetPassword />} />
+                <Route path="parametres" element={<ProfileSettings />} />
+                <Route path="profil" element={<SettingsPage />} />
+                <Route path="parametres-expert" element={<ExpertsProfileSettings />} />
+                <Route path="aide" element={<AidePage />} />
+                <Route path="decisions" element={<Decisions />} />
             </Route>
 
         </Route>

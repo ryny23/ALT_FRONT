@@ -2,8 +2,8 @@ import React from 'react';
 
 const AidePage = () => {
   return (
-    <div className="container mx-auto p-6">
-      <div className="bg-white shadow-md rounded-lg p-8 mb-6">
+    <div className="bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text container mx-auto p-6">
+      <div className=" shadow-md rounded-lg p-8 mb-6">
         <h1 className="text-3xl font-bold mb-4">Aide de la Plateforme ALT</h1>
         <p>
           Bienvenue sur la page d'aide de African Legal Tech (ALT), votre plateforme dédiée à la centralisation des textes juridiques majeurs au Cameroun. Cette page est conçue pour vous guider dans l'utilisation de nos services et pour vous aider à tirer le meilleur parti de notre plateforme.

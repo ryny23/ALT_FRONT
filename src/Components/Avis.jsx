@@ -44,7 +44,7 @@ const Avis = () => {
 
   return (
     <div>
-      <section className="py-16">
+      <section className="bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text py-16">
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <img src={logo} width={200} height={100} alt="Image" className="w-full h-auto rounded-lg" />
@@ -57,13 +57,13 @@ const Avis = () => {
               </p>
               <form onSubmit={handleSaveChanges} className="space-y-4">
                 <div>
-                  <label htmlFor="titre-temoignage" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="titre-temoignage" className="block text-sm font-medium bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
                     Titre du témoignage
                   </label>
                   <input
                     type="text"
                     id="titre-temoignage"
-                    className="flex h-10 w-full rounded-md border px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-white border-gray-500 focus:border-gray-500 focus:ring-gray-500"
+                    className="bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text flex h-10 w-full rounded-md border px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border-gray-500 focus:border-gray-500 focus:ring-gray-500"
                     placeholder="Titre du témoignage"
                     value={titreTemoignage}
                     onChange={(e) => setTitreTemoignage(e.target.value)}
@@ -71,12 +71,12 @@ const Avis = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="temoignage" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="temoignage" className="block text-sm font-medium bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
                     Témoignage
                   </label>
                   <textarea
                     id="temoignage"
-                    className="flex min-h-[80px] w-full rounded-md text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-white border-gray-500 focus:border-gray-500 focus:ring-gray-500"
+                    className="bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text flex min-h-[80px] w-full rounded-md text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border-gray-500 focus:border-gray-500 focus:ring-gray-500"
                     rows="4"
                     placeholder="Votre témoignage"
                     value={temoignage}

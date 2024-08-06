@@ -54,19 +54,19 @@ const Astuces = ({ page }) => {
   };
 
   return (
-    <div className="flex items-center justify-start my-4">
-      <div className="max-w-2xl w-full p-4 bg-white shadow-md rounded-md">
+    <div className="py-16 px-10 flex items-center justify-start my-4">
+      <div className="max-w-2xl w-full p-4 bg-light-background dark:bg-slate-700 text-light-text dark:text-dark-text shadow-md rounded-md">
         <h1 className="text-2xl font-bold mb-4 capitalize">{page}</h1>
-        <div className="p-4 bg-blue-50 rounded-md">
+        <div className="p-4 dark:bg-slate-800 rounded-md">
           <div className="flex items-center mb-2">
-            <img alt="info-icon" src="https://openui.fly.dev/openui/24x24.svg?text=ℹ️" className="mr-2" />
+            <img alt="info-icon" src="https://openui.fly.dev/openui/24x24.svg?text=ℹ️" className="mr-2 dark:bg-slate-300 rounded-full" />
             <span className="font-semibold">Astuces</span>
           </div>
           {tips[page]?.map((tip, index) => (
-            <p key={index} className="text-sm text-zinc-700 mb-2">
+            <p key={index} className="text-sm mb-2">
               {tip.text} (<a href={tip.link.href} className="text-blue-600 underline">{tip.link.text}</a>)
             </p>
-          )) || <p className="text-sm text-zinc-700">Aucune astuce disponible pour cette section.</p>}
+          )) || <p className="text-sm">Aucune astuce disponible pour cette section.</p>}
         </div>
       </div>
     </div>

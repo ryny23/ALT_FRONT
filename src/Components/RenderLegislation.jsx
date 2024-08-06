@@ -5,7 +5,7 @@ import Astuces from './Astuces'
 
 const RenderLegislation = () => {
   return (
-    <div>
+    <div className='min-h-screen'>
       <Astuces page="legislations" />
     </div>
   )

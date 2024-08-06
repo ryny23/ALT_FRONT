@@ -2,12 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import anime from '../assets/anime.svg';
-import logo from './../assets/logo.png';
-import { Button } from 'flowbite-react';
-import { Option } from '@material-tailwind/react';
-import Select from 'react-select';
-import Nav from './Nav';
-import Footer from './Footer';
 
 const ExpertsProfile = () => {
   const { userId } = useParams();
@@ -138,7 +132,6 @@ const ExpertsProfile = () => {
 
   return (
     <div>
-      <Nav/>
       <div className="flex flex-col min-h-screen bg-white">
     <div className="flex-1 flex justify-center items-center">
     <div className="bg-white shadow-lg rounded-lg w-full max-w-4xl p-8">
@@ -262,7 +255,6 @@ const ExpertsProfile = () => {
     </div>
   </div>
 </div>
-        <Footer/>
     </div>
   )
 };

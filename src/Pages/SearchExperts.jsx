@@ -3,7 +3,7 @@ import { Dropdown, Badge, Button, TextInput, Spinner } from 'flowbite-react';
 import { IconSearch, IconLocation } from '@tabler/icons-react';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import CitationImage from '../assets/Citation.png';
 import anime from '../assets/anime.svg'
 
@@ -111,20 +111,20 @@ export default function Component() {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="w-full min-h-screen bg-gray-100">
-      <header className="text-slate-950 bg-white py-4 px-6 rounded-t-lg">
-        <h1 className="text-2xl font-bold">Trouvez un expert</h1>
-        <div className="mt-4 space-y-4">
-          <div className="relative">
-            <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+    <div className="w-full min-h-screen bg-gray-100 dark:bg-dark-background text-light-text dark:text-dark-text">
+      <header className="bg-gray-100 dark:bg-dark-background text-light-text dark:text-dark-text py-4 px-6 rounded-t-lg">
+        <h1 className="text-3xl font-bold">Trouvez un expert</h1>
+        <div className="mt-6 space-y-4">
+          <div className="relative px-48">
+            <IconSearch className="absolute left-[165px] z-30 top-1/2 -translate-y-1/2 text-gray-400" />
             <TextInput
               type="search"
               placeholder="Rechercher un expert..."
-              className="pl-10 w-full"
+              className="w-full"
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <div className="flex items-center justify-between gap-4">
+          <div className="pl-6 flex items-center bg-gray-100 dark:bg-dark-background text-light-text dark:text-dark-text justify-between gap-4">
             <Dropdown label="Filtrer par domaine" color="slate">
               <Dropdown.Item onClick={() => setSelectedDomain('')}>
                 Tous
@@ -176,7 +176,7 @@ export default function Component() {
           </div>
         </div>
       </header>
-      <div className="grid gap-6 p-6 md:p-10 lg:p-12">
+      <div className="bg-gray-100 dark:bg-dark-background text-light-text dark:text-dark-text grid gap-6 p-6 md:p-10 lg:p-12">
         {loading && (
           <div className="flex justify-center items-center">
             <Spinner size="xl" />
@@ -190,7 +190,7 @@ export default function Component() {
         {!loading && !error && displayedExperts.map((expert) => (
           <div
             key={expert.id}
-            className="pl-4 bg-white w-full md:w-[800px] rounded-2xl shadow-lg overflow-hidden mx-auto flex flex-col md:flex-row items-center justify-center"
+            className="pl-4 w-full bg-white dark:bg-slate-700 md:w-[800px] rounded-2xl shadow-lg overflow-hidden mx-auto flex flex-col md:flex-row items-center justify-center"
           >
             <img
               src={avatarUrls[expert.id] || 'default-avatar-url'} // Assuming avatar is a URL, adjust if necessary
@@ -200,7 +200,7 @@ export default function Component() {
             <div className="p-4 flex-1">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-xl font-semibold text-blue-500">{expert.acf.nom} {expert.acf.prenom}</h3>
+                  <h3 className="text-xl font-semibold dark:text-blue-200 text-blue-500">{expert.acf.nom} {expert.acf.prenom}</h3>
                   <p className="text-gray-500">{expert.acf.profession}</p>
                 </div>
                 <Badge className="bg-green-100 text-green-400">Vérifié</Badge>
@@ -210,17 +210,19 @@ export default function Component() {
                 {expert.acf.adresse}
               </p>
               <div className="flex flex-wrap gap-2 mt-2">
-                <p className="text-sm text-black flex flex-col font-semibold">Domaine d'expertise</p>
+                <p className="text-sm  flex flex-col font-semibold">Domaine d'expertise</p>
                 {expert.acf.specialite.map((spec, index) => (
                   <Badge key={index} className="bg-slate-200 text-slate-800">{spec}</Badge>
                 ))}
               </div>
               <div className="flex flex-wrap gap-2 mt-2">
-                <p className="text-sm text-black flex flex-col font-semibold">Expérience</p>
+                <p className="text-sm  flex flex-col font-semibold">Expérience</p>
                 <Badge className="bg-slate-200 text-slate-800">{expert.experience} ans</Badge>
               </div>
               <div className="mt-4">
-                <Button color="slate" onClick={() => navigate(`/user/${expert.id}`)}>Voir le profil</Button>
+                <NavLink to="user/:userId">
+                  <button className="bg-gray-400">Voir le profil</button>
+                </NavLink>
               </div>
             </div>
           </div>

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Nav from '../Components/Nav';
-import Footer from '../Components/Footer';
 import anime from '../assets/anime.svg';
 
 const Dossier = () => {
