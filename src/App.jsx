@@ -61,7 +61,7 @@ const App = () => {
           <Route path="/commentaire/:id" element={<SingleCommentaire />} />
           <Route path="/legislation/:id" element={<LegislationDetail1 />} />
           <Route path="/decision/:id" element={<SingleDecision />} />
-          <Route path="/user/:userId" element={<ExpertsProfile />} />
+          <Route path="/expert/:userId" element={<ExpertsProfile />} />
           <Route path="/search" element={<SearchExperts />} />
           <Route path="/legislationdetail" element={<LegislationDetail1 />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />

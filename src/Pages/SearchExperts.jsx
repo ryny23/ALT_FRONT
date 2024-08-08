@@ -220,7 +220,7 @@ export default function Component() {
                 <Badge className="bg-slate-200 text-slate-800">{expert.experience} ans</Badge>
               </div>
               <div className="mt-4">
-                <Button color="slate" onClick={() => navigate(`/user/${expert.id}`)}>Voir le profil</Button>
+                <Button color="slate" onClick={() => navigate(`/expert/${expert.id}`)}>Voir le profil</Button>
               </div>
             </div>
           </div>

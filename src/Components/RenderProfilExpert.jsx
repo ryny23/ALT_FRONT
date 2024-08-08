@@ -26,15 +26,12 @@ const ExpertsProfile = () => {
   const [nom, setNom] = useState('');
   const [prenom, setPrenom] = useState('');
   const [phone, setPhone] = useState('');
-  const [passwordCurrent, setPasswordCurrent] = useState('');
-  const [passwordNew, setPasswordNew] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [birthdate, setBirthdate] = useState('');
   const [gender, setGender] = useState('');
   const [address, setAddress] = useState('');
   const [company, setCompany] = useState('');
   const [titre, setTitre] = useState('');
+  const [profession, setProfession] = useState('');
   const [specialite, setSpecialite] = useState('');
   const [titreexp1, setTitreExp1] = useState('');
   const [titreexp2, setTitreExp2] = useState('');
@@ -79,6 +76,7 @@ const ExpertsProfile = () => {
         setUsername(userData.name);
         setPhone(userData.acf.tel);
         setGender(userData.acf.sexe);
+        setProfession(userData.acf.profession);
         setAddress(userData.acf.adresse);
         setCompany(userData.acf.entreprise);
         setTitre(userData.acf.titre);
@@ -127,7 +125,13 @@ const ExpertsProfile = () => {
     fetchUserData();
   }, [userId]);
 
+
+  const domainsList = selectedDomains.length > 0 
+    ? selectedDomains.join(', ') 
+    : 'No domains selected';
+
   const { loading } = state;
+
 
   if (loading) {
     return (
@@ -191,6 +195,14 @@ const ExpertsProfile = () => {
             </div> */}
           </div>
         </div>
+      </div>
+      <div className="mt-8">
+      <h3 className="text-sm font-medium mb-1">Bibliographie</h3>
+      <p className="text-[#666666]">
+      Avec une carrière débutée le {datebarreau}, Maître {nom} est un {profession} spécialisé(e) en {domainsList}. 
+      Il/elle offre un service professionnel et personnalisé pour résoudre les défis juridiques de ses clients.
+    </p>
+        
       </div>
       <div className="mt-8">
         <h3 className="text-sm font-medium mb-1">Spécialités</h3>
