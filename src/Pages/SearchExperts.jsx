@@ -220,7 +220,7 @@ export default function Component() {
                 <Badge className="bg-slate-200 text-slate-800">{expert.experience} ans</Badge>
               </div>
               <div className="mt-4">
-                <NavLink to="user/:userId">
+                <NavLink to={(`${expert.id}`)}>
                   <button className="bg-gray-400">Voir le profil</button>
                 </NavLink>
               </div>

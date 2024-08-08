@@ -93,7 +93,6 @@ const LegislationDetail = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
-      <Nav />
       <div className="flex-1 container mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-4 gap-8">
         <aside className="lg:col-span-1 bg-gray-50 p-4 rounded shadow lg:sticky lg:top-0 lg:max-h-screen lg:overflow-y-auto">
           <h2 className="text-xl font-bold mb-4">Sommaire</h2>
@@ -120,7 +119,7 @@ const LegislationDetail = () => {
                   {decisions.map((decision, index) => (
                     <li key={index}>
                       <a
-                        onClick={() => scrollToSection(`decision-${decision.id}`)}
+                        onClick={() => scrollToSection(`${decision.id}`)}
                         className="cursor-pointer text-blue-500 hover:underline"
                       >
                         {parse(decision.title.rendered)}
@@ -191,7 +190,6 @@ const LegislationDetail = () => {
           </div>
         </main>
       </div>
-      <Footer />
     </div>
   );
 };

@@ -64,7 +64,6 @@ const SingleCommentaire = () => {
 
   return (
     <div>
-      <Nav />
       <div className="max-w-screen-xl mx-auto">
         <main className="mt-10 flex">
           <div className="w-2/3 pr-4 text-gray-700 leading-relaxed">
@@ -75,7 +74,6 @@ const SingleCommentaire = () => {
           </div>
         </main>
       </div>
-      <Footer />
     </div>
   );
 };

@@ -28,8 +28,8 @@ const Legislations = () => {
 
   return (
     <div>
-      <div className="mr-6 lg:w-[1200px] mt-8 py-2 flex-shrink-0 flex flex-col bg-white dark:bg-gray-600 rounded-lg">
-        <h3 className="flex items-center pt-1 pb-1 px-8 text-lg font-semibold capitalize dark:text-gray-300">
+      <div className="mr-6 lg:w-[1200px] mt-8 py-2 flex-shrink-0 flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-textrounded-lg">
+        <h3 className="flex items-center pt-1 pb-1 px-8 text-lg font-semibold capitalize dark:text-white">
           <span>Legislations</span>
           <button className="ml-2">
             <svg className="h-5 w-5 fill-current" viewBox="0 0 256 512">
@@ -48,12 +48,12 @@ const Legislations = () => {
             <ul className="pt-1 pb-2 px-3 overflow-y-auto">
               {Legislations.map((legislation) => (
                 <li key={legislation.id} className="mt-2">
-                  <Link to={`legislation/${legislation.id}`} className="pt-5 flex flex-col justify-between dark:bg-gray-200 rounded-lg">
-                    <div className="flex items-center justify-between font-semibold capitalize dark:text-gray-700">
+                  <Link to={`${legislation.id}`} className="pt-5 flex flex-col justify-between dark:bg-gray-800rounded-lg">
+                    <div className="flex items-center justify-between font-semibold capitalize dark:text-white">
                       <span>{legislation.title?.rendered || 'No Title'}</span>
                     </div>
                   </Link>
-                  <div className="text-sm font-medium leading-snug text-gray-600 my-3">
+                  <div className="text-sm font-medium leading-snug dark:text-white dark:bg-slate-700 rounded-lg p-3 my-3">
                     {parse(legislation.excerpt?.rendered || 'No Excerpt')}
                   </div>
                 </li>

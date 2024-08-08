@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import parse from 'html-react-parser'; // Assurez-vous que vous avez installé cette dépendance
 import anime from '../assets/anime.svg'; // Assurez-vous que vous avez un spinner de chargement approprié
 
@@ -28,7 +28,7 @@ const Commentaires = () => {
 
   return (
     <div>
-      <div className="mr-6 lg:w-[1200px] mt-8 py-2 flex-shrink-0 flex flex-col bg-white dark:bg-gray-600 rounded-lg">
+      <div className="mr-6 lg:w-[1200px] mt-8 py-2 flex-shrink-0 flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text rounded-lg">
         <h3 className="flex items-center pt-1 pb-1 px-8 text-lg font-semibold capitalize dark:text-gray-300">
           <span>Commentaires</span>
           <button className="ml-2">
@@ -48,12 +48,12 @@ const Commentaires = () => {
             <ul className="pt-1 pb-2 px-3 overflow-y-auto">
               {Commentaires.map((commentaires) => (
                 <li key={commentaires.id} className="mt-2">
-                  <Link to={`commentaires/${commentaires.id}`} className="pt-5 flex flex-col justify-between dark:bg-gray-200 rounded-lg">
-                    <div className="flex items-center justify-between font-semibold capitalize dark:text-gray-700">
+                  <NavLink to={`${commentaires.id}`} className="pt-5 flex flex-col justify-between dark:bg-slate-800 rounded-lg">
+                    <div className="flex items-center justify-between font-semibold capitalize dark:text-white">
                       <span>{commentaires.title?.rendered || 'No Title'}</span>
                     </div>
-                  </Link>
-                  <div className="text-sm font-medium leading-snug text-gray-600 my-3">
+                  </NavLink>
+                  <div className="text-sm font-medium leading-snug dark:bg-slate-700 p-3 rounded-lg dark:text-gray-300 my-3">
                     {parse(commentaires.excerpt?.rendered || 'No Excerpt')}
                   </div>
                 </li>

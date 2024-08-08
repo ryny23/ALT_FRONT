@@ -28,7 +28,7 @@ const Decisions = () => {
 
   return (
     <div>
-      <div className="mr-6 lg:w-[1200px] mt-8 py-2 flex-shrink-0 flex flex-col bg-white dark:bg-gray-600 rounded-lg">
+      <div className="mr-6 lg:w-[1200px] mt-8 py-2 flex-shrink-0 flex flex-col text-gray-700 border  dark:text-white bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg">
         <h3 className="flex items-center pt-1 pb-1 px-8 text-lg font-semibold capitalize dark:text-gray-300">
           <span>Decisions</span>
           <button className="ml-2">
@@ -48,12 +48,12 @@ const Decisions = () => {
             <ul className="pt-1 pb-2 px-3 overflow-y-auto">
               {decisions.map((decision) => (
                 <li key={decision.id} className="mt-2">
-                  <Link to={`decision/${decision.id}`} className="pt-5 flex flex-col justify-between dark:bg-gray-200 rounded-lg">
-                    <div className="flex items-center justify-between font-semibold capitalize dark:text-gray-700">
+                  <Link to={`${decision.id}`} className="pt-5 flex flex-col justify-between dark:bg-gray-800 rounded-lg">
+                    <div className="flex items-center justify-between font-semibold capitalize dark:text-white">
                       <span>{decision.title?.rendered || 'No Title'}</span>
                     </div>
                   </Link>
-                  <div className="text-sm font-medium leading-snug text-gray-600 my-3">
+                  <div className="text-sm font-medium leading-snug dark:text-white p-3 rounded-lg dark:bg-slate-700 my-3">
                     {parse(decision.excerpt?.rendered || 'No Excerpt')}
                   </div>
                 </li>
