@@ -38,6 +38,7 @@ import ExpertsLayout from "./layout/ExpertsLayout";
 import Decisions from "./Pages/Decisions";
 import RenderProfilExpert from "./Components/RenderProfilExpert";
 import Detailslayout from "./layout/Detailslayout";
+import Commentaires from "./Pages/Commentaires";
 
 
 const router = createBrowserRouter(
@@ -97,7 +98,7 @@ const router = createBrowserRouter(
                 </Route>
 
                 <Route path="commentaires" element={<Detailslayout/>}>
-                    <Route index element={<RenderCommentaire />} />
+                    <Route index element={<Commentaires />} />
                         <Route path=":id" element={<SingleCommentaire />} />
                     </Route>
 
