@@ -1,5 +1,6 @@
 import { RouterProvider, createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom"
 import AuthForm from "./Pages/AuthForm";
+import Dashboard from "./Pages/Dashboard";
 import {
     AvisClients, CabinetsAvocats, DirEntre, Blog,
      DirSin, DirJur, Fonctionnalites, MiniSeries, Webinaires,
@@ -8,10 +9,12 @@ import {
 import ForgotPassword from './Components/ForgotPassword'
 import ProtectedRoute from './Components/ProtectedRoute'
 import Test2 from './Pages/Test2'
+import SinglePost from './Components/SinglePost';
 // import SingleArticle from './Components/SingleArticle';
 import LegislationDetail from './Pages/Legislations';
 import SingleDecision from './Components/SingleDecision'
 import SearchExperts from './Pages/SearchExperts'
+import ExpertsProfile from './Components/RenderProfilExpert'
 import SingleCommentaire from './Components/SingleCommentaire'
 import TermsConditions from './Pages/TermsConditions'
 import LegislationDetail1 from './Pages/LegislationDetail'
@@ -24,10 +27,15 @@ import DashboardLayout from './layout/DashboardLayout';
 import AuthLayout from './layout/AuthLayout'; 
 import RenderAlertes from './Components/RenderAlertes'
 import Avis from './Components/Avis';
+import RenderCommentaire from "./Pages/Commentaires";
+import RenderDecision from "./Components/RenderDecision";
+import RenderLegislation from "./Components/RenderLegislation";
 import AidePage from './Pages/AidePage'
 import ProfileSettings from './Components/ProfileSettings'
 import ExpertsProfileSettings from './Components/ExpertsProfileSettings'
 import SettingsPage from './Components/SettingsPage'
+import ExpertsLayout from "./layout/ExpertsLayout";
+import Decisions from "./Pages/Decisions";
 import RenderProfilExpert from "./Components/RenderProfilExpert";
 import Detailslayout from "./layout/Detailslayout";
 import Commentaires from "./Pages/Commentaires";
@@ -67,6 +75,7 @@ const router = createBrowserRouter(
                 <Route path="authform?tab=register" element={<AuthForm/>}/>
                 <Route path="authform?tab=login" element={<AuthForm/>}/>
                 <Route path="forgot-password" element={<ForgotPassword/>}/>
+
             </Route>
 
 
@@ -109,6 +118,7 @@ const router = createBrowserRouter(
 
                 
                 <Route path="article/:{result.id}" element={<ArticleDetail />} />
+
             </Route>
         </Route>
     )

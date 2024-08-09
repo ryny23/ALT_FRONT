@@ -48,7 +48,7 @@ const Commentaires = () => {
             <ul className="pt-1 pb-2 px-3 overflow-y-auto">
               {Commentaires.map((commentaire) => (
             <li key={commentaire.id} className="mt-2">
-              <NavLink to={`/commentaire/${commentaire.id}`} className="pt-5 flex flex-col justify-between  dark:bg-gray-200 rounded-lg">
+              <NavLink to={`${commentaire.id}`} className="pt-5 flex flex-col justify-between  dark:bg-gray-200 rounded-lg">
                 <div className="flex items-center justify-between font-semibold capitalize dark:text-gray-700">
                   <span>{commentaire.title?.rendered || 'No Title'}</span>
                 </div>
