@@ -126,52 +126,52 @@ export default function Component() {
           </div>
           <div className="pl-6 flex items-center bg-gray-100 dark:bg-dark-background text-light-text dark:text-dark-text justify-between gap-4">
             <Dropdown label="Filtrer par domaine" color="slate">
-              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('')}>
+              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('')}>
                 Tous
               </Dropdown.Item>
-              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('Droit des affaires') }>
+              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('Droit des affaires') }>
                 Droit des affaires
               </Dropdown.Item>
-              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('Droit de la famille' )}>
+              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('Droit de la famille' )}>
                 Droit de la famille
               </Dropdown.Item>
-              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('Droit immobilier')}> 
+              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('Droit immobilier')}> 
                 Droit immobilier
               </Dropdown.Item>
-              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('Droit du travail')}> 
+              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('Droit du travail')}> 
                 Droit du travail
               </Dropdown.Item>
-              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('Droit pénal')}>
+              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('Droit pénal')}>
                  Droit pénal
               </Dropdown.Item>
-              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('Droit de la propriét é intellectuelle')}>
+              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('Droit de la propriét é intellectuelle')}>
                 Droit de la propriété intellectuelle
               </Dropdown.Item>
             </Dropdown>
             <Dropdown label="Filtrer par lieu" color="slate">
-              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedLocation('')}>
+              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedLocation('')}>
                 Tous
               </Dropdown.Item>
-              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedLocation('Yaounde')}>
+              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedLocation('Yaounde')}>
                 Yaounde
               </Dropdown.Item>
-              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedLocation('Douala')}>
+              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedLocation('Douala')}>
                 Douala
               </Dropdown.Item>
-              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedLocation('Maroua')}>
+              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedLocation('Maroua')}>
                 Maroua
               </Dropdown.Item>
-              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedLocation('Limbe')}>
+              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedLocation('Limbe')}>
                 Limbe
               </Dropdown.Item>
-              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedLocation('Buea')}>
+              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedLocation('Buea')}>
                 Buea
               </Dropdown.Item>
             </Dropdown>
             <Dropdown label="Filtrer par type d'expert" color="slate">
-              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedType('')}>Tous</Dropdown.Item>
-              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedType('Avocat')}>Avocat</Dropdown.Item>
-              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedType('Notaire')}>Notaire</Dropdown.Item>
+              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedType('')}>Tous</Dropdown.Item>
+              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedType('Avocat')}>Avocat</Dropdown.Item>
+              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedType('Notaire')}>Notaire</Dropdown.Item>
             </Dropdown>
           </div>
         </div>
