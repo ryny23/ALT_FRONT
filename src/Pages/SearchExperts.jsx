@@ -7,7 +7,6 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import CitationImage from '../assets/Citation.png';
 import anime from '../assets/anime.svg'
 
-const authToken = localStorage.getItem('token'); // Replace with your actual token
 
 export default function Component() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -20,6 +19,7 @@ export default function Component() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const expertsPerPage = 4;
+  const authToken = localStorage.getItem('token'); // Replace with your actual token
 
   useEffect(() => {
     const fetchExperts = async () => {
