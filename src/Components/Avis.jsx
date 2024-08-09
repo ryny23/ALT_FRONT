@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import logo from '../assets/logo.png';
+import test from '../assets/test.png';
 
 const Avis = () => {
   const [titreTemoignage, setTitreTemoignage] = useState('');
@@ -44,10 +44,10 @@ const Avis = () => {
 
   return (
     <div>
-      <section className="bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text py-16">
-        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+      <section className="bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text  px-10 py-16">
+        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-16">
           <div>
-            <img src={logo} width={200} height={100} alt="Image" className="w-full h-auto rounded-lg" />
+            <img src={test} alt="avis client" className="w-screen h-auto rounded-3xl" />
           </div>
           <div className="flex flex-col justify-center">
             <div className="space-y-4">
@@ -55,8 +55,8 @@ const Avis = () => {
               <p className="text-muted-foreground">
                 Nous aimerions entendre vos retours sur nos services. Laissez un avis pour nous aider à nous améliorer.
               </p>
-              <form onSubmit={handleSaveChanges} className="space-y-4">
-                <div>
+              <form onSubmit={handleSaveChanges} className="justify-stretch items-center space-y-4">
+                <div className='space-y-2'>
                   <label htmlFor="titre-temoignage" className="block text-sm font-medium bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
                     Titre du témoignage
                   </label>
@@ -70,7 +70,7 @@ const Avis = () => {
                     required
                   />
                 </div>
-                <div>
+                <div className='space-y-2'>
                   <label htmlFor="temoignage" className="block text-sm font-medium bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
                     Témoignage
                   </label>

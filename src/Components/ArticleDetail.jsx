@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Nav from './Nav';
 import Footer from './Footer';
+import { bouncy } from 'ldrs'
 import anime from '../assets/anime.svg'
 
 const LegislationDetail = () => {
@@ -103,7 +104,12 @@ const LegislationDetail = () => {
       // </div>
       <div className="flex justify-center items-center h-screen">
       
-        <img src={anime}></img>
+
+      <l-bouncy
+        size="45"
+        speed="1.75" 
+        color="black" 
+      ></l-bouncy>
       
     </div>
     );

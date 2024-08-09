@@ -64,13 +64,13 @@ const SingleCommentaire = () => {
 
   return (
     <div>
-      <div className="max-w-screen-xl mx-auto">
+      <div className="pl-8 py-8 max-w-screen-xl mx-auto bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
         <main className="mt-10 flex">
-          <div className="w-2/3 pr-4 text-gray-700 leading-relaxed">
-            <h1 className="text-2xl text-gray-800 font-semibold mb-4 mt-4">{commentaire.title.rendered}</h1>
+          <div className="w-2/3 pr-4  leading-relaxed">
+            <h1 className="text-2xl font-semibold mb-4 mt-4">{commentaire.title.rendered}</h1>
             
             
-            <div className="pb-6">{parse(commentaire.content.rendered)}</div>
+            <div className="dark:text-gray-300 pb-6">{parse(commentaire.content.rendered)}</div>
           </div>
         </main>
       </div>

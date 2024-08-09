@@ -116,7 +116,7 @@ const router = createBrowserRouter(
             
 
                 
-                <Route path="article/:id" element={<ArticleDetail />} />
+                <Route path="article/:{result.id}" element={<ArticleDetail />} />
 
             </Route>
         </Route>

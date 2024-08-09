@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import logo from '../assets/logo.png';
-import parse from 'html-react-parser';
 import { NavLink, Link } from 'react-router-dom';
-import { Spinner } from "@material-tailwind/react";
-import { FaUserAlt } from 'react-icons/fa';
-import RenderAcceuil from '../Components/RenderAcceuil';
 
 
 
@@ -115,7 +111,7 @@ useEffect(() => {
 
   return (
     <div className="">
-      <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+      <nav className="fixed top-0 z-50 w-full  border-b border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700">
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-8 justify-between">
