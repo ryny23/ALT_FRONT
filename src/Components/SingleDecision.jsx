@@ -31,17 +31,15 @@ const SingleDecision = () => {
 
   return (
     <div>
-      <Nav />
-      <div className="max-w-screen-xl pb-10 mx-auto">
+      <div className="max-w-screen-xl pl-8 py-10 mx-auto bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
         <main className="mt-10">
-          <div className="px-4 lg:px-0 mt-12 text-gray-700 max-w-screen-md mx-auto text-lg leading-relaxed">
+          <div className="px-4 lg:px-0 mt-12  max-w-screen-md mx-auto text-lg leading-relaxed">
             <h1 className="text-2xl font-bold">{decision.title.rendered}</h1>
             <div dangerouslySetInnerHTML={{ __html: decision.content.rendered }} className="mt-4" />
             
           </div>
         </main>
       </div>
-      <Footer />
     </div>
   );
 };

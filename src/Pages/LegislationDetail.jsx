@@ -93,16 +93,15 @@ const LegislationDetail = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
-      <Nav />
       <div className="flex-1 container mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <aside className="lg:col-span-1 bg-gray-50 p-4 rounded shadow lg:sticky lg:top-0 lg:max-h-screen lg:overflow-y-auto">
+        <aside className="lg:col-span-1 dark:bg-gray-700 p-4 rounded-xl shadow lg:sticky lg:top-0 lg:max-h-screen lg:overflow-y-auto">
           <h2 className="text-xl font-bold mb-4">Sommaire</h2>
           <ul className="space-y-2">
             {details.map((item, index) => (
               <li key={index}>
                 <a
                   onClick={() => scrollToSection(`detail-${item.id}`)}
-                  className="cursor-pointer text-blue-500 hover:underline"
+                  className="cursor-pointer text-blue-500 text-sm text-start dark:text-blue-200 hover:underline"
                 >
                   {parse(item.title.rendered)}
                 </a>
@@ -116,12 +115,12 @@ const LegislationDetail = () => {
                 >
                   Décisions
                 </a>
-                <ul className="ml-4 space-y-2">
+                <ul className=" space-y-2">
                   {decisions.map((decision, index) => (
                     <li key={index}>
                       <a
-                        onClick={() => scrollToSection(`decision-${decision.id}`)}
-                        className="cursor-pointer text-blue-500 hover:underline"
+                        onClick={() => scrollToSection(`${decision.id}`)}
+                        className="cursor-pointer text-blue-500 text-sm text-start dark:text-blue-200 hover:underline"
                       >
                         {parse(decision.title.rendered)}
                       </a>
@@ -138,12 +137,12 @@ const LegislationDetail = () => {
                 >
                   Commentaires
                 </a>
-                <ul className="ml-4 space-y-2">
+                <ul className="space-y-2">
                   {comments.map((comment, index) => (
                     <li key={index}>
                       <a
                         onClick={() => scrollToSection(`comment-${comment.id}`)}
-                        className="cursor-pointer text-blue-500 hover:underline"
+                        className="cursor-pointer text-blue-500 text-sm text-start dark:text-blue-100 hover:underline"
                       >
                         {parse(comment.title.rendered)}
                       </a>
@@ -154,8 +153,8 @@ const LegislationDetail = () => {
             )}
           </ul>
         </aside>
-        <main className="lg:col-span-3 bg-white p-6 rounded shadow">
-          <div className="text-gray-700 text-lg leading-relaxed">
+        <main className="lg:col-span-3 dark:bg-gray-800 p-6 rounded shadow">
+          <div className="text-lg leading-relaxed">
             <h1 className="text-3xl font-bold mb-6">{legislation.title.rendered}</h1>
             <div dangerouslySetInnerHTML={{ __html: legislation.content.rendered }} className="mb-6" />
             <div>
@@ -191,7 +190,6 @@ const LegislationDetail = () => {
           </div>
         </main>
       </div>
-      <Footer />
     </div>
   );
 };

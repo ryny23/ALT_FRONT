@@ -1,8 +1,7 @@
-import React from 'react'
 import { Outlet } from 'react-router-dom'
 import Details from '../Pages/Details'
 
-const ExpertsLayout = () => {
+const Detailslayout = () => {
   return (
     <div className=''>
         <Details />
@@ -16,4 +15,4 @@ const ExpertsLayout = () => {
   )
 }
 
-export default ExpertsLayout
+export default Detailslayout

@@ -126,52 +126,52 @@ export default function Component() {
           </div>
           <div className="pl-6 flex items-center bg-gray-100 dark:bg-dark-background text-light-text dark:text-dark-text justify-between gap-4">
             <Dropdown label="Filtrer par domaine" color="slate">
-              <Dropdown.Item onClick={() => setSelectedDomain('')}>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('')}>
                 Tous
               </Dropdown.Item>
-              <Dropdown.Item onClick={() => setSelectedDomain('Droit des affaires')}>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('Droit des affaires') }>
                 Droit des affaires
               </Dropdown.Item>
-              <Dropdown.Item onClick={() => setSelectedDomain('Droit de la famille')}>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('Droit de la famille' )}>
                 Droit de la famille
               </Dropdown.Item>
-              <Dropdown.Item onClick={() => setSelectedDomain('Droit immobilier')}>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('Droit immobilier')}> 
                 Droit immobilier
               </Dropdown.Item>
-              <Dropdown.Item onClick={() => setSelectedDomain('Droit du travail')}>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('Droit du travail')}> 
                 Droit du travail
               </Dropdown.Item>
-              <Dropdown.Item onClick={() => setSelectedDomain('Droit pénal')}>
-                Droit pénal
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('Droit pénal')}>
+                 Droit pénal
               </Dropdown.Item>
-              <Dropdown.Item onClick={() => setSelectedDomain('Droit de la propriété intellectuelle')}>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('Droit de la propriét é intellectuelle')}>
                 Droit de la propriété intellectuelle
               </Dropdown.Item>
             </Dropdown>
             <Dropdown label="Filtrer par lieu" color="slate">
-              <Dropdown.Item onClick={() => setSelectedLocation('')}>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedLocation('')}>
                 Tous
               </Dropdown.Item>
-              <Dropdown.Item onClick={() => setSelectedLocation('Yaounde')}>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedLocation('Yaounde')}>
                 Yaounde
               </Dropdown.Item>
-              <Dropdown.Item onClick={() => setSelectedLocation('Douala')}>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedLocation('Douala')}>
                 Douala
               </Dropdown.Item>
-              <Dropdown.Item onClick={() => setSelectedLocation('Maroua')}>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedLocation('Maroua')}>
                 Maroua
               </Dropdown.Item>
-              <Dropdown.Item onClick={() => setSelectedLocation('Limbe')}>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedLocation('Limbe')}>
                 Limbe
               </Dropdown.Item>
-              <Dropdown.Item onClick={() => setSelectedLocation('Buea')}>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedLocation('Buea')}>
                 Buea
               </Dropdown.Item>
             </Dropdown>
             <Dropdown label="Filtrer par type d'expert" color="slate">
-              <Dropdown.Item onClick={() => setSelectedType('')}>Tous</Dropdown.Item>
-              <Dropdown.Item onClick={() => setSelectedType('Avocat')}>Avocat</Dropdown.Item>
-              <Dropdown.Item onClick={() => setSelectedType('Notaire')}>Notaire</Dropdown.Item>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedType('')}>Tous</Dropdown.Item>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedType('Avocat')}>Avocat</Dropdown.Item>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedType('Notaire')}>Notaire</Dropdown.Item>
             </Dropdown>
           </div>
         </div>
@@ -195,13 +195,13 @@ export default function Component() {
             <img
               src={avatarUrls[expert.id] || 'default-avatar-url'} // Assuming avatar is a URL, adjust if necessary
               alt={`Expert ${expert.acf.nom}`}
-              className="w-full rounded-full md:w-40 md:h-40 object-cover"
+              className="w-full rounded-full md:w-40 md:h-40 object-cover border border-gray-200"
             />
             <div className="p-4 flex-1">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-xl font-semibold dark:text-blue-200 text-blue-500">{expert.acf.nom} {expert.acf.prenom}</h3>
-                  <p className="text-gray-500">{expert.acf.profession}</p>
+                  <p className="dark:text-green-400">{expert.acf.profession}</p>
                 </div>
                 <Badge className="bg-green-100 text-green-400">Vérifié</Badge>
               </div>
@@ -220,8 +220,8 @@ export default function Component() {
                 <Badge className="bg-slate-200 text-slate-800">{expert.experience} ans</Badge>
               </div>
               <div className="mt-4">
-                <NavLink to="user/:userId">
-                  <button className="bg-gray-400">Voir le profil</button>
+                <NavLink to={(`${expert.id}`)}>
+                  <button className="bg-gray-200 dark:bg-gray-800 py-2 px-4 rounded-lg">Voir le profil</button>
                 </NavLink>
               </div>
             </div>

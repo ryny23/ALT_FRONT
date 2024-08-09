@@ -7,10 +7,10 @@ const Faqs = () => {
   return (
     <div>
       <div>
-        <Faq/>
+        <Faq />
       </div>
     </div>
-  )
+  );
 }
 
 export default Faqs

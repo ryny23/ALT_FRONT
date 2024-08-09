@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import logo from '../assets/logo.png';
-import parse from 'html-react-parser';
 import { NavLink, Link } from 'react-router-dom';
-import { Spinner } from "@material-tailwind/react";
-import { FaUserAlt } from 'react-icons/fa';
-import RenderAcceuil from '../Components/RenderAcceuil';
-
-
-
 
 
 
@@ -87,17 +80,13 @@ useEffect(() => {
     const userName = localStorage.getItem('conUserName');
     const [selectedMenu, setSelectedMenu] = useState('');
     const [posts, setPosts] = useState([]);
-    const [commentaires, setcommentaires] = useState([]);
-    const [legislations, setLegislations] = useState([]);
-    const [decisions, setDecisions] = useState([]);
+    
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-  
-
-
     
 
+<<<<<<< HEAD
     
   
     useEffect(() => {
@@ -357,6 +346,8 @@ useEffect(() => {
 //     };
 
 
+=======
+>>>>>>> 2a5f9662d485ca22c02369e7921c80c1f3db499e
 
     const [isProfileMenuOpen, setProfileMenuOpen] = useState(false);
 
@@ -382,7 +373,7 @@ useEffect(() => {
 
   return (
     <div className="">
-      <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+      <nav className="fixed top-0 z-50 w-full  border-b border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700">
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-8 justify-between">
@@ -407,7 +398,7 @@ useEffect(() => {
                   ></path>
                 </svg>
               </button>
-              <Link to="/" className="flex ms-2 md:me-24">
+              <NavLink to="/" className="flex ms-2 md:me-24">
                 <img
                   src={logo}
                   className="h-10 w-10 me-3 rounded-full"
@@ -416,7 +407,7 @@ useEffect(() => {
                 <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
                   African Legal Tech
                 </span>
-              </Link>
+              </NavLink>
             </div>
             <div>
               <div>
@@ -503,7 +494,7 @@ useEffect(() => {
               <div className="flex items-center ms-3">
                 <div className="flex items-center justify-center gap-10">
                   <div className="flex flex-col items-center text-center">
-                    <Link to="alertes" className="flex flex-col items-center">
+                    <NavLink to="alertes" className="flex flex-col items-center">
                       <svg
                         className="w-7 h-7 text-gray-700 dark:text-gray-300"
                         viewBox="0 0 24 24"
@@ -517,10 +508,10 @@ useEffect(() => {
                       <span className="text-sm text-gray-700 dark:text-gray-300">
                         Alertes
                       </span>
-                    </Link>
+                    </NavLink>
                   </div>
                   <div className="flex flex-col items-center text-center">
-                    <Link to="dossier" className="flex flex-col items-center">
+                    <NavLink to="dossier" className="flex flex-col items-center">
                       <svg
                         className="w-7 h-7 text-gray-700 dark:text-gray-300"
                         viewBox="0 0 24 24"
@@ -534,7 +525,7 @@ useEffect(() => {
                       <span className="text-sm text-gray-700 dark:text-gray-300">
                         Dossiers
                       </span>
-                    </Link>
+                    </NavLink>
                   </div>
 
                   <div className="flex flex-col items-center relative cursor-pointer group">
@@ -551,32 +542,32 @@ useEffect(() => {
                     </button>
                     <div className="top-[43px] z-20 absolute left-[-85px] w-[150px] mt-1 bg-white dark:bg-slate-700 divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
                       <div className="py-[20px]">
-                        <Link
+                        <NavLink
                           to="profil"
                           className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-950"
                         >
                           Profil
-                        </Link>
-                        <Link
+                        </NavLink>
+                        <NavLink
                           to="parametres"
                           className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-950"
                         >
                           Parametres
-                        </Link>
+                        </NavLink>
                         {isExpert && (
-                          <Link
+                          <NavLink
                             to="parametres-expert"
                             className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-950"
                           >
                             Paramètres experts
-                          </Link>
+                          </NavLink>
                         )}
-                        <Link
+                        <NavLink
                           to="aide"
                           className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-950"
                         >
                           Aide
-                        </Link>
+                        </NavLink>
                         <a
                           onClick={() => setShowConfirm(true)}
                           className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-950"
@@ -603,7 +594,7 @@ useEffect(() => {
         <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
           <ul className="mt-2 space-y-2 font-medium">
             <li>
-              <Link
+              <NavLink
                 to=""
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group"
               >
@@ -618,7 +609,7 @@ useEffect(() => {
                   <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
                 </svg>
                 <span className="ms-3">Acceuil</span>
-              </Link>
+              </NavLink>
             </li>
             <li>
               <NavLink
@@ -662,7 +653,7 @@ useEffect(() => {
             </li>
 
             <li onClick={() => setSelectedMenu('commentaires')}>
-              <Link
+              <NavLink
                 to="commentaires"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group"
               >
@@ -679,31 +670,11 @@ useEffect(() => {
                   Commentaires
                 </span>
                 {/* <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">3</span> */}
-              </Link>
+              </NavLink>
             </li>
-
-            {/* <li onClick={() => setSelectedMenu('commentaires')}>
-                            <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group">
-                                <svg className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z" />
-                                </svg>
-                                <span className="flex-1 ms-3 whitespace-nowrap">Commentaires</span>
-                                <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">3</span>
-                            </a>
-                        </li>  */}
-
-            {/* <li className="relative">
-                            <button onClick={toggleProfileMenu} className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group">
-                                <svg className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                                    <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
-                                </svg>
-                                <Link to="search" className="flex-1 ms-3 whitespace-nowrap mx-32">Expert</Link>
-                            </button>
-                        </li> */}
-
             <li className="relative">
-              <Link
-                to="search"
+              <NavLink
+                to="expert"
                 onClick={toggleProfileMenu}
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group"
               >
@@ -717,10 +688,10 @@ useEffect(() => {
                   <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
                 </svg>
                 <span className="flex-1 ms-3 whitespace-nowrap">Experts</span>
-              </Link>
+              </NavLink>
             </li>
             <li className="relative">
-              <Link
+              <NavLink
                 to="avis"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group"
               >
@@ -736,12 +707,11 @@ useEffect(() => {
                 <span className="flex-1 ms-3 whitespace-nowrap">
                   Donner un avis
                 </span>
-              </Link>
+              </NavLink>
             </li>
           </ul>
         </div>
       </aside>
-
           {/*popup deconnexion*/}
       <div className="sm:ml-64">
         <div className="rounded-lg">
@@ -779,7 +749,7 @@ useEffect(() => {
 }
 
 
-
+// recherche
 const ResultsList = ({ results }) => {
   const [articleExcerpts, setArticleExcerpts] = useState({});
   const [legislationTitles, setLegislationTitles] = useState({});
@@ -852,22 +822,22 @@ const ResultsList = ({ results }) => {
       {results.map((result) => (
         <div key={result.id} className="p-4 bg-white rounded shadow">
           <h2 className="text-xl font-bold mb-2">
-            <Link
+            <NavLink
               to={result.subtype === 'legislation' ? `/legislation/${result.id}` : `/article/${result.id}`}
               className="text-black-500 hover:underline"
             >
               {result?.title || 'No Title'}
-            </Link>
+            </NavLink>
           </h2>
           <p className="text-gray-600 mb-2">
             Legislation:{' '}
             {legislationTitles[result.id] ? (
-              <Link
+              <NavLink
                 to={`/legislation/${legislationTitles[result.id].id}`}
                 className="text-blue-500 hover:underline"
               >
                 {legislationTitles[result.id].title}
-              </Link>
+              </NavLink>
             ) : (
               'Loading...'
             )}
@@ -887,4 +857,4 @@ const ResultsList = ({ results }) => {
 
 
 
-export default Dashboard
+export default Dashboard;

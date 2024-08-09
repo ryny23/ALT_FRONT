@@ -16,7 +16,7 @@ const RenderAcceuil = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const res = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/posts');
+        const res = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/posts?per_page=4&orderby=date&order=desc');
         const articles = res.data;
 
         const articlesWithMedia = await Promise.all(
