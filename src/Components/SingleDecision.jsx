@@ -126,7 +126,7 @@ const SingleDecision = () => {
           </ul>
         </aside>
         <main className="lg:col-span-3 dark:bg-gray-800 p-6 rounded shadow">
-          <div className="text-gray-700 text-lg leading-relaxed">
+          <div className="text-lg leading-relaxed">
             <h1 id="title" className="text-3xl font-bold mb-6">{parse(decision.title.rendered)}</h1>
             <div id="descriptif" className="mb-6">
               <h3 className="text-xl font-semibold mb-2">Descriptif</h3>
