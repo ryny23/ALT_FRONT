@@ -28,7 +28,7 @@ const Decisions = () => {
 
   return (
     <div>
-      <div className="mr-6 lg:w-[1200px] mt-8 py-2 flex-shrink-0 flex flex-col text-gray-700 border  dark:text-white bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg">
+      <div className="mr-6 lg:w-[1200px] mt-8 py-2 flex-shrink-0 flex flex-col text-gray-700 dark:text-white bg-white dark:bg-gray-800  rounded-lg">
         <h3 className="flex items-center pt-1 pb-1 px-8 text-lg font-semibold capitalize dark:text-gray-300">
           <span>Decisions</span>
           <button className="ml-2">
