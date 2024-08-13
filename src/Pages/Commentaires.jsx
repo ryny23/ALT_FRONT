@@ -29,7 +29,7 @@ const Commentaires = () => {
   return (
     <div>
       <div className="mr-6 lg:w-[1200px] mt-8 py-2 flex-shrink-0 flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text rounded-lg">
-        <h3 className="flex items-center pt-1 pb-1 px-8 text-lg font-semibold capitalize dark:text-gray-300">
+        <h3 className="flex items-center pt-1 pb-1 px-8 text-lg font-semibold capitalize dark:text-white">
           <span>Commentaires</span>
           <button className="ml-2">
             <svg className="h-5 w-5 fill-current" viewBox="0 0 256 512">
@@ -48,8 +48,8 @@ const Commentaires = () => {
             <ul className="pt-1 pb-2 px-3 overflow-y-auto">
               {Commentaires.map((commentaire) => (
             <li key={commentaire.id} className="mt-2">
-              <NavLink to={`${commentaire.id}`} className="pt-5 flex flex-col justify-between  dark:bg-gray-200 rounded-lg">
-                <div className="flex items-center justify-between font-semibold capitalize dark:text-gray-700">
+              <NavLink to={`${commentaire.id}`} className="pt-5 flex flex-col justify-between  dark:bg-gray-800 rounded-lg">
+                <div className="flex items-center justify-between font-semibold capitalize dark:text-gray-100">
                   <span>{commentaire.title?.rendered || 'No Title'}</span>
                 </div>
                 </NavLink>
@@ -58,7 +58,7 @@ const Commentaires = () => {
                   {commentaire.acf.url}
                 </a>
               )}
-                <div className="text-sm font-medium leading-snug text-gray-600 my-3">
+                <div className="text-sm font-medium leading-snug dark:text-gray-400 my-3">
                   {parse(commentaire.excerpt?.rendered) || 'No Excerpt'}
                 </div>
                 {/* <div className="flex justify-between">

@@ -188,7 +188,7 @@ const filteredExperts = expertsData.filter((expert) => {
             <IconSearch className="absolute left-[165px] z-30 top-1/2 -translate-y-1/2 text-gray-400" />
             <TextInput
               type="search"
-              placeholder="Rechercher un expert..."
+              placeholder="Rechercher un expert par nom, ville, region ou domaine..."
               className="w-full"
               onChange={(e) => setSearchTerm(e.target.value)}
               value={searchTerm}
