@@ -51,7 +51,7 @@ const ExpertsProfileSettings = () => {
   const handleCityChange = (event) => {
     const city = event.target.value;
     setSelectedCity(city);
-    setSummary(`${selectedRegion}, ${city}`);
+    setSummary(`${city}, ${selectedRegion}`);
   };
 
 
