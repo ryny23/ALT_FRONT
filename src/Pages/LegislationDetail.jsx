@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import Nav from '../Components/Nav';
+import Footer from '../Components/Footer';
 import anime from '../assets/anime.svg';
 import parse from 'html-react-parser';
 
@@ -22,8 +24,8 @@ const LegislationDetail = () => {
         setLegislation(res.data);
 
         const identifiers = res.data.acf.titre_ou_chapitre_ou_section_ou_articles;
-        const decisionIdentifiers = res.data.acf.decision;
-        const commentIdentifiers = res.data.acf.commentaire;
+        const decisionIdentifiers = res.data.acf.decision.slice(0, 3);
+        const commentIdentifiers = res.data.acf.commentaire.slice(0, 3);
 
         const fetchData = async (id) => {
           for (let endpoint of endpoints) {
