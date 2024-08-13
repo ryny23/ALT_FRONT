@@ -81,6 +81,11 @@ const LegislationDetail = () => {
     }
   };
 
+  const extractLastPart = (text) => {
+    const parts = text.split(' &#8211; ');
+    return parts[parts.length - 1];
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -103,7 +108,7 @@ const LegislationDetail = () => {
                   onClick={() => scrollToSection(`detail-${item.id}`)}
                   className="cursor-pointer text-blue-500 text-sm text-start dark:text-blue-200 hover:underline"
                 >
-                  {parse(item.title.rendered)}
+                  {extractLastPart(item.title.rendered)} {/* Affiche uniquement la dernière partie */}
                 </a>
               </li>
             ))}
@@ -122,7 +127,7 @@ const LegislationDetail = () => {
                         onClick={() => scrollToSection(`decision-${decision.id}`)}
                         className="cursor-pointer text-blue-500 text-sm text-start dark:text-blue-200 hover:underline"
                       >
-                        {parse(decision.title.rendered)}
+                        {extractLastPart(decision.title.rendered)}
                       </a>
                     </li>
                   ))}
@@ -144,7 +149,7 @@ const LegislationDetail = () => {
                         onClick={() => scrollToSection(`comment-${comment.id}`)}
                         className="cursor-pointer text-blue-500 text-sm text-start dark:text-blue-100 hover:underline"
                       >
-                        {parse(comment.title.rendered)}
+                        {extractLastPart(comment.title.rendered)}
                       </a>
                     </li>
                   ))}
@@ -160,7 +165,7 @@ const LegislationDetail = () => {
             <div>
               {details.map((item, index) => (
                 <div key={index} className="mb-6" id={`detail-${item.id}`}>
-                  <h3 className="text-xl font-semibold mb-2">{parse(item.title.rendered)}</h3>
+                  <h3 className="text-xl font-semibold mb-2">{extractLastPart(item.title.rendered)}</h3>
                   <div dangerouslySetInnerHTML={{ __html: item.content.rendered }} />
                 </div>
               ))}
@@ -170,7 +175,7 @@ const LegislationDetail = () => {
                 <h2 className="text-2xl font-bold mb-4">Décisions</h2>
                 {decisions.map((decision, index) => (
                   <div key={index} className="mb-6" id={`decision-${decision.id}`}>
-                    <h3 className="text-xl font-semibold mb-2">{parse(decision.title.rendered)}</h3>
+                    <h3 className="text-xl font-semibold mb-2">{extractLastPart(decision.title.rendered)}</h3>
                     <div dangerouslySetInnerHTML={{ __html: decision.content.rendered }} />
                   </div>
                 ))}
@@ -181,7 +186,7 @@ const LegislationDetail = () => {
                 <h2 className="text-2xl font-bold mb-4">Commentaires</h2>
                 {comments.map((comment, index) => (
                   <div key={index} className="mb-6" id={`comment-${comment.id}`}>
-                    <h3 className="text-xl font-semibold mb-2">{parse(comment.title.rendered)}</h3>
+                    <h3 className="text-xl font-semibold mb-2">{extractLastPart(comment.title.rendered)}</h3>
                     <div dangerouslySetInnerHTML={{ __html: comment.content.rendered }} />
                   </div>
                 ))}
