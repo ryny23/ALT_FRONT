@@ -119,7 +119,7 @@ const LegislationDetail = () => {
                   {decisions.map((decision, index) => (
                     <li key={index}>
                       <a
-                        onClick={() => scrollToSection(`${decision.id}`)}
+                        onClick={() => scrollToSection(`decision-${decision.id}`)}
                         className="cursor-pointer text-blue-500 text-sm text-start dark:text-blue-200 hover:underline"
                       >
                         {parse(decision.title.rendered)}
