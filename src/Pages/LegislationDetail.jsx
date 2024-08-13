@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import Nav from '../Components/Nav';
-import Footer from '../Components/Footer';
 import anime from '../assets/anime.svg';
 import parse from 'html-react-parser';
 

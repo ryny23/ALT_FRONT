@@ -10,6 +10,7 @@ import { Button } from 'flowbite-react';
 // import { Select } from '@headlessui/react';
 import { Option } from '@material-tailwind/react';
 import Select from 'react-select';
+import AddButton from './AddButton'
 
 
 
@@ -767,6 +768,7 @@ const ExpertsProfileSettings = () => {
                   onChange={(e) => setAddress(e.target.value)}
                 />
               </div>
+              <AddButton />
 
               <div className="col-span-1 md:col-span-2 flex flex-col gap-4">
                 <h3 class="text-green-500 font-medium">Dernières décisions</h3>

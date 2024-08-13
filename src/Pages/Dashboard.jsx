@@ -11,6 +11,26 @@ const Dashboard = () => {
   const [theme, setTheme] = useState('');
   const [isExpert, setIsExpert] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  const handleScroll = () => {
+    if (window.scrollY > lastScrollY && window.scrollY > 100) {
+      // Scroll down
+      setIsVisible(false);
+    } else {
+      // Scroll up
+      setIsVisible(true);
+    }
+    setLastScrollY(window.scrollY);
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [lastScrollY]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -108,10 +128,16 @@ useEffect(() => {
     };
 
 
+    
+
+
+
 
   return (
     <div className="">
-      <nav className="fixed top-0 z-50 w-full  border-b border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700">
+      <nav className={`fixed top-0 z-50 w-full  border-b border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 transition-transform duration-300 ${
+        isVisible ? 'transform translate-y-0' : 'transform -translate-y-full'
+      }`}>
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-8 justify-between">

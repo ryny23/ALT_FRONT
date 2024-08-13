@@ -7,7 +7,7 @@ const DashboardLayout = () => {
     <div className='min-h-screen bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text'>
         <Dashboard />
         
-        <div className='xl:ml-64 xl:mt-[72px]'>
+        <div className='xl:pl-64 xl:pt-[72px]'>
             <main>
                 <Outlet />
             </main>

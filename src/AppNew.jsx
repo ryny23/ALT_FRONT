@@ -75,6 +75,7 @@ const router = createBrowserRouter(
                 <Route path="authform?tab=register" element={<AuthForm/>}/>
                 <Route path="authform?tab=login" element={<AuthForm/>}/>
                 <Route path="forgot-password" element={<ForgotPassword/>}/>
+
             </Route>
 
 
