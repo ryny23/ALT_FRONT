@@ -14,7 +14,7 @@ const Commentaires = () => {
       setLoading(true);
       setError('');
       try {
-        const res = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/Commentaires');
+        const res = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/commentaires');
         setCommentaires(res.data);
       } catch (err) {
         setError('Failed to fetch Commentaires');
@@ -46,18 +46,28 @@ const Commentaires = () => {
             <div>{error}</div>
           ) : (
             <ul className="pt-1 pb-2 px-3 overflow-y-auto">
-              {Commentaires.map((commentaires) => (
-                <li key={commentaires.id} className="mt-2">
-                  <NavLink to={`${commentaires.id}`} className="pt-5 flex flex-col justify-between dark:bg-slate-800 rounded-lg">
-                    <div className="flex items-center justify-between font-semibold capitalize dark:text-white">
-                      <span>{commentaires.title?.rendered || 'No Title'}</span>
-                    </div>
-                  </NavLink>
-                  <div className="text-sm font-medium leading-snug dark:bg-slate-700 p-3 rounded-lg dark:text-gray-300 my-3">
-                    {parse(commentaires.excerpt?.rendered || 'No Excerpt')}
-                  </div>
-                </li>
-              ))}
+              {Commentaires.map((commentaire) => (
+            <li key={commentaire.id} className="mt-2">
+              <NavLink to={`${commentaire.id}`} className="pt-5 flex flex-col justify-between  dark:bg-gray-200 rounded-lg">
+                <div className="flex items-center justify-between font-semibold capitalize dark:text-gray-700">
+                  <span>{commentaire.title?.rendered || 'No Title'}</span>
+                </div>
+                </NavLink>
+                {commentaire.acf.url && (
+                <a href={commentaire.acf.url} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                  {commentaire.acf.url}
+                </a>
+              )}
+                <div className="text-sm font-medium leading-snug text-gray-600 my-3">
+                  {parse(commentaire.excerpt?.rendered) || 'No Excerpt'}
+                </div>
+                {/* <div className="flex justify-between">
+                  <p className="text-sm font-medium leading-snug text-gray-600">{commentaire.date ? new Date(commentaire.date).toLocaleDateString() : 'No Date'}</p>
+                </div> */}
+              
+              
+            </li>
+          ))}
             </ul>
           )}
         </div>
