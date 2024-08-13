@@ -53,9 +53,9 @@ const Legislations = () => {
                       <span>{legislation.title?.rendered || 'No Title'}</span>
                     </div>
                   </Link>
-                  <div className="text-sm font-medium leading-snug dark:text-white dark:bg-slate-700 rounded-lg p-3 my-3">
+                  {/* <div className="text-sm font-medium leading-snug dark:text-white dark:bg-slate-700 rounded-lg p-3 my-3">
                     {parse(legislation.excerpt?.rendered || 'No Excerpt')}
-                  </div>
+                  </div> */}
                 </li>
               ))}
             </ul>
