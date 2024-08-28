@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import parse from 'html-react-parser';
-import Nav from '../Components/Nav';
-import Footer from '../Components/Footer';
 import anime from '../assets/anime.svg';
 
 const ArticleDetail = () => {
@@ -72,7 +70,7 @@ const ArticleDetail = () => {
         return;
       }
 
-      navigate(`/legislation/${legislationDataRef.current.id}`);
+      navigate(`/dashboard/legislation/${legislationDataRef.current.id}`);
     } catch (error) {
       console.error('Failed to navigate to legislation:', error);
     }
@@ -90,7 +88,6 @@ const ArticleDetail = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
-      <Nav />
       <div className="flex-1 container mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-4 gap-8">
         <aside className="lg:col-span-1 bg-gray-50 p-4 rounded shadow lg:sticky lg:top-0 lg:max-h-screen lg:overflow-y-auto">
           <h2 className="text-xl font-bold mb-4">Sommaire</h2>
@@ -116,8 +113,8 @@ const ArticleDetail = () => {
         <main className="lg:col-span-3 bg-white p-6 rounded shadow">
           <div className="text-gray-700 text-lg leading-relaxed">
             <h1 className="text-2xl text-gray-800 font-semibold mb-4 mt-4">{article.title.rendered}</h1>
-            <p className="mb-2 cursor-pointer text-blue-500 hover:underline" onClick={navigateToLegislation}>
-              Legislation: {legislationTitle}
+            <p className="mb-2" onClick={navigateToLegislation}>
+              Législation associée:<span className="ml-2 cursor-pointer text-blue-500 hover:underline">{legislationTitle}</span>
             </p>
             <div className="pb-6">{parse(article.content.rendered)}</div>
             <div>
@@ -139,7 +136,6 @@ const ArticleDetail = () => {
           </div>
         </main>
       </div>
-      <Footer />
     </div>
   );
 };

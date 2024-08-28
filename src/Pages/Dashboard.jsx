@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import logo from '../assets/logo.png';
 import { NavLink, Link } from 'react-router-dom';
+import SearchBar from '../Components/SearchBar';
 
 
 
-const Dashboard = () => {
+const Dashboard = ({  }) => {
   const [avatarUrl, setAvatarUrl] = useState('');
   const [avatarId, setAvatarId] = useState(null);
   const [theme, setTheme] = useState('');
@@ -13,6 +14,8 @@ const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+
+
 
   const handleScroll = () => {
     if (window.scrollY > lastScrollY && window.scrollY > 100) {
@@ -75,25 +78,7 @@ useEffect(() => {
     document.documentElement.classList.remove('dark');
   }
 }, [theme]);
-  
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [results, setResults] = useState([]);
-
-  const handleSearch = async () => {
-    if (searchTerm.trim() === '') {
-      setResults([]);
-      return;
-    }
-  
-    try {
-      const response = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/search?search=${searchTerm}&subtype=article`);
-      setResults(response.data);
-    } catch (error) {
-      console.error('Failed to search:', error);
-      setResults([]);
-    }
-  };
   
     
   
@@ -128,8 +113,42 @@ useEffect(() => {
     };
 
 
-    
+    const [activePage, setActivePage] = useState('all'); // par défaut, tous les résultats
+    const [resultCounts, setResultCounts] = useState({});
 
+    const handleResultsUpdate = (counts) => {
+      setResultCounts(counts);
+    };
+    const [legislations, setLegislations] = useState([]);
+    const [decisions, setDecisions] = useState([]);
+    const [articles, setArticles] = useState([]);
+    const [commentaires, setCommentaires] = useState([]);
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const legislationsResponse = await axios.get('/api/legislations');
+          const decisionsResponse = await axios.get('/api/decisions');
+          const articlesResponse = await axios.get('/api/articles');
+          const commentairesResponse = await axios.get('/api/commentaires');
+  
+          setLegislations(legislationsResponse.data);
+          setDecisions(decisionsResponse.data);
+          setArticles(articlesResponse.data);
+          setCommentaires(commentairesResponse.data);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+  
+      fetchData();
+    }, []);
+  
+    // Assurez-vous que les données sont disponibles avant de rendre l'Outlet
+    if (!legislations.length && !decisions.length && !articles.length && !commentaires.length) {
+      return <div>Loading...</div>;
+    }
+  
 
 
 
@@ -174,84 +193,17 @@ useEffect(() => {
               </NavLink>
             </div>
             <div>
-              <div>
-                {/* Search input on desktop screen */}
-                <div className="hidden mx-10 md:block">
-                  <div className="relative">
-                    <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                      <svg
-                        className="w-5 h-5 text-gray-400"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                      >
-                        <path
-                          d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        ></path>
-                      </svg>
-                    </span>
-
-                    <input
-                      type="text"
-                      value={searchTerm}
-                      onChange={(e) => {
-                        setSearchTerm(e.target.value);
-                        handleSearch();
-                        setSelectedMenu("search");
-                      }}
-                      className="w-[600px] py-2 pl-10 pr-4 text-gray-700 bg-white border rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-blue-300"
-                      placeholder="Search"
-                    />
-                  </div>
-                </div>
-                {/* Search input on mobile screen */}
-                <div className="my-4 md:hidden">
-                  <div className="relative">
-                    <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                      <svg
-                        className="w-5 h-5 text-gray-400"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                      >
-                        <path
-                          d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        ></path>
-                      </svg>
-                    </span>
-
-                    <input
-                      type="text"
-                      onChange={(e) => {
-                        setSearchTerm(e.target.value);
-                        handleSearch();
-                        setSelectedMenu("search");
-                      }}
-                      className="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-blue-300"
-                      placeholder="Search"
-                    />
-                  </div>
-                </div>
+              <div className='SearchBar'>
+                <SearchBar
+                  context={{
+                    legislations,
+                    decisions,
+                    articles,
+                    commentaires
+                  }}
+                 />
+                 
               </div>
-
-              {/* Search input on mobile screen */}
-              {/* <div className="my-4 md:hidden">
-                            <div className="relative">
-                                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                                <svg className="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none">
-                                    <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-                                </svg>
-                                </span>
-        
-                                <input type="text" className="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-blue-300" placeholder="Search" />
-                            </div>
-                             </div> */}
             </div>
 
             <div className="flex items-center">
@@ -359,9 +311,9 @@ useEffect(() => {
           <ul className="mt-2 space-y-2 font-medium">
             <li>
               <NavLink
-                to=""
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group"
-              >
+                  to=""
+                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group"
+                >
                 <svg
                   className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                   aria-hidden="true"
@@ -377,9 +329,11 @@ useEffect(() => {
             </li>
             <li>
               <NavLink
-                to="decisions"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group"
-              >
+                  to="decision"
+                  className={({ isActive }) =>
+                    `flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group ${isActive ? 'bg-gray-200 dark:bg-gray-700' : ''}`
+                  }
+                >
                 <svg
                   className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                   aria-hidden="true"
@@ -396,10 +350,11 @@ useEffect(() => {
 
             <li>
               <NavLink
-                to="legislations"
-                data
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group"
-              >
+                  to="legislation"
+                  className={({ isActive }) =>
+                    `flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group ${isActive ? 'bg-gray-200 dark:bg-gray-700' : ''}`
+                  }
+                >
                 <svg
                   className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                   aria-hidden="true"
@@ -418,9 +373,11 @@ useEffect(() => {
 
             <li onClick={() => setSelectedMenu('commentaires')}>
               <NavLink
-                to="commentaires"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group"
-              >
+                  to="commentaire"
+                  className={({ isActive }) =>
+                    `flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group ${isActive ? 'bg-gray-200 dark:bg-gray-700' : ''}`
+                  }
+                >
                 <svg
                   className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                   aria-hidden="true"
@@ -437,10 +394,11 @@ useEffect(() => {
               </NavLink>
             </li>
             <li className="relative">
-              <NavLink
+            <NavLink
                 to="expert"
-                onClick={toggleProfileMenu}
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group"
+                className={({ isActive }) =>
+                  `flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group ${isActive ? 'bg-gray-200 dark:bg-gray-700' : ''}`
+                }
               >
                 <svg
                   className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -455,9 +413,11 @@ useEffect(() => {
               </NavLink>
             </li>
             <li className="relative">
-              <NavLink
+            <NavLink
                 to="avis"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group"
+                className={({ isActive }) =>
+                  `flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 group ${isActive ? 'bg-gray-200 dark:bg-gray-700' : ''}`
+                }
               >
                 <svg
                   className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -512,112 +472,6 @@ useEffect(() => {
   );
 }
 
-
-// recherche
-const ResultsList = ({ results }) => {
-  const [articleExcerpts, setArticleExcerpts] = useState({});
-  const [legislationTitles, setLegislationTitles] = useState({});
-  
-  useEffect(() => {
-    const fetchArticleExcerpt = async (articleId) => {
-      try {
-        const response = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/articles/${articleId}`);
-        const excerpt = response.data?.excerpt?.rendered || 'No Excerpt';
-        setArticleExcerpts((prevExcerpts) => ({
-          ...prevExcerpts,
-          [articleId]: excerpt,
-        }));
-      } catch (error) {
-        console.error(`Failed to fetch excerpt for article ${articleId}:`, error);
-        setArticleExcerpts((prevExcerpts) => ({
-          ...prevExcerpts,
-          [articleId]: 'Failed to fetch excerpt',
-        }));
-      }
-    };
-
-    const fetchLegislationTitle = async (articleId) => {
-      try {
-        const altUrl = 'https://alt.back.qilinsa.com';
-    
-        // Fetch article details
-        const articleResponse = await axios.get(`${altUrl}/wp-json/wp/v2/articles/${articleId}`);
-        const articleData = articleResponse.data;
-    
-        // Extract legislation ID from titre data
-        const legislationId = articleData.acf.Legislation_ou_titre_ou_chapitre_ou_section; // Assuming 'legislation' is a custom field storing legislation ID
-        if (!legislationId) throw new Error("Legislation ID not found");
-    
-        // Fetch legislation details using legislation ID
-        const legislationResponse = await axios.get(`${altUrl}/wp-json/wp/v2/legislations/${legislationId}`);
-        const legislationTitle = legislationResponse.data?.title?.rendered || 'No Legislation Title';
-    
-        setLegislationTitles((prevTitles) => ({
-          ...prevTitles,
-          [articleId]: {
-            title: legislationTitle,
-            id: legislationId,
-          },
-        }));
-      } catch (error) {
-        console.error(`Failed to fetch legislation for article ${articleId}:`, error);
-        setLegislationTitles((prevTitles) => ({
-          ...prevTitles,
-          [articleId]: 'Failed to fetch legislation',
-        }));
-      }
-    };
-    
-
-    results.forEach((result) => {
-      if (result.subtype === 'article' && !articleExcerpts[result.id]) {
-        fetchArticleExcerpt(result.id);
-        fetchLegislationTitle(result.id);
-      }
-    });
-  }, [results, articleExcerpts]);
-
-  if (results.length === 0) {
-    return <p className="text-gray-500">No results found</p>;
-  }
-
-  return (
-    <div className="grid grid-cols-1 gap-4">
-      {results.map((result) => (
-        <div key={result.id} className="p-4 bg-white rounded shadow">
-          <h2 className="text-xl font-bold mb-2">
-            <NavLink
-              to={result.subtype === 'legislation' ? `/legislation/${result.id}` : `/article/${result.id}`}
-              className="text-black-500 hover:underline"
-            >
-              {result?.title || 'No Title'}
-            </NavLink>
-          </h2>
-          <p className="text-gray-600 mb-2">
-            Legislation:{' '}
-            {legislationTitles[result.id] ? (
-              <NavLink
-                to={`/legislation/${legislationTitles[result.id].id}`}
-                className="text-blue-500 hover:underline"
-              >
-                {legislationTitles[result.id].title}
-              </NavLink>
-            ) : (
-              'Loading...'
-            )}
-          </p>
-          <p className="text-gray-700">
-            {result.subtype === 'article' && articleExcerpts[result.id] ? (
-              <span dangerouslySetInnerHTML={{ __html: articleExcerpts[result.id] }} />
-            ) : (
-              'No Excerpt'
-            )}
-          </p>
-        </div>
-      ))}
-    </div>
-  );
-};
 
 
 

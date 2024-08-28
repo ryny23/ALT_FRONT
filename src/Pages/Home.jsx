@@ -45,7 +45,7 @@ function Home() {
         <div>
           <div className="scroll-smooth px-2 mx-auto max-w-screen-xl text-center lg:px-4">
             <div className="mx-auto max-w-screen-sm">
-              <h2 className="mb-6 text-5xl tracking-tight font-extrabold text-green-500 dark:text-white">Qu'est-ce que ALT ?</h2>
+              <h2 className="mb-6 text-5xl tracking-tight font-extrabold text-green-500">Qu'est-ce que ALT ?</h2>
               <h3 className="pb-[15px] font-light text-gray-500 sm:text-xl dark:text-gray-400"></h3>
               <p className='pb-[45px] sm:text-xl'>
                 <TextGenerateEffect words={text} />

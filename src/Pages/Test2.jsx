@@ -12,6 +12,6 @@ const Test2 = () => {
         <ImportFiles2 />
     </div>
   )
-}
+};
 
 export default Test2
