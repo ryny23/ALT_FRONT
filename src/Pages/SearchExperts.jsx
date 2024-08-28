@@ -7,25 +7,6 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import CitationImage from '../assets/Citation.png';
 import anime from '../assets/anime.svg'
 
-// Normalization for case-insensitive and accent-insensitive comparison
-const normalizeString = (str) => {
-  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-};
-
-// Static data for locations
-const locations = {
-  'Adamaoua': ["Ngaoundéré", "Banyo", "Tignère", "Vina", "Djohong", "Gbaya", "Bouba", "Mbere", "Mayo-Baléo", "Tibati"],
-  'Centre': ["Yaoundé", "Obala", "Ayos", "Ebolowa", "Mengang", "Nkometou", "Bafia", "Ntui", "Mbalmayo", "Biyem-Assi"],
-  'Est': ["Bertoua", "Abong-Mbang", "Belabo", "Batouri", "Gari-Gombo", "Kentzé", "Lomié", "Ngoura", "Yokadouma", "Nguélémendouka"],
-  'Extrême-Nord': ["Maroua", "Kousseri", "Yagoua", "Kaélé", "Mora", "Kolofata", "Roua", "Pétévo", "Waza", "Moulvoudaye"],
-  'Littoral': ["Douala", "Bonabéri", "Deïdo", "Akwa", "Bassa", "Limbe", "Tiko", "Buea", "Idanau", "Manoka"],
-  'Nord': ["Garoua", "Maroua", "Koza", "Mokolo", "Pitoa", "Figuil", "Mayo-Oulo", "Mandara", "Ngong", "Tchaourou"],
-  'Nord-Ouest': ["Bamenda", "Fundong", "Bali", "Bafut", "Oku", "Ndop", "Wum", "Kumbo", "Batibo", "Bafut"],
-  'Sud-Ouest': ["Limbe", "Buea", "Tiko", "Muea", "Fako", "Mbonge", "Buea II", "Limbe II", "Muea", "Limbe"],
-  'Sud': ["Ebolowa", "Akom", "Obala", "Ngoulemakong", "Mven", "Akom II", "Nkomo", "Bipindi", "Kribi", "Campo"],
-  'Ouest': ["Dschang", "Foumban", "Bafoussam", "Dibang", "Dizangué", "Fongondé", "Nkong-Zem", "Sia", "Bansoa", "Dschang"]
-};
-
 
 
 export default function Component() {
@@ -38,12 +19,9 @@ export default function Component() {
   const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const authToken = localStorage.getItem('token'); // Replace with your actual token
   const expertsPerPage = 4;
 
-  
-  const [suggestions, setSuggestions] = useState([]);
-  const [showAll, setShowAll] = useState(false);
+  const authToken = localStorage.getItem('token'); // Replace with your actual token
 
   useEffect(() => {
     const fetchExperts = async () => {
@@ -95,67 +73,22 @@ export default function Component() {
     fetchExperts();
   }, [selectedType]);
 
-  // Filtrer les suggestions de lieux en fonction du terme de recherche
-  useEffect(() => {
-    if (searchTerm) {
-      const filteredSuggestions = getSuggestions(searchTerm);
-      setSuggestions(filteredSuggestions.slice(0, 10));
-    } else {
-      setSuggestions([]);
-    }
-  }, [searchTerm]);
-
-// Fonction pour obtenir les suggestions de lieux (ville, région)
-const getSuggestions = (term) => {
-  const normalizedTerm = normalizeString(term);
-  const matches = [];
-  Object.entries(locations).forEach(([region, cities]) => {
-    cities.forEach(city => {
-      const cityRegion = `${city}, ${region}`;
-      if (normalizeString(city).includes(normalizedTerm) || normalizeString(region).includes(normalizedTerm)) {
-        matches.push(cityRegion);
-      }
-    });
-  });
-  return matches;
-};
-
-// Gérer la sélection d'un lieu dans les suggestions
-const handleSelectLocation = (location) => {
-  setSearchTerm(location);
-  setSuggestions([]);
-};
-
-
-
-// Filtrage des experts en tenant compte des villes et des régions
-const filteredExperts = expertsData.filter((expert) => {
-  const searchTerms = searchTerm.toLowerCase().split(' ');
-  const matchesSearch = searchTerms.every(term =>
-    expert.acf.nom.toLowerCase().includes(term) ||
-    expert.acf.prenom.toLowerCase().includes(term) ||
-    expert.acf.adresse.toLowerCase().includes(term) ||
-    expert.acf.profession.toLowerCase().includes(term) ||
-    expert.acf.specialite.some(spec => spec.toLowerCase().includes(term))
-  );
-  const matchesLocation = searchTerms.every(term => {
-    return (
-      normalizeString(expert.acf.adresse).includes(term) ||
-      Object.entries(locations).some(([region, cities]) => {
-        return (
-          cities.some(city => normalizeString(city).includes(term) && normalizeString(expert.acf.adresse).includes(city)) ||
-          normalizeString(region).includes(term) && normalizeString(expert.acf.adresse).includes(region)
-        );
-      })
+  const filteredExperts = expertsData.filter((expert) => {
+    const searchTerms = searchTerm.toLowerCase().split(' ');
+    const matchesSearch = searchTerms.every(term =>
+      expert.acf.nom.toLowerCase().includes(term) ||
+      expert.acf.prenom.toLowerCase().includes(term) ||
+      expert.acf.adresse.toLowerCase().includes(term) ||
+      expert.acf.profession.toLowerCase().includes(term) ||
+      expert.acf.specialite.some(spec => spec.toLowerCase().includes(term))
     );
-  });
-  
-  return (
-    (selectedDomain ? expert.acf.specialite.includes(selectedDomain) : true) &&
-    (selectedLocation ? matchesLocation : true) &&
-    (selectedType ? expert.acf.profession === selectedType : true) &&
-    matchesSearch
-  );
+
+    return (
+      (selectedDomain ? expert.acf.specialite.includes(selectedDomain) : true) &&
+      (selectedLocation ? expert.acf.adresse.includes(selectedLocation) : true) &&
+      (selectedType ? expert.acf.profession === selectedType : true) &&
+      matchesSearch
+    );
   });
 
   const pageCount = Math.ceil(filteredExperts.length / expertsPerPage);
@@ -191,58 +124,56 @@ const filteredExperts = expertsData.filter((expert) => {
               placeholder="Rechercher un expert..."
               className="w-full"
               onChange={(e) => setSearchTerm(e.target.value)}
-              value={searchTerm}
             />
-            {suggestions.length > 0 && (
-              <ul className="absolute z-10 w-2/5 mt-2 dark:text-white dark:hover bg-white dark:bg-slate-800 border  border-gray-300 rounded-lg shadow-lg">
-                {suggestions.map((suggestion, index) => (
-                  <li
-                    key={index}
-                    className="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-950 cursor-pointer"
-                    onClick={() => handleSelectLocation(suggestion)}
-                  >
-                    {suggestion}
-                  </li>
-                ))}
-                {suggestions.length > 10 && !showAll && (
-                  <li
-                    className="px-4 py-3 text-blue-500 cursor-pointer dark:hover:bg-gray-950 hover:bg-gray-100"
-                    onClick={() => setShowAll(true)}
-                  >
-                    Voir plus
-                  </li>
-                )}
-              </ul>
-            )}
           </div>
           <div className="pl-6 flex items-center bg-gray-100 dark:bg-dark-background text-light-text dark:text-dark-text justify-between gap-4">
             <Dropdown label="Filtrer par domaine" color="slate">
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('')}>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('')}>
                 Tous
               </Dropdown.Item>
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('Droit des affaires') }>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('Droit des affaires') }>
                 Droit des affaires
               </Dropdown.Item>
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('Droit de la famille' )}>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('Droit de la famille' )}>
                 Droit de la famille
               </Dropdown.Item>
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('Droit immobilier')}> 
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('Droit immobilier')}> 
                 Droit immobilier
               </Dropdown.Item>
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('Droit du travail')}> 
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('Droit du travail')}> 
                 Droit du travail
               </Dropdown.Item>
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('Droit pénal')}>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('Droit pénal')}>
                  Droit pénal
               </Dropdown.Item>
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('Droit de la propriét é intellectuelle')}>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedDomain('Droit de la propriét é intellectuelle')}>
                 Droit de la propriété intellectuelle
               </Dropdown.Item>
             </Dropdown>
+            <Dropdown label="Filtrer par lieu" color="slate">
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedLocation('')}>
+                Tous
+              </Dropdown.Item>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedLocation('Yaounde')}>
+                Yaounde
+              </Dropdown.Item>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedLocation('Douala')}>
+                Douala
+              </Dropdown.Item>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedLocation('Maroua')}>
+                Maroua
+              </Dropdown.Item>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedLocation('Limbe')}>
+                Limbe
+              </Dropdown.Item>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedLocation('Buea')}>
+                Buea
+              </Dropdown.Item>
+            </Dropdown>
             <Dropdown label="Filtrer par type d'expert" color="slate">
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedType('')}>Tous</Dropdown.Item>
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedType('Avocat')}>Avocat</Dropdown.Item>
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedType('Notaire')}>Notaire</Dropdown.Item>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedType('')}>Tous</Dropdown.Item>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedType('Avocat')}>Avocat</Dropdown.Item>
+              <Dropdown.Item  className='hover:bg-gray-950' onClick={() => setSelectedType('Notaire')}>Notaire</Dropdown.Item>
             </Dropdown>
           </div>
         </div>

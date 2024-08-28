@@ -39,6 +39,14 @@ import Decisions from "./Pages/Decisions";
 import RenderProfilExpert from "./Components/RenderProfilExpert";
 import Detailslayout from "./layout/Detailslayout";
 import Commentaires from "./Pages/Commentaires";
+import ImportCommentaires from "./Pages/ImportCommentaires";
+import ImportDecisions from "./Pages/ImportDecisions";
+import CommentImport from "./Pages/CommentImport";
+import ArticleImport from "./Pages/ArticleImport";
+import DecisionImport from "./Pages/DecisionImport";
+import LegislationImport from "./Pages/LegislationImport";
+import ImportPage from "./Pages/ImportPage";
+
 
 
 const router = createBrowserRouter(
@@ -51,6 +59,13 @@ const router = createBrowserRouter(
                 <Route path="tarifs" element={<Tarifs/>}/>
                 <Route path="conditions-generales" element={<TermsConditions/>}/>
                 <Route path="test" element={<Test2/>}/>
+                <Route path="importcommentaires" element={<ImportCommentaires />} />
+                <Route path="importdecisions" element={<ImportDecisions />} />
+                <Route path="commentimport" element={<CommentImport />} />
+                <Route path="articleimport" element={<ArticleImport />} />
+                <Route path="decisionimport" element={<DecisionImport />} />
+                <Route path="importpage" element={<ImportPage />} />
+                <Route path="legislationimport" element={<LegislationImport />} />
 
                 {/* PLATEFORME */}
                 <Route path="fonctionnalites" element={<Fonctionnalites/>}/>
@@ -74,7 +89,7 @@ const router = createBrowserRouter(
             <Route path="authform" element={<AuthLayout/>}>
                 <Route path="authform?tab=register" element={<AuthForm/>}/>
                 <Route path="authform?tab=login" element={<AuthForm/>}/>
-                <Route path="forgot-password" element={<ForgotPassword/>}/>
+                <Route path="forgot-password" element={<ImportCommentaires/>}/>
 
             </Route>
 
@@ -90,6 +105,7 @@ const router = createBrowserRouter(
                 <Route path="parametres" element={<SettingsPage />} />
                 <Route path="resetpassword" element={<ResetPassword />} />
                 <Route path="parametres-expert" element={<ExpertsProfileSettings />} />
+                
                 
                 
                 {/* TEXTES JURIDIQUES */}
@@ -118,6 +134,8 @@ const router = createBrowserRouter(
 
                 
                 <Route path="article/:{result.id}" element={<ArticleDetail />} />
+                
+                
 
             </Route>
         </Route>
