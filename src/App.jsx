@@ -40,6 +40,11 @@ import Detailslayout from "./layout/Detailslayout";
 import Commentaires from "./Pages/Commentaires";
 import SearchResults from './Components/SearchResults';
 import Historique from "./Components/Historique";
+import CommentImport from "./Pages/CommentImport";
+import ArticleImport from "./Pages/ArticleImport";
+import DecisionImport from "./Pages/DecisionImport";
+import LegislationImport from "./Pages/LegislationImport";
+import ImportPage from "./Pages/ImportPage";
 
 
 const router = createBrowserRouter(
@@ -52,6 +57,11 @@ const router = createBrowserRouter(
                 <Route path="tarifs" element={<Tarifs/>}/>
                 <Route path="conditions-generales" element={<TermsConditions/>}/>
                 <Route path="test" element={<Test2/>}/>
+                <Route path="commentimport" element={<CommentImport />} />
+                <Route path="articleimport" element={<ArticleImport />} />
+                <Route path="decisionimport" element={<DecisionImport />} />
+                <Route path="importpage" element={<ImportPage />} />
+                <Route path="legislationimport" element={<LegislationImport />} />
 
                 {/* PLATEFORME */}
                 <Route path="fonctionnalites" element={<Fonctionnalites/>}/>

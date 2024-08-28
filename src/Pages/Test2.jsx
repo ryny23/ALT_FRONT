@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState } from 'react';
 import axios from 'axios';
 import Papa from 'papaparse';
@@ -66,17 +65,9 @@ const CommentaireImport = () => {
   };
   
   
-=======
-import React from 'react'
-import ProfileSettings from '../Components/ProfileSettings'
-import AddButton from '../Components/AddButton'
-import ImportFiles from '../Components/ImportFiles'
-import ImportFiles2 from '../Components/ImportFiles2'
->>>>>>> 5d78f31e7151d7dc416ef7875085c5b36f657885
 
   return (
     <div>
-<<<<<<< HEAD
       <section className="bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text px-10 py-16">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold">Importer des Commentaires via CSV</h2>
@@ -92,13 +83,6 @@ import ImportFiles2 from '../Components/ImportFiles2'
       </section>
     </div>
   );
-=======
-        <ProfileSettings/>
-        <ImportFiles />
-        <ImportFiles2 />
-    </div>
-  )
->>>>>>> 5d78f31e7151d7dc416ef7875085c5b36f657885
 };
 
 export default CommentaireImport;
