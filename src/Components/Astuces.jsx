@@ -55,7 +55,7 @@ const Astuces = ({ page }) => {
 
   return (
     <div className="py-16 px-10 flex items-center justify-start my-4">
-      <div className="max-w-2xl w-full p-4 bg-light-background dark:bg-slate-700 text-light-text dark:text-dark-text shadow-md rounded-md">
+      <div className="max-w-2xl w-full p-4 bg-emerald-50 dark:bg-slate-700 text-light-text dark:text-dark-text shadow-md rounded-md">
         <h1 className="text-2xl font-bold mb-4 capitalize">{page}</h1>
         <div className="p-4 dark:bg-slate-800 rounded-md">
           <div className="flex items-center mb-2">

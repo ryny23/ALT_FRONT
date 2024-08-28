@@ -785,29 +785,15 @@ const ExpertsProfileSettings = () => {
                   onChange={(e) => setDateBarreau(e.target.value)}
                 />
               </div>
-              {/* <div className="col-span-1 md:col-span-2 flex flex-col gap-4">
-                <label
-                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-green-500"
-                  for="bar-admission-location"
-                >
-                  Adresse
-                </label>
-                <input
-                  className="flex h-10 w-full rounded-md border px-3 py-2  text-sm ring-offset-background file:border-0  file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text border-gray-500 focus:border-gray-500 focus:ring-gray-500"
-                  id="bar-admission-location"
-                  placeholder="Californie"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                />
-              </div> */}
+              
               <div className="flex space-x-4">
           <div className="flex-1">
-            <label htmlFor="region" className="block text-sm font-medium text-gray-700">Région</label>
+            <label htmlFor="region" className="block text-sm font-medium text-green-500">Région</label>
             <select
               id="region"
               value={selectedRegion}
               onChange={handleRegionChange}
-              className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full py-2 px-3 border border-gray-300 dark:bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             >
               <option value="">Sélectionner une région</option>
               {Object.keys(locations).map((region) => (
@@ -818,12 +804,12 @@ const ExpertsProfileSettings = () => {
             </select>
           </div>
           <div className="flex-1">
-            <label htmlFor="city" className="block text-sm font-medium text-gray-700">Ville</label>
+            <label htmlFor="city" className="block text-sm font-medium text-green-500">Ville</label>
             <select
               id="city"
               value={selectedCity}
               onChange={handleCityChange}
-              className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full py-2 px-3 border border-gray-300 dark:bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               disabled={!selectedRegion}
             >
               <option value="">Sélectionner une ville</option>
@@ -837,13 +823,13 @@ const ExpertsProfileSettings = () => {
           </div>
         </div>
         <div>
-          <label htmlFor="summary" className="block text-sm font-medium text-gray-700">Résumé</label>
+          <label htmlFor="summary" className="block text-sm font-medium text-green-500">Résumé</label>
           <input
             type="text"
             id="summary"
             value={summary}
             readOnly
-            className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-gray-100 rounded-md shadow-sm sm:text-sm"
+            className="mt-1 block w-full py-2 px-3 border border-gray-300 dark:bg-gray-800 rounded-md shadow-sm sm:text-sm"
           />
         </div>
 

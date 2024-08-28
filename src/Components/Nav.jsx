@@ -3,12 +3,37 @@ import { Link, NavLink } from 'react-router-dom';
 import logo from './../assets/logo.png';
 import Cookies from 'js-cookie';
 
+const DropdownMenu = ({ title, links }) => {
+  return (
+    <div className="flex items-center justify-center bg-transparent relative text-left">
+      <div className="relative cursor-pointer flex items-center justify-between bg-transparent group">
+        <NavLink to="#" className="menu-hover text-base text-white mx-2">
+          {title}
+        </NavLink>
+        <span>
+          <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M10 12l-5-5h10l-5 5z" />
+          </svg>
+        </span>
+        <div className="top-[20px] z-20 absolute left-0 w-max mt-1 bg-white divide-y divide-gray-100 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
+          <div className="py-[20px]">
+            {links.map((link, index) => (
+              <NavLink key={index} to={link.to} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                {link.label}
+              </NavLink>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Nav = () => {
   const [openNav, setOpenNav] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Vérifiez si le token est présent dans le local storage ou les cookies
     const token = localStorage.getItem('token') || Cookies.get('token');
     if (token) {
       setIsLoggedIn(true);
@@ -20,107 +45,53 @@ const Nav = () => {
   };
 
   const handleLogout = () => {
-    // Supprimer le token du local storage et des cookies
     localStorage.removeItem('token');
     localStorage.removeItem('userName');
     Cookies.remove('token');
     Cookies.remove('userName');
     setIsLoggedIn(false);
-    // Rediriger vers la page d'accueil
     window.location.href = '/';
   };
 
-  const navList = () => {
-    return (
-      <div className='text-left flex flex-col md:flex-row justify-between items-center text-base gap-10 z-20 font-Inter'>
-        <div className="flex items-center justify-center bg-transparent relative text-left">
-          <div className="relative cursor-pointer flex items-center justify-between bg-bg-transparent group">
-            <NavLink to="#" className="text-white menu-hover text-base white mx-2">
-              Plateforme
-            </NavLink>
-            <span>
-              <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 12l-5-5h10l-5 5z" />
-              </svg>
-            </span>
-            <div className="top-[20px] z-20 absolute left-0 w-[150px] mt-1 bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
-              <div className="py-[20px]">
-                <NavLink to="/fonctionnalites" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Fonctionnalités</NavLink>
-                <NavLink to="/pourquoi-nous" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Pourquoi nous ?</NavLink>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center justify-center bg-transparent relative text-left">
-          <div className="relative cursor-pointer flex items-center justify-between bg-bg-transparent group">
-            <NavLink to="#" className="menu-hover text-base text-white mx-2">
-              Solutions
-            </NavLink>
-            <span>
-              <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 12l-5-5h10l-5 5z" />
-              </svg>
-            </span>
-            <div className="top-[20px] z-20 absolute left-0 w-[270px] mt-1 bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
-              <div className="py-[20px]">
-                <NavLink to="/cabinets-avocats" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Cabinets d'avocats</NavLink>
-                <NavLink to="/directions-entreprises" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Directions d'entreprises</NavLink>
-                <NavLink to="/directions-juridiques-du-secteur-public" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Directions juridiques du secteur public</NavLink>
-                <NavLink to="/directions-sinistres" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Directions sinistres</NavLink>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center justify-center bg-transparent relative text-left">
-          <div className="relative cursor-pointer flex items-center justify-between bg-bg-transparent group">
-            <NavLink to="#" className="menu-hover text-base text-white mx-2">
-              Vie de la communauté
-            </NavLink>
-            <span>
-              <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 12l-5-5h10l-5 5z" />
-              </svg>
-            </span>
-            <div className="top-[20px] z-20 absolute left-0 w-[180px] mt-1 bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
-              <div className="py-[20px]">
-                <NavLink to="/webinaires" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Webinaires</NavLink>
-                <NavLink to="/mini-series" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mini-séries</NavLink>
-                <NavLink to="/blog" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Blog</NavLink>
-                <NavLink to="/faqs" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">F.A.Q</NavLink>
-              </div>
-            </div>
-          </div>
-        </div>
-        <NavLink
-          to="/avis-clients"
-          className={({ isActive, isPending }) =>
-            isPending ? "pending" : isActive ? "text-cyan-300" : ""
-          }
-        >
-          Avis Clients
-        </NavLink>
-        <NavLink
-          to="/tarifs"
-          className={({ isActive, isPending }) =>
-            isPending ? "pending" : isActive ? "text-cyan-300" : ""
-          }
-        >
-          Tarifs
-        </NavLink>
-      </div>
-    );
-  };
+  const navItems = [
+    {
+      title: 'Plateforme',
+      links: [
+        { label: 'Fonctionnalités', to: 'fonctionnalites' },
+        { label: 'Pourquoi nous ?', to: 'pourquoi-nous' },
+      ],
+    },
+    {
+      title: 'Solutions',
+      links: [
+        { label: "Cabinets d'avocats", to: 'cabinets-avocats' },
+        { label: "Directions d'entreprises", to: 'directions-entreprises' },
+        { label: "Directions juridiques du secteur public", to: 'directions-juridiques-du-secteur-public' },
+        { label: "Directions sinistres", to: 'directions-sinistres' },
+      ],
+    },
+    {
+      title: 'Vie de la communauté',
+      links: [
+        { label: 'Webinaires', to: 'webinaires' },
+        { label: 'Mini-séries', to: 'mini-series' },
+        { label: 'Blog', to: 'blog' },
+        { label: 'F.A.Q', to: 'faqs' },
+      ],
+    },
+  ];
 
   return (
     <header className="bg-gradient-to-r from-black to-slate-900 dark:bg-slate-900">
-      <div className="z-20 container mx-auto py-4 px-4 md:flex md:items-center md:justify-between">
+      <div className="z-20 container mx-auto py-4 px-4 xl:flex xl:items-center xl:justify-between">
         <div className="flex items-center justify-between">
-          <NavLink to="/" className='text-2xl font-semibold flex items-center space-x-2 z-20'>
-            <img src={logo} alt="" className='rounded-full w-[75px] inline-block items-center' /><span className='text-[white]'>ALT</span>
+          <NavLink to="/" className="text-2xl font-semibold flex items-center space-x-2 z-20">
+            <img src={logo} alt="" className="rounded-full w-[75px] inline-block items-center" />
+            <span className="text-white">ALT</span>
           </NavLink>
           <button
             onClick={toggleNav}
-            className="z-50 block md:hidden border border-gray-600 p-2 rounded text-gray-600 hover:bg-gray-200 focus:outline-none focus:bg-gray-300"
+            className="z-50 block xl:hidden border border-gray-600 p-2 rounded text-gray-600 hover:bg-gray-200 focus:outline-none focus:bg-gray-300"
           >
             <svg
               className={`w-6 h-6 ${openNav ? 'hidden' : 'block'}`}
@@ -153,45 +124,72 @@ const Nav = () => {
           </button>
         </div>
 
-        <nav className="text-white hidden md:flex space-x-12">
-          {navList()}
+        <nav className="text-white hidden xl:flex space-x-12">
+          {navItems.map((item, index) => (
+            <DropdownMenu key={index} title={item.title} links={item.links} />
+          ))}
+          <NavLink to="avis-clients" className={({ isActive }) => (isActive ? 'text-cyan-300' : '')}>
+            Avis Clients
+          </NavLink>
+          <NavLink to="tarifs" className={({ isActive }) => (isActive ? 'text-cyan-300' : '')}>
+            Tarifs
+          </NavLink>
         </nav>
 
         <div
-          className={`${openNav ? '' : 'hidden'
-            } text-white rounded-2xl mx-10 mt-4 z-50 bg-gradient-to-l from-black to-slate-950 flex flex-col gap-4 p-6 md:hidden`}
+          className={`${openNav ? '' : 'hidden'} text-white items-center justify-center rounded-2xl mx-10 mt-4 z-50 bg-gradient-to-l from-black to-slate-950 flex flex-col gap-4 p-6 xl:hidden`}
         >
-          {navList()}
-        </div>
-
-        <div className='space-x-12 hidden lg:flex items-center z-20'>
+          {navItems.map((item, index) => (
+            <DropdownMenu key={index} title={item.title} links={item.links} />
+          ))}
+          <NavLink to="avis-clients" className="block px-4 py-2 text-sm text-white hover:bg-gray-700">
+            Avis Clients
+          </NavLink>
+          <NavLink to="tarifs" className="block px-4 py-2 text-sm text-white hover:bg-gray-700">
+            Tarifs
+          </NavLink>
           {isLoggedIn ? (
             <>
-              <Link to="/dashboard" className='text-white hover:text-green-300'>
-                <button>
-                  Dashboard
-                </button>
+              <Link to="/dashboard" className="block px-4 py-2 text-sm text-white hover:bg-gray-700">
+                Dashboard
               </Link>
-              <button onClick={handleLogout} className='bg-green-600 text-white py-2 px-4 transition-all duration-300 rounded hover:bg-gray-600'>
+              <button onClick={handleLogout} className="bg-green-600 text-white py-2 px-4 transition-all duration-300 rounded hover:bg-gray-600">
                 Déconnexion
               </button>
             </>
           ) : (
             <>
-              <Link to="/authform?tab=login" className='hidden lg:flex items-center text-white hover:text-green-300'>
-                <button>
-                  Connexion
-                </button>
+              <Link to="/authform?tab=login" className="block px-4 py-2 text-sm text-white hover:bg-gray-700">
+                Connexion
               </Link>
-              <Link to="/authform?tab=register" className='hidden lg:flex items-center text-white hover:text-green-400'>
-                <button className='bg-green-600 text-white py-2 px-4 transition-all duration-300 rounded hover:bg-gray-600'>
-                  Inscription
-                </button>
+              <Link to="/authform?tab=register" className="block px-4 py-2 text-sm text-white bg-green-600 rounded hover:bg-gray-600">
+                Inscription
               </Link>
             </>
           )}
         </div>
 
+        <div className="space-x-4 hidden xl:block">
+          {isLoggedIn ? (
+            <>
+              <Link to="/dashboard" className="text-base text-white mx-2">
+                Dashboard
+              </Link>
+              <button onClick={handleLogout} className="bg-green-600 text-white py-2 px-4 transition-all duration-300 rounded hover:bg-gray-600">
+                Déconnexion
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/authform?tab=login" className="text-base text-white mx-2">
+                Connexion
+              </Link>
+              <Link to="/authform?tab=register" className="bg-green-600 text-white py-2 px-4 transition-all duration-300 rounded hover:bg-gray-600">
+                Inscription
+              </Link>
+            </>
+          )}
+        </div>
       </div>
     </header>
   );

@@ -1,109 +1,184 @@
-import { useState } from 'react';
-import { TextInput, Spinner } from 'flowbite-react';
-import { IconSearch } from '@tabler/icons-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-// Données statiques des villes et régions corrigées
-const regions = {
-  'Centre': ['Yaoundé', 'Biyem-Assi', 'Nsimalen', 'Mbalmayo', 'Obala', 'Ayos', 'Ebolowa', 'Mengang', 'Nkometou', 'Bafoussam'],
-  'Littoral': ['Douala', 'Bonabéri', 'Deïdo', 'Akwa', 'Bassa', 'Limbe', 'Tiko', 'Ebolowa', 'Buea', 'Idenau'],
-  'Ouest': ['Dschang', 'Foumban', 'Bafoussam', 'Dibang', 'Dizangué', 'Fongondé', 'Nkong-Zem', 'Sia', 'Bansoa', 'Dschang'],
-  'Nord': ['Maroua', 'Koza', 'Mokolo', 'Garoua', 'Ngong', 'Figuil', 'Mayo-Oulo', 'Pitoa', 'Tchaourou', 'Mandara'],
-  'Sud': ['Ebolowa', 'Akom', 'Obala', 'Ngoulemakong', 'Mven', 'Akom II', 'Nkomo', 'Bipindi', 'Kribi', 'Campo'],
-  'Nord-Ouest': ['Bamenda', 'Wum', 'Nkambé', 'Fundong', 'Bali', 'Bafut', 'Oku', 'Ndop', 'Kumbo', 'Batibo'],
-  'Sud-Ouest': ['Limbe', 'Buea', 'Tiko', 'Muea', 'Fako', 'Mbonge', 'Buea', 'Limbe II', 'Muea', 'Limbe'],
-  'Extrême-Nord': ['Kousseri', 'Yagoua', 'Maroua', 'Kaélé', 'Moulvoudaye', 'Kolofata', 'Mora', 'Roua', 'Pétévo', 'Waza'],
-  'Adamaoua': ['Ngaoundéré', 'Banyo', 'Tignère', 'Vina', 'Djohong', 'Gbaya', 'Bouba', 'Mbere', 'Mayo-Baléo', 'Tibati'],
-  'Est': ['Belabo', 'Bertoua', 'Gari-Gombo', 'Lomié', 'Kentzé', 'Batouri', 'Abong-Mbang', 'Nguélémendouka', 'Yokadouma', 'Ngoura']
+const SearchBar = () => {
+    const [query, setQuery] = useState('');
+    const [searchHistory, setSearchHistory] = useState([]);
+    const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+    const navigate = useNavigate();
+    const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        const history = JSON.parse(localStorage.getItem('searchHistory')) || [];
+        setSearchHistory(history);
+    }, []);
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (query.trim()) {
+            const newHistory = [query, ...searchHistory.slice(0, 9)];
+            setSearchHistory(newHistory);
+            localStorage.setItem('searchHistory', JSON.stringify(newHistory));
+            navigate(`/dashboard/results?query=${encodeURIComponent(query)}`);
+            setIsDropdownVisible(false);
+        }
+    };
+
+    const handleClickOutside = (e) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+            setIsDropdownVisible(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    return (
+        <div className="relative">
+            <div className="hidden mx-10 md:block">
+                <div className="relative">
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <svg
+                            className="w-5 h-5 text-gray-400"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                        >
+                            <path
+                                d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                        </svg>
+                    </span>
+                    <input
+                        type="text"
+                        className="w-[450px] border-1 rounded-3xl py-2 pl-10 pr-3 text-gray-600 border-gray-400 focus:ring-0 focus:border-1 sm:text-base"
+                        placeholder="Rechercher un texte juridique..."
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        onFocus={() => setIsDropdownVisible(true)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                handleSearch(e);
+                            }
+                        }}
+                    />
+                    <button
+                        type="submit"
+                        className="absolute inset-y-0 right-0 flex items-center pr-3"
+                        onClick={handleSearch}
+                    >
+                        <svg
+                            className="w-5 h-5 text-gray-600"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                        >
+                            <path
+                                d="M10 19L16.2386 12.2386C16.4574 11.9529 16.4574 11.0471 16.2386 10.7614L10 1.76142V19ZM15.2386 10.7614C15.4574 11.0471 15.4574 11.9529 15.2386 12.2386L10 19L1.76142 12.2386C1.45736 11.9529 1.45736 11.0471 1.76142 10.7614L10 1.76142L15.2386 10.7614Z"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                {/* Dropdown d'historique de recherche */}
+                {isDropdownVisible && searchHistory.length > 0 && (
+                    <div
+                        ref={dropdownRef}
+                        className="absolute z-10 mt-2 w-full max-w-[450px] border border-gray-200 rounded-lg shadow-lg dark:bg-dark-background bg-white"
+                    >
+                        <div className="flex justify-between items-center p-2">
+                            <span className="font-semibold text-gray-600">Recherches récentes</span>
+                            <button
+                                className="font-normal underline"
+                                onClick={() => {
+                                    navigate('/dashboard/recherche/historique');
+                                    setIsDropdownVisible(false);
+                                }}
+                            >
+                                Voir tout
+                            </button>
+                        </div>
+                        <ul className="max-h-48 overflow-y-auto">
+                            {searchHistory.map((item, index) => (
+                                <li
+                                    key={index}
+                                    className="p-2 cursor-pointer hover:bg-gray-100"
+                                    onClick={() => {
+                                        setQuery(item);
+                                        handleSearch(new Event('submit'));
+                                    }}
+                                >
+                                        {item}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+            </div>
+
+            {/* Recherche pour écran petit */}
+            <div className="block mx-4 md:hidden">
+                <div className="relative">
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <svg
+                            className="w-5 h-5 text-gray-400"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                        >
+                            <path
+                                d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                        </svg>
+                    </span>
+                    <input
+                        type="text"
+                        className="w-full border-1 rounded-3xl py-2 pl-10 pr-3 text-gray-700 bg-white focus:ring-0 focus:border-1 sm:text-sm"
+                        placeholder="Rechercher..."
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        onFocus={() => setIsDropdownVisible(true)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                handleSearch(e);
+                            }
+                        }}
+                    />
+                    <button
+                        type="submit"
+                        className="absolute inset-y-0 right-0 flex items-center pr-3"
+                        onClick={handleSearch}
+                    >
+                        <svg
+                            className="w-5 h-5 text-gray-400"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                        >
+                            <path
+                                d="M10 19L16.2386 12.2386C16.4574 11.9529 16.4574 11.0471 16.2386 10.7614L10 1.76142V19ZM15.2386 10.7614C15.4574 11.0471 15.4574 11.9529 15.2386 12.2386L10 19L1.76142 12.2386C1.45736 11.9529 1.45736 11.0471 1.76142 10.7614L10 1.76142L15.2386 10.7614Z"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
 };
 
-const allLocations = Object.entries(regions).flatMap(([region, cities]) => 
-  cities.map(city => ({ label: `${city}, ${region}`, value: city }))
-);
-
-const MAX_VISIBLE_RESULTS = 10;
-
-// Fonction pour normaliser les chaînes de caractères (enlever les accents)
-const normalizeString = (str) => {
-  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-};
-
-export default function SearchComponent() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredLocations, setFilteredLocations] = useState([]);
-  const [visibleResults, setVisibleResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [showAll, setShowAll] = useState(false);
-
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    setLoading(true);
-
-    if (value) {
-      const normalizedValue = normalizeString(value);
-      const filtered = allLocations.filter(({ label }) =>
-        normalizeString(label).includes(normalizedValue)
-      );
-      setFilteredLocations(filtered);
-      setVisibleResults(filtered.slice(0, MAX_VISIBLE_RESULTS));
-      setShowAll(false);
-    } else {
-      setFilteredLocations([]);
-      setVisibleResults([]);
-    }
-    
-    setLoading(false);
-  };
-
-  const handleShowAll = () => {
-    setVisibleResults(filteredLocations);
-    setShowAll(true);
-  };
-
-  const handleSelectLocation = (location) => {
-    setSearchTerm(location);
-    setFilteredLocations([]);
-    setVisibleResults([]);
-  };
-
-  return (
-    <div className="relative w-full max-w-md mx-auto">
-      <div className="relative">
-        <IconSearch className="absolute top-1/2 left-2 transform -translate-y-1/2 text-gray-500" />
-        <TextInput
-          type="search"
-          placeholder="Rechercher une ville ou une région..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="w-full pl-10"
-        />
-        {loading && (
-          <div className="absolute top-1/2 right-2 transform -translate-y-1/2">
-            <Spinner size="sm" />
-          </div>
-        )}
-      </div>
-      {filteredLocations.length > 0 && (
-        <ul className="absolute z-10 w-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg">
-          {visibleResults.map(({ label }, index) => (
-            <li
-              key={index}
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleSelectLocation(label)}
-            >
-              {label}
-            </li>
-          ))}
-          {filteredLocations.length > MAX_VISIBLE_RESULTS && !showAll && (
-            <li
-              className="px-4 py-2 text-blue-500 cursor-pointer hover:bg-gray-100"
-              onClick={handleShowAll}
-            >
-              Voir plus
-            </li>
-          )}
-        </ul>
-      )}
-    </div>
-  );
-}
+export default SearchBar;

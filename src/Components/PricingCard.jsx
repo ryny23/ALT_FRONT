@@ -5,12 +5,12 @@ const PricingCard = () => {
 <section>
 <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
       <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
-          <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Choisissez la formule ALT adaptée à vos besoins </h2>
+          <h2 class="mb-4 text-4xl tracking-tight font-extrabold">Choisissez la formule ALT adaptée à vos besoins </h2>
           <p class="mb-5 font-light text-gray-500 sm:text-xl dark:text-gray-400">Nous proposons des offres d'abonnement modulables et sur-mesure pour répondre aux besoins spécifiques de chaque professionnel du droit. Découvrez dès à présent nos différentes formules et n'hésitez pas à nous contacter pour obtenir un devis personnalisé.</p>
       </div>
       <div class="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
           {/*<!-- Pricing Card -->*/}
-          <div class="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
+          <div class="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
               <h3 class="mb-4 text-2xl font-semibold">Avocat individuel</h3>
               <p class="font-light text-gray-500 sm:text-lg dark:text-gray-400">Best option for personal use & for your next project.</p>
               <div class="flex justify-center items-baseline my-8">
