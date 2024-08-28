@@ -47,11 +47,11 @@ const DashboardLayout = () => {
   return (
     <div className='min-h-screen bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text'>
       <Dashboard resultCounts={resultCounts} />
-      <div className='xl:pl-64 xl:pt-[72px]'>
+      {/* <div className='xl:pl-64 xl:pt-[72px]'>
         <main>
           <Outlet context={{ legislations, decisions, articles, commentaires }} />
         </main>
-      </div>
+      </div> */}
     </div>
   );
 };
