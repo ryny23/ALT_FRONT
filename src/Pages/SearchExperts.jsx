@@ -332,7 +332,7 @@ const filteredExperts = expertsData.filter((expert) => {
                 </div>
                 <div className="mt-4 flex flex-col sm:flex-row items-center sm:items-start justify-between mb-2">
                   <NavLink to={`${expert.id}`}>
-                    <button className="px-4 py-2 rounded-lg dark:bg-gray-800 dark:hover:bg-gray-600 sm:items-center">Voir le profil</button>
+                    <button className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-400 dark:bg-gray-800 dark:hover:bg-gray-600 sm:items-center">Voir le profil</button>
                   </NavLink>
                 </div>
               </div>
@@ -354,9 +354,9 @@ const filteredExperts = expertsData.filter((expert) => {
               pageClassName="px-3 py-1 rounded-full cursor-pointer"
               activeLinkClassName="bg-green-500 text-white"
               disabledClassName="opacity-50 cursor-not-allowed"
-              breakClassName="px-3 py-1 bg-gray-950 rounded-full"
-              previousClassName="px-3 py-1 bg-gray-950 rounded-full"
-              nextClassName="px-3 py-1 bg-gray-950 rounded-full"
+              breakClassName="px-3 py-1 rounded-full"
+              previousClassName="px-3 py-1 rounded-full border border-gray-600"
+              nextClassName="px-3 py-1 rounded-full border border-gray-600"
             />
           </div>
         )}

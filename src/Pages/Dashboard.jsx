@@ -127,6 +127,7 @@ const Dashboard = () => {
                       : 'text-gray-600 hover:text-green-600 dark:text-gray-300 dark:hover:text-white hover:bg-green-50 dark:hover:bg-green-800'
                   } rounded-lg`
                 }
+                onClick={() => window.innerWidth <= 1024 && setSidebarOpen(false)}
               >
                 <item.icon className="w-6 h-6 mr-3" />
                 {item.text}
