@@ -180,21 +180,42 @@ const filteredExperts = expertsData.filter((expert) => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="w-full min-h-screen bg-gray-100 dark:bg-dark-background text-light-text dark:text-dark-text">
-      <header className="bg-gray-100 dark:bg-dark-background text-light-text dark:text-dark-text py-4 px-6 rounded-t-lg">
-        <h1 className="text-3xl font-bold">Trouvez un expert</h1>
-        <div className="mt-6 space-y-4">
-          <div className="relative px-48">
-            <IconSearch className="absolute left-[165px] z-30 top-1/2 -translate-y-1/2 text-gray-400" />
-            <TextInput
+    <div className="w-full min-h-screen bg-gray-100 dark:bg-dark-background text-light-text dark:text-dark-text p-4 sm:p-6 md:p-8">
+      <header className="mb-8 flex flex-col items-center justify-center">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-6">Trouvez un expert</h1>
+        <div className="space-y-4 flex flex-col items-center">
+          <div className="sm:w-[650px] w-full relative flex items-center">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-3 sm:pl-4 md:pl-8">
+              <svg
+                className="w-5 h-5 text-gray-400"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+            <input
               type="search"
               placeholder="Rechercher un expert par nom, ville, region ou domaine..."
-              className="w-full"
+              className="w-full border-1 rounded-3xl py-2 px-4 pl-12 dark:bg-gray-800 border-gray-400 focus:ring-0 focus:border-1 sm:text-sm"
               onChange={(e) => setSearchTerm(e.target.value)}
               value={searchTerm}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSearch(e);
+                }
+              }}
             />
             {suggestions.length > 0 && (
-              <ul className="absolute z-10 w-2/5 mt-2 dark:text-white dark:hover bg-white dark:bg-slate-800 border  border-gray-300 rounded-lg shadow-lg">
+              <ul
+                className="absolute z-10 w-[300px] max-h-[300px] overflow-y-auto mt-2 dark:bg-dark-background border  border-gray-300 rounded-lg shadow-lg"
+              >
                 {suggestions.map((suggestion, index) => (
                   <li
                     key={index}
@@ -204,50 +225,47 @@ const filteredExperts = expertsData.filter((expert) => {
                     {suggestion}
                   </li>
                 ))}
-                {suggestions.length > 10 && !showAll && (
-                  <li
-                    className="px-4 py-3 text-blue-500 cursor-pointer dark:hover:bg-gray-950 hover:bg-gray-100"
-                    onClick={() => setShowAll(true)}
-                  >
-                    Voir plus
-                  </li>
-                )}
               </ul>
             )}
           </div>
-          <div className="pl-6 flex items-center bg-gray-100 dark:bg-dark-background text-light-text dark:text-dark-text justify-between gap-4">
-            <Dropdown label="Filtrer par domaine" color="slate">
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('')}>
-                Tous
-              </Dropdown.Item>
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('Droit des affaires') }>
-                Droit des affaires
-              </Dropdown.Item>
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('Droit de la famille' )}>
-                Droit de la famille
-              </Dropdown.Item>
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('Droit immobilier')}> 
-                Droit immobilier
-              </Dropdown.Item>
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('Droit du travail')}> 
-                Droit du travail
-              </Dropdown.Item>
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('Droit pénal')}>
-                 Droit pénal
-              </Dropdown.Item>
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedDomain('Droit de la propriét é intellectuelle')}>
-                Droit de la propriété intellectuelle
-              </Dropdown.Item>
-            </Dropdown>
-            <Dropdown label="Filtrer par type d'expert" color="slate">
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedType('')}>Tous</Dropdown.Item>
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedType('Avocat')}>Avocat</Dropdown.Item>
-              <Dropdown.Item  className='dark:hover:bg-gray-950' onClick={() => setSelectedType('Notaire')}>Notaire</Dropdown.Item>
-            </Dropdown>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-8">
+            <div className="flex border border-gray-400 px-3 rounded-3xl justify-between text-sm items-center gap-8 w-full sm:w-auto">
+              <span className="text-light-text dark:text-dark-text">Domaine:</span>
+              <select
+                id="domaine"
+                className="bg-gray-100 text-sm dark:bg-dark-background border-none focus:border-none focus:ring-0 text-light-text dark:text-dark-text p-2 rounded-lg w-full sm:w-[200px]"
+                value={selectedDomain}
+                onChange={(e) => setSelectedDomain(e.target.value)}
+              >
+                <option value="">Tous</option>
+                <option value="Droit des affaires">Droit des affaires</option>
+                <option value="Droit de la famille">Droit de la famille</option>
+                <option value="Droit immobilier">Droit immobilier</option>
+                <option value="Droit du travail">Droit du travail</option>
+                <option value="Droit pénal">Droit pénal</option>
+                <option value="Droit de la propriété intellectuelle">
+                  Droit de la propriété intellectuelle
+                </option>
+              </select>
+            </div>
+            <div className="flex border border-gray-400 px-3 rounded-3xl justify-between text-sm items-center gap-3 w-full sm:w-auto">
+              <span className="text-light-text dark:text-dark-text">Type d'expert:</span>
+              <select
+                id="type"
+                className="bg-gray-100 ml-8 text-sm dark:bg-dark-background border-none focus:border-none focus:ring-0 text-light-text dark:text-dark-text p-2 rounded-lg w-full sm:w-[150px]"
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+              >
+                <option value="">Tous</option>
+                <option value="Avocat">Avocat</option>
+                <option value="Notaire">Notaire</option>
+              </select>
+            </div>
           </div>
         </div>
       </header>
-      <div className="bg-gray-100 dark:bg-dark-background text-light-text dark:text-dark-text grid gap-6 p-6 md:p-10 lg:p-12">
+
+      <main className="space-y-6">
         {loading && (
           <div className="flex justify-center items-center">
             <Spinner size="xl" />
@@ -261,64 +279,88 @@ const filteredExperts = expertsData.filter((expert) => {
         {!loading && !error && displayedExperts.map((expert) => (
           <div
             key={expert.id}
-            className="pl-4 w-full bg-white dark:bg-slate-700 md:w-[800px] rounded-2xl shadow-lg overflow-hidden mx-auto flex flex-col md:flex-row items-center justify-center"
+            className="bg-white dark:bg-slate-700 rounded-xl shadow-lg overflow-hidden max-w-3xl mx-auto"
           >
-            <img
-              src={avatarUrls[expert.id] || 'default-avatar-url'} // Assuming avatar is a URL, adjust if necessary
-              alt={`Expert ${expert.acf.nom}`}
-              className="w-full rounded-full md:w-40 md:h-40 object-cover border border-gray-200"
-            />
-            <div className="p-4 flex-1">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-xl font-semibold dark:text-blue-200 text-blue-500">{expert.acf.nom} {expert.acf.prenom}</h3>
-                  <p className="dark:text-green-400">{expert.acf.profession}</p>
+            <div className="p-4 sm:p-6 flex flex-col sm:flex-row items-center">
+              {avatarUrls[expert.id] ? (
+                <img
+                  src={avatarUrls[expert.id]}
+                  alt={`Expert ${expert.acf.nom}`}
+                  className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border border-gray-200 mb-4 sm:mb-0 sm:mr-6"
+                />
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border border-gray-200 mb-4 sm:mb-0 sm:mr-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+              )}
+              <div className="flex-1 text-center sm:text-left">
+                <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between mb-2">
+                  <div>
+                    <h3 className="text-xl font-semibold dark:text-blue-200 text-blue-500">
+                      <span className='font-semibold'>Me. </span> {expert.acf.nom} {expert.acf.prenom}
+                    </h3>
+                    <p className="dark:text-green-400">{expert.acf.profession}</p>
+                  </div>
+                  <Badge className="bg-green-100 text-green-400 mt-2 sm:mt-0">
+                    Vérifié
+                  </Badge>
                 </div>
-                <Badge className="bg-green-100 text-green-400">Vérifié</Badge>
-              </div>
-              <p className="flex text-sm">
-                <IconLocation className="text-sm mr-1" />
-                {expert.acf.adresse}
-              </p>
-              <div className="flex flex-wrap gap-2 mt-2">
-                <p className="text-sm  flex flex-col font-semibold">Domaine d'expertise</p>
-                {expert.acf.specialite.map((spec, index) => (
-                  <Badge key={index} className="bg-slate-200 text-slate-800">{spec}</Badge>
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-2 mt-2">
-                <p className="text-sm  flex flex-col font-semibold">Expérience</p>
-                <Badge className="bg-slate-200 text-slate-800">{expert.experience} ans</Badge>
-              </div>
-              <div className="mt-4">
-                <NavLink to={(`${expert.id}`)}>
-                  <button className="bg-gray-200 dark:bg-gray-800 py-2 px-4 rounded-lg">Voir le profil</button>
-                </NavLink>
+                <p className="flex items-center justify-center sm:justify-start text-sm mb-2">
+                  <IconLocation className="mr-1" size={16} />
+                  {expert.acf.adresse}
+                </p>
+                <div className="space-y-2">
+                  <p className="text-sm font-semibold">Domaine d'expertise</p>
+                  <div className="flex flex-wrap justify-center sm:justify-start gap-2">
+                    {expert.acf.specialite.map((spec, index) => (
+                      <Badge key={index} className="bg-slate-200 text-slate-800">
+                        {spec}
+                        </Badge>
+                    ))}
+                  </div>
+                </div>
+                <div className="mt-4 flex flex-col sm:flex-row items-center sm:items-start justify-between mb-2">
+                  <NavLink to={`${expert.id}`}>
+                    <button className="px-4 py-2 rounded-lg dark:bg-gray-800 dark:hover:bg-gray-600 sm:items-center">Voir le profil</button>
+                  </NavLink>
+                </div>
               </div>
             </div>
           </div>
         ))}
         {!loading && !error && (
-          <div className="mt-8">
+          <div className="mt-8 flex justify-center">
             <ReactPaginate
-              previousLabel={'<'}
-              nextLabel={'>'}
-              breakLabel={'...'}
               pageCount={pageCount}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={5}
+              pageRangeDisplayed={2}
+              marginPagesDisplayed={1}
               onPageChange={handlePageClick}
-              containerClassName={'pagination flex justify-center'}
-              pageClassName={'page-item'}
-              pageLinkClassName={'page-link px-3 py-1 border rounded-md'}
-              previousLinkClassName={'page-link px-3 py-1 border rounded-md'}
-              nextLinkClassName={'page-link px-3 py-1 border rounded-md'}
-              breakLinkClassName={'page-link px-3 py-1 border rounded-md'}
-              activeClassName={'active bg-slate-950 text-white'}
+              containerClassName="flex space-x-2"
+              activeClassName="text-white bg-green-500"
+              previousLabel="<"
+              nextLabel=">"
+              breakLabel="..."
+              pageClassName="px-3 py-1 rounded-full cursor-pointer"
+              activeLinkClassName="bg-green-500 text-white"
+              disabledClassName="opacity-50 cursor-not-allowed"
+              breakClassName="px-3 py-1 bg-gray-950 rounded-full"
+              previousClassName="px-3 py-1 bg-gray-950 rounded-full"
+              nextClassName="px-3 py-1 bg-gray-950 rounded-full"
             />
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 }

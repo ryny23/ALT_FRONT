@@ -57,8 +57,8 @@ const SearchBar = () => {
                         </svg>
                     </span>
                     <input
-                        type="text"
-                        className="w-[450px] border-1 rounded-3xl py-2 pl-10 pr-3 text-gray-600 border-gray-400 focus:ring-0 focus:border-1 sm:text-base"
+                        type="search"
+                        className="w-[450px] border-1 rounded-3xl py-2 pl-10 pr-3 dark:bg-gray-800 border-gray-400 focus:ring-0 focus:border-1 sm:text-sm"
                         placeholder="Rechercher un texte juridique..."
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
@@ -75,7 +75,7 @@ const SearchBar = () => {
                         onClick={handleSearch}
                     >
                         <svg
-                            className="w-5 h-5 text-gray-600"
+                            className="w-5 h-5 text-gray-600 dark:text-gray-400"
                             viewBox="0 0 24 24"
                             fill="none"
                         >
@@ -93,7 +93,7 @@ const SearchBar = () => {
                 {isDropdownVisible && searchHistory.length > 0 && (
                     <div
                         ref={dropdownRef}
-                        className="absolute z-10 mt-2 w-full max-w-[450px] border border-gray-200 rounded-lg shadow-lg dark:bg-dark-background bg-white"
+                        className="absolute z-50 mt-2 w-full max-w-[450px] border border-gray-200 rounded-lg shadow-lg dark:bg-dark-background bg-white"
                     >
                         <div className="flex justify-between items-center p-2">
                             <span className="font-semibold text-gray-600">Recherches récentes</span>
@@ -111,7 +111,7 @@ const SearchBar = () => {
                             {searchHistory.map((item, index) => (
                                 <li
                                     key={index}
-                                    className="p-2 cursor-pointer hover:bg-gray-100"
+                                    className="p-2 cursor-pointer dark:hover:bg-gray-700 hover:bg-gray-200"
                                     onClick={() => {
                                         setQuery(item);
                                         handleSearch(new Event('submit'));
@@ -145,7 +145,7 @@ const SearchBar = () => {
                     </span>
                     <input
                         type="text"
-                        className="w-full border-1 rounded-3xl py-2 pl-10 pr-3 text-gray-700 bg-white focus:ring-0 focus:border-1 sm:text-sm"
+                        className="w-full border-1 rounded-3xl py-2 pl-10 pr-3 dark:bg-gray-800 text-gray-700 focus:ring-0 focus:border-1 sm:text-sm"
                         placeholder="Rechercher..."
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}

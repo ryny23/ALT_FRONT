@@ -178,37 +178,37 @@ const Dashboard = () => {
               
                 {/* dropdown menu items  */}
                 
-                <div className="top-[43px] z-20 absolute left-[-95px] w-[150px] mt-1 bg-white dark:bg-slate-700 divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
+                <div className="top-[43px] z-20 absolute left-[-95px] w-[150px] mt-1 bg-white dark:bg-slate-800 divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
                       <div className="py-[20px]">
                         <NavLink
                           to="profil"
-                          className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-950"
+                          className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                           Profil
                         </NavLink>
                         <NavLink
                           to="parametres"
-                          className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-950"
+                          className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                           Parametres
                         </NavLink>
                         {isExpert && (
                           <NavLink
                             to="parametres-expert"
-                            className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-950"
+                            className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
                           >
                             Paramètres experts
                           </NavLink>
                         )}
                         <NavLink
                           to="aide"
-                          className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-950"
+                          className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                           Aide
                         </NavLink>
                         <a
                           onClick={() => setShowConfirm(true)}
-                          className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-950"
+                          className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                           Déconnexion
                         </a>
@@ -220,7 +220,7 @@ const Dashboard = () => {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-white dark:bg-gray-900">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-white dark:bg-gray-800">
           <div className="container mx-auto">
             <Outlet />
           </div>
