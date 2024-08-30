@@ -109,6 +109,7 @@ const LegislationDetail = () => {
                   className="cursor-pointer text-blue-500 text-sm text-start dark:text-blue-200 hover:underline"
                 >
                   {extractLastPart(item.title.rendered)} {/* Affiche uniquement la dernière partie */}
+                  
                 </a>
               </li>
             ))}

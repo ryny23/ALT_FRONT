@@ -3,15 +3,18 @@ import axios from 'axios';
 import Select from 'react-select';
 
 const DecisionImport = () => {
-    const [articles, setArticles] = useState([]);
+    const [decisions, setDecisions] = useState([]);
     const [selectedCommentaires, setSelectedCommentaires] = useState({});
     const [selectedArticles, setSelectedArticles] = useState({});
     const [selectedLegislations, setSelectedLegislations] = useState({});
     const [commentaires, setCommentaires] = useState([]);
-    const [decisions, setDecisions] = useState([]);
+    const [articles, setArticles] = useState([]);
     const [legislations, setLegislations] = useState([]);
+    const [selectedDecisions, setSelectedDecisions] = useState([]);
+    const [expandedDecision, setExpandedDecision] = useState(null);
+    const [selectAll, setSelectAll] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -55,25 +58,31 @@ const DecisionImport = () => {
 
     const handleSave = () => {
         setLoading(true);
-        setMessage('');
+        setMessage(null);
         const token = localStorage.getItem('token');
 
-        const promises = decisions.map(decision => {
-            const commentID = selectedCommentaires[decision.Title]?.value;
-            const articleID = selectedArticles[decision.Title]?.value;
+        const promises = selectedDecisions.map(decisionTitle => {
+            const decision = decisions.find(d => d.Title === decisionTitle);
+
+            const commentIDs = (selectedCommentaires[decision.Title] || []).map(comment => comment.value);
+            const articleIDs = (selectedArticles[decision.Title] || []).map(article => article.value);
             const legislationID = selectedLegislations[decision.Title]?.value;
 
-            return axios.post('https://alt.back.qilinsa.com/wp-json/wp/v2/decisions', {
+            const data = {
                 title: decision.Title,
                 content: decision.Content,
+                status: 'publish',
                 acf: {
-                    commentaire: commentID,
-                    article: articleID,
-                    legislation: legislationID,
                     resume: decision.resume,
                     information: decision.information,
                 }
-            }, {
+            };
+
+            if (commentIDs.length > 0) data.acf.commentaire = commentIDs;
+            if (articleIDs.length > 0) data.acf.article = articleIDs;
+            if (legislationID) data.acf.legislation_ou_titre_ou_chapitre_ou_section = legislationID;
+
+            return axios.post('https://alt.back.qilinsa.com/wp-json/wp/v2/decisions', data, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
@@ -82,15 +91,35 @@ const DecisionImport = () => {
         });
 
         Promise.all(promises)
-            .then(() => {
-                setMessage('Decisions importé avec succes!');
+            .then((responses) => {
                 setLoading(false);
+                setMessage({ type: 'success', text: 'Decisions imported successfully!' });
+                console.log('Decisions saved:', responses.map(response => response.data));
             })
             .catch((error) => {
-                setMessage('Error importing decisions. Please try again.');
                 setLoading(false);
+                setMessage({ type: 'error', text: 'Error saving decisions. Please try again.' });
                 console.error('Error saving decisions:', error);
             });
+    };
+
+    const handleDecisionClick = (title) => {
+        setExpandedDecision(expandedDecision === title ? null : title);
+    };
+
+    const handleSelectDecision = (title) => {
+        setSelectedDecisions(prev =>
+            prev.includes(title) ? prev.filter(t => t !== title) : [...prev, title]
+        );
+    };
+
+    const handleSelectAll = () => {
+        if (selectAll) {
+            setSelectedDecisions([]);
+        } else {
+            setSelectedDecisions(decisions.map(decision => decision.Title));
+        }
+        setSelectAll(!selectAll);
     };
 
     return (
@@ -102,50 +131,96 @@ const DecisionImport = () => {
                 onChange={handleFileUpload}
                 className="mb-4 p-2 border border-gray-300 rounded"
             />
+            <button
+                onClick={handleSave}
+                className={`px-4 mx-2 py-2 ${loading ? 'bg-gray-400' : 'bg-blue-500'} text-white font-semibold rounded-lg shadow-md hover:bg-blue-600`}
+                disabled={loading}
+            >
+                {loading ? 'Importing...' : 'Import'}
+            </button>
+
+            {message && (
+                <div className={`mb-4 p-4 ${message.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} rounded`}>
+                    {message.text}
+                </div>
+            )}
+
             {decisions.length > 0 && (
                 <div>
+                    <button
+                        onClick={handleSelectAll}
+                        className="px-4 py-2 mb-4 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-600"
+                    >
+                        {selectAll ? 'Deselect All' : 'Select All'}
+                    </button>
                     {decisions.map((decision, index) => (
                         <div key={index} className="mb-6 p-4 border border-gray-200 rounded-lg">
-                            <h3 className="text-xl font-semibold mb-2">{decision.Title}</h3>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-1">Map Commentaires:</label>
-                                <Select
-                                    options={commentaires}
-                                    onChange={(selectedOption) => setSelectedCommentaires(prev => ({ ...prev, [decision.Title]: selectedOption }))}
-                                    isClearable
-                                    className="w-full"
+                            <div className="flex items-center mb-2">
+                                <input
+                                    type="checkbox"
+                                    checked={selectedDecisions.includes(decision.Title)}
+                                    onChange={() => handleSelectDecision(decision.Title)}
+                                    className="mr-2"
                                 />
+                                <h3
+                                    className="text-xl font-semibold cursor-pointer"
+                                    onClick={() => handleDecisionClick(decision.Title)}
+                                >
+                                    {decision.Title}
+                                </h3>
                             </div>
+                            {expandedDecision === decision.Title && (
+                                <div>
+                                    <div className="mb-4">
+                                        <label className="block text-sm font-medium mb-1">Map Commentaire:</label>
+                                        <Select
+                                            options={commentaires}
+                                            value={selectedCommentaires[decision.Title] || null}
+                                            onChange={(selectedOption) => setSelectedCommentaires(prev => ({ ...prev, [decision.Title]: selectedOption }))}
+                                            isClearable
+                                            isMulti
+                                            className="w-full"
+                                        />
+                                    </div>
 
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-1">Map Articles:</label>
-                                <Select
-                                    options={articles}
-                                    onChange={(selectedOption) => setSelectedArticles(prev => ({ ...prev, [decision.Title]: selectedOption }))}
-                                    isClearable
-                                    className="w-full"
-                                />
-                            </div>
+                                    <div className="mb-4">
+                                        <label className="block text-sm font-medium mb-1">Map Article:</label>
+                                        <Select
+                                            options={articles}
+                                            value={selectedArticles[decision.Title] || null}
+                                            onChange={(selectedOption) => setSelectedArticles(prev => ({ ...prev, [decision.Title]: selectedOption }))}
+                                            isClearable
+                                            isMulti
+                                            className="w-full"
+                                        />
+                                    </div>
 
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-1">Map Legislation:</label>
-                                <Select
-                                    options={legislations}
-                                    onChange={(selectedOption) => setSelectedLegislations(prev => ({ ...prev, [decision.Title]: selectedOption }))}
-                                    isClearable
-                                    className="w-full"
-                                />
-                            </div>
+                                    <div className="mb-4">
+                                        <label className="block text-sm font-medium mb-1">Map Legislation:</label>
+                                        <Select
+                                            options={legislations}
+                                            value={selectedLegislations[decision.Title] || null}
+                                            onChange={(selectedOption) => setSelectedLegislations(prev => ({ ...prev, [decision.Title]: selectedOption }))}
+                                            isClearable
+                                            className="w-full"
+                                        />
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     ))}
                     <button
                         onClick={handleSave}
-                        className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600"
+                        className={`px-4 py-2 ${loading ? 'bg-gray-400' : 'bg-blue-500'} text-white font-semibold rounded-lg shadow-md hover:bg-blue-600`}
                         disabled={loading}
                     >
-                        {loading ? 'Saving...' : 'Save'}
+                        {loading ? 'Importing...' : 'Import'}
                     </button>
-                    {message && <p className={`mt-4 ${message.includes('Error') ? 'text-red-500' : 'text-green-500'}`}>{message}</p>}
+                    {message && (
+                        <div className={`mb-4 p-4 ${message.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} rounded`}>
+                            {message.text}
+                        </div>
+                    )}
                 </div>
             )}
         </div>
