@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import parse from 'html-react-parser';
 
@@ -9,16 +9,16 @@ const getRandomColor = () => {
 
 const TestimonialCard = ({ testimonial, color }) => (
   <div className="min-w-[300px] max-w-[300px] h-[400px] bg-white shadow-lg rounded-lg p-6 border border-gray-200 hover:border-blue-300 transition-all duration-300 ease-in-out transform hover:scale-105 flex flex-col justify-between">
-    <h3 className="text-lg font-semibold text-gray-900">{testimonial.title.rendered.charAt(0).toUpperCase() + testimonial.title.rendered.slice(1)}</h3>
+    <h3 className="text-lg font-semibold text-gray-900">{testimonial.title.rendered}</h3>
     <div className="my-4 text-gray-600 overflow-auto flex-grow">
       {parse(testimonial.content.rendered)}
     </div>
     <div className="flex items-center mt-4">
-      <div className="text-center flex items-center justify-center w-10 h-10 rounded-full text-white font-bold" style={{ backgroundColor: color }}>
+      <div className="flex items-center justify-center w-10 h-10 rounded-full text-white font-bold" style={{ backgroundColor: color }}>
         {testimonial.acf.nom.split(' ').map(n => n[0]).join('')}
       </div>
       <div className="ml-3">
-        <p className="font-semibold text-gray-900">{testimonial.acf.nom.charAt(0).toUpperCase() + testimonial.acf.nom.slice(1)}</p>
+        <p className="font-semibold text-gray-900">{testimonial.acf.nom}</p>
         <p className="text-sm text-gray-600">{testimonial.acf.profession}</p>
       </div>
     </div>
@@ -77,12 +77,12 @@ const Temoignages = () => {
         </div>
         <div className="mt-8 overflow-hidden">
           <div className="flex gap-4 animate-scroll-right mb-4">
-            {row1.concat(row1).map((testimonial, index) => (
+            {row1.concat(row1).concat(row1).map((testimonial, index) => (
               <TestimonialCard key={`${testimonial.id}-${index}`} testimonial={testimonial} color={colorMap[testimonial.id]} />
             ))}
           </div>
           <div className="flex gap-4 animate-scroll-left">
-            {row2.concat(row2).map((testimonial, index) => (
+            {row2.concat(row2).concat(row2).map((testimonial, index) => (
               <TestimonialCard key={`${testimonial.id}-${index}`} testimonial={testimonial} color={colorMap[testimonial.id]} />
             ))}
           </div>
@@ -91,17 +91,17 @@ const Temoignages = () => {
       <style jsx>{`
         @keyframes scrollRight {
           0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
+          100% { transform: translateX(-66.666%); }
         }
         @keyframes scrollLeft {
-          0% { transform: translateX(-50%); }
+          0% { transform: translateX(-66.666%); }
           100% { transform: translateX(0); }
         }
         .animate-scroll-right {
-          animation: scrollRight 60s linear infinite;
+          animation: scrollRight 20s linear infinite;
         }
         .animate-scroll-left {
-          animation: scrollLeft 60s linear infinite;
+          animation: scrollLeft 20s linear infinite;
         }
       `}</style>
     </section>
