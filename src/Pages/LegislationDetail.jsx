@@ -12,6 +12,8 @@ const LegislationDetail = () => {
   const [details, setDetails] = useState([]);
   const [decisions, setDecisions] = useState([]);
   const [comments, setComments] = useState([]);
+  const [DateEntree, setDateEntree] = useState([]);
+  const [DateModif, setDateModif] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -26,6 +28,24 @@ const LegislationDetail = () => {
         const identifiers = res.data.acf.titre_ou_chapitre_ou_section_ou_articles;
         const decisionIdentifiers = res.data.acf.decision.slice(0, 3);
         const commentIdentifiers = res.data.acf.commentaire.slice(0, 3);
+
+        const DateEntreeApi = res.data.acf.date_entree;
+        if (DateEntreeApi) {
+          const year = DateEntreeApi.substr(0, 4);
+          const month = DateEntreeApi.substr(4, 2);
+          const day = DateEntreeApi.substr(6, 2);
+          const formattedDate_entree = `${year}-${month}-${day}`;
+          setDateEntree(formattedDate_entree);
+        }
+
+        const DateModifApi = res.data.acf.date_modif;
+        if (DateModifApi) {
+          const year = DateModifApi.substr(0, 4);
+          const month = DateModifApi.substr(4, 2);
+          const day = DateModifApi.substr(6, 2);
+          const formattedDate_modif = `${year}-${month}-${day}`;
+          setDateModif(formattedDate_modif);
+        }
 
         const fetchData = async (id) => {
           for (let endpoint of endpoints) {
@@ -60,6 +80,8 @@ const LegislationDetail = () => {
         const detailsData = await Promise.all(identifiers.map(fetchData));
         const decisionsData = await Promise.all(decisionIdentifiers.map(fetchDecisions));
         const commentsData = await Promise.all(commentIdentifiers.map(fetchComments));
+
+        
 
         setDetails(detailsData);
         setDecisions(decisionsData);
@@ -108,8 +130,8 @@ const LegislationDetail = () => {
                   onClick={() => scrollToSection(`detail-${item.id}`)}
                   className="cursor-pointer text-blue-500 text-sm text-start dark:text-blue-200 hover:underline"
                 >
-                  {extractLastPart(item.title.rendered)} {/* Affiche uniquement la dernière partie */}
-                  
+                  {extractLastPart(parse(item.title.rendered))} {/* Affiche uniquement la dernière partie */}
+              
                 </a>
               </li>
             ))}
@@ -161,12 +183,14 @@ const LegislationDetail = () => {
         </aside>
         <main className="lg:col-span-3 dark:bg-gray-800 p-6 rounded shadow">
           <div className="text-lg leading-relaxed">
-            <h1 className="text-3xl font-bold mb-6">{legislation.title.rendered}</h1>
+            <h1 className="text-3xl font-bold mb-6">{parse(legislation.title.rendered)}</h1>
             <div dangerouslySetInnerHTML={{ __html: legislation.content.rendered }} className="mb-6" />
+            Date d'entrée : {DateEntree} <br/>
+            Date derniere modif : {DateModif} <br/><br/>
             <div>
               {details.map((item, index) => (
                 <div key={index} className="mb-6" id={`detail-${item.id}`}>
-                  <h3 className="text-xl font-semibold mb-2">{extractLastPart(item.title.rendered)}</h3>
+                  <h3 className="text-xl font-semibold mb-2">{extractLastPart(parse(item.title.rendered))}</h3>
                   <div dangerouslySetInnerHTML={{ __html: item.content.rendered }} />
                 </div>
               ))}

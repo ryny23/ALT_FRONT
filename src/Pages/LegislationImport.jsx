@@ -5,7 +5,7 @@ function CsvImporter() {
   const [csvData, setCsvData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const token = localStorage.getItem('token'); // Remplacez par votre vrai token
+  const token = localStorage.getItem('token'); 
 
   // Fonction pour lire et traiter le fichier CSV
   const handleFileUpload = (e) => {
@@ -20,6 +20,31 @@ function CsvImporter() {
     });
   };
 
+  // Fonction pour formater les dates en "YYYY-MM-DD"
+  const formatDate = (date) => {
+    if (!date) return null;
+
+    const parsedDate = new Date(date);
+
+    if (!isNaN(parsedDate)) {
+      return parsedDate.toISOString().split('T')[0];
+    } else {
+      // Gestion des formats non standards comme "12-juin-67"
+      const dateParts = date.split(/[-\/]/);
+      const day = dateParts[0];
+      const month = dateParts[1];
+      const year = dateParts[2].length === 2 ? `19${dateParts[2]}` : dateParts[2];
+
+      // Conversion des mois en français en format numérique
+      const months = {
+        'janvier': '01', 'février': '02', 'mars': '03', 'avril': '04', 'mai': '05', 'juin': '06',
+        'juillet': '07', 'août': '08', 'septembre': '09', 'octobre': '10', 'novembre': '11', 'décembre': '12'
+      };
+
+      return `${year}${months[month.toLowerCase()]}${day}`;
+    }
+  };
+
   // Fonction pour faire les appels API avec authentification par token
   const processCsvData = async () => {
     setLoading(true);
@@ -27,10 +52,14 @@ function CsvImporter() {
     let lastLegislationId = null;
     let lastTitreId = null;
     let lastChapitreId = null;
-  
+
     try {
       for (const row of csvData) {
-        const { Titre_legislation, Titre, Chapitre, Section } = row;
+        const { Titre_legislation, Titre, Chapitre, Section, Code_visé, Date_entrée, Date_modification } = row;
+        
+        const formattedDateEntree = formatDate(Date_entrée);
+        const formattedDateModification = formatDate(Date_modification);
+        
         let response;
         if (!Titre && !Chapitre && !Section) {
           // Crée une législation
@@ -42,10 +71,17 @@ function CsvImporter() {
             },
             body: JSON.stringify({
               title: Titre_legislation, 
+              acf:{
+                code: Code_visé,
+              date_entree: formattedDateEntree,
+              date_modif: formattedDateModification,
+
+              },
+              
               status: 'publish',
             })
           });
-  
+
           if (response.ok) {
             const data = await response.json();
             lastLegislationId = data.id; // Récupère l'ID de la législation
@@ -56,7 +92,7 @@ function CsvImporter() {
             const errorData = await response.json();
             throw new Error(`Erreur lors de la création de la législation: ${errorData.message}`);
           }
-  
+
         } else if (!Chapitre && !Section) {
           // Crée un titre avec l'ID de la législation dans ACF
           response = await fetch('https://alt.back.qilinsa.com/wp-json/wp/v2/titres', {
@@ -73,7 +109,7 @@ function CsvImporter() {
               }
             })
           });
-  
+
           if (response.ok) {
             const data = await response.json();
             lastTitreId = data.id; // Récupère l'ID du titre
@@ -82,11 +118,11 @@ function CsvImporter() {
             const errorData = await response.json();
             throw new Error(`Erreur lors de la création du titre: ${errorData.message}`);
           }
-  
+
         } else if (!Section) {
           // Crée un chapitre avec l'ID du titre ou de la législation dans ACF
           const legislationOuTitreId = lastTitreId ? lastTitreId : lastLegislationId;
-  
+
           response = await fetch('https://alt.back.qilinsa.com/wp-json/wp/v2/chapitres', {
             method: 'POST',
             headers: {
@@ -102,7 +138,7 @@ function CsvImporter() {
               }
             })
           });
-  
+
           if (response.ok) {
             const data = await response.json();
             lastChapitreId = data.id; // Récupère l'ID du chapitre
@@ -111,11 +147,11 @@ function CsvImporter() {
             const errorData = await response.json();
             throw new Error(`Erreur lors de la création du chapitre: ${errorData.message}`);
           }
-  
+
         } else {
           // Crée une section avec l'ID du chapitre, du titre ou de la législation dans ACF
           const legislationOuTitreOuChapitreId = lastChapitreId ? lastChapitreId : (lastTitreId ? lastTitreId : lastLegislationId);
-  
+
           response = await fetch('https://alt.back.qilinsa.com/wp-json/wp/v2/sections', {
             method: 'POST',
             headers: {
@@ -131,7 +167,7 @@ function CsvImporter() {
               }
             })
           });
-  
+
           if (response.ok) {
             console.log('Section créée:', Section, 'avec ID de chapitre, titre ou législation:', legislationOuTitreOuChapitreId);
           } else {
@@ -150,7 +186,7 @@ function CsvImporter() {
 
   return (
     <div className="container mx-auto p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-2xl font-bold mb-4">Importer un fichier CSV pour legislation</h2>
+      <h2 className="text-2xl font-bold mb-4">Importer un fichier CSV pour législation</h2>
       <input
         className="mb-4 p-2 border border-gray-300 rounded"
         type="file"

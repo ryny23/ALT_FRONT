@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
+import Papa from 'papaparse';
 
 const DecisionImport = () => {
     const [decisions, setDecisions] = useState([]);
@@ -22,8 +23,23 @@ const DecisionImport = () => {
                 const commentairesRes = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/commentaires');
                 const articlesRes = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/articles');
                 const legislationsRes = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/legislations');
+    
+                const legislationsMap = legislationsRes.data.reduce((map, legislation) => {
+                    map[legislation.id] = legislation.title.rendered;
+                    return map;
+                }, {});
+    
+                const articlesWithLegislation = await Promise.all(articlesRes.data.map(async (article) => {
+                    const legislationId = article.acf?.Legislation_ou_titre_ou_chapitre_ou_section;
+                    const legislationTitle = legislationsMap[legislationId] || 'Unknown Legislation';
+                    return {
+                        value: article.id,
+                        label: `${article.title.rendered} - ${legislationTitle}`
+                    };
+                }));
+    
                 setCommentaires(commentairesRes.data.map(item => ({ value: item.id, label: item.title.rendered })));
-                setArticles(articlesRes.data.map(item => ({ value: item.id, label: item.title.rendered })));
+                setArticles(articlesWithLegislation);
                 setLegislations(legislationsRes.data.map(item => ({ value: item.id, label: item.title.rendered })));
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -31,30 +47,41 @@ const DecisionImport = () => {
         };
         fetchData();
     }, []);
+    
 
     const handleFileUpload = (event) => {
         const file = event.target.files[0];
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const csv = e.target.result;
-            const lines = csv.split('\n');
-            const result = lines.slice(1).map(line => {
-                const fields = line.split(',');
-                if (fields.length >= 3) {
-                    const Title = fields[0].replace(/(^"|"$)/g, '').trim();
-                    const Content = fields[1].replace(/(^"|"$)/g, '').trim();
-                    const resume = fields[2].replace(/(^"|"$)/g, '').trim();
-                    const information = fields[3].replace(/(^"|"$)/g, '').trim();
-                    if (Title && Content && resume && information) {
-                        return { Title, Content, resume, information };
-                    }
+        Papa.parse(file, {
+            header: true,
+            skipEmptyLines: true,
+            complete: function(results) {
+                const requiredFields = ['Title', 'Content', 'Resume', 'Information'];
+                const parsedData = results.data;
+    
+                // Check if all required fields are present in the first row
+                const missingFields = requiredFields.filter(field => !Object.keys(parsedData[0]).includes(field));
+                
+                if (missingFields.length > 0) {
+                    console.error(`Missing fields in the CSV: ${missingFields.join(', ')}`);
+                    alert(`Error: The following fields are missing in the CSV file: ${missingFields.join(', ')}`);
+                    return;
                 }
-                return null;
-            }).filter(Boolean);
-            setDecisions(result);
-        };
-        reader.readAsText(file);
+    
+                const validData = parsedData.map(row => ({
+                    Title: row.Title ? row.Title.trim() : '',
+                    Content: row.Content ? row.Content.trim() : '',
+                    resume: row.Resume ? row.Resume.trim() : '',
+                    information: row.Information ? row.Information.trim() : ''
+                })).filter(row => row.Title && row.Content && row.resume && row.information);
+    
+                setDecisions(validData);
+            },
+            error: function(error) {
+                console.error('Error parsing CSV file:', error);
+            }
+        });
     };
+    
 
     const handleSave = () => {
         setLoading(true);
@@ -80,7 +107,7 @@ const DecisionImport = () => {
 
             if (commentIDs.length > 0) data.acf.commentaire = commentIDs;
             if (articleIDs.length > 0) data.acf.article = articleIDs;
-            if (legislationID) data.acf.legislation_ou_titre_ou_chapitre_ou_section = legislationID;
+            if (legislationID) data.acf.legislation = legislationID;
 
             return axios.post('https://alt.back.qilinsa.com/wp-json/wp/v2/decisions', data, {
                 headers: {
