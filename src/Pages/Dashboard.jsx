@@ -13,6 +13,7 @@ import {
   HiBell,
   HiFolder,
   HiMenu,
+  HiUpload,
   HiX
 } from 'react-icons/hi';
 
@@ -96,6 +97,7 @@ const Dashboard = () => {
     { to: "commentaire", icon: HiChat, text: "Commentaires" },
     { to: "expert", icon: HiUserGroup, text: "Experts" },
     { to: "avis", icon: HiStar, text: "Donner un avis" },
+    { to: "legal-text-manager", icon: HiUpload, text: "Importer / Exporter" },
     { to: "alertes", icon: HiBell, text: "Alertes", mobileOnly: true },
     { to: "dossier", icon: HiFolder, text: "Dossiers", mobileOnly: true },
   ];
@@ -152,7 +154,9 @@ const Dashboard = () => {
           </div>
           
           <div className="flex-1 max-w-xl mx-auto">
-            <SearchBar />
+            <SearchBar
+              className="z-50 absolute"
+            />
           </div>
           
           <div className="flex items-center lg:w-1/3 justify-end space-x-9">
