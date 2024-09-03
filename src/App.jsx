@@ -41,6 +41,12 @@ import Commentaires from "./Pages/Commentaires";
 import SearchResults from './Components/SearchResults';
 import Historique from "./Components/Historique";
 import LegalTextManager2 from "./Pages/LegalTextmanager2";
+import CommentImport from "./Pages/CommentImport";
+import DecisionImport from "./Pages/DecisionImport";
+import ArticleImport from "./Pages/ArticleImport";
+import LegislationImport from "./Pages/LegislationImport";
+import ImportPage from "./Pages/ImportPage";
+
 
 
 const router = createBrowserRouter(

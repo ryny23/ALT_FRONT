@@ -102,6 +102,7 @@ const ExpertsProfile = () => {
           }
         }
 
+
         const datebarreauFromApi = userData.acf.datebarreau;
         if (datebarreauFromApi) {
           const year = datebarreauFromApi.substr(0, 4);
@@ -148,7 +149,7 @@ const ExpertsProfile = () => {
           
         </div>
         <div className="text-center md:text-left">
-          <h2 className="text-xl font-bold"><span className="dark:text-gray-400">Maitre</span> {nom}</h2>
+          <h2 className="text-xl font-bold">{nom}</h2>
           <p className="dark:text-gray-400">{titre}</p>
           <div className="flex flex-col gap-1 mt-2">
             <div className="flex items-center justify-center md:justify-start">
