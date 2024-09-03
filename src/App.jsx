@@ -40,11 +40,15 @@ import Detailslayout from "./layout/Detailslayout";
 import Commentaires from "./Pages/Commentaires";
 import SearchResults from './Components/SearchResults';
 import Historique from "./Components/Historique";
+<<<<<<< HEAD
 import CommentImport from "./Pages/CommentImport";
 import ArticleImport from "./Pages/ArticleImport";
 import DecisionImport from "./Pages/DecisionImport";
 import LegislationImport from "./Pages/LegislationImport";
 import ImportPage from "./Pages/ImportPage";
+=======
+import LegalTextManager2 from "./Pages/LegalTextmanager2";
+>>>>>>> main
 
 
 const router = createBrowserRouter(
@@ -103,6 +107,7 @@ const router = createBrowserRouter(
                 <Route path="parametres-expert" element={<ExpertsProfileSettings />} />
                 <Route path="results" element={<SearchResults />} />
                 <Route path="/dashboard/recherche/historique" element={<Historique />}/>
+                <Route path="legal-text-manager" element={<LegalTextManager2 />} />
                 
                 
                 {/* TEXTES JURIDIQUES */}

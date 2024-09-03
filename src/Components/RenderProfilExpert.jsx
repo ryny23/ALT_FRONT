@@ -2,12 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import anime from '../assets/anime.svg';
-import logo from './../assets/logo.png';
-import { Button } from 'flowbite-react';
-import { Option } from '@material-tailwind/react';
-import Select from 'react-select';
-import Nav from './Nav';
-import Footer from './Footer';
 
 const ExpertsProfile = () => {
   const { id } = useParams();
@@ -154,7 +148,7 @@ const ExpertsProfile = () => {
           
         </div>
         <div className="text-center md:text-left">
-          <h2 className="text-xl font-bold">{nom}</h2>
+          <h2 className="text-xl font-bold"><span className="dark:text-gray-400">Maitre</span> {nom}</h2>
           <p className="dark:text-gray-400">{titre}</p>
           <div className="flex flex-col gap-1 mt-2">
             <div className="flex items-center justify-center md:justify-start">

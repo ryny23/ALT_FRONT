@@ -3,14 +3,8 @@ import axios from 'axios';
 import anime from '../assets/anime.svg'
 import { Textarea } from 'flowbite-react'
 import { CameraIcon } from '@heroicons/react/20/solid'
-import logo from './../assets/logo.png'
 import { Button } from 'flowbite-react';
-// import Option from '@material-tailwind/react/components/Select/Option';
-// import { Select } from '@material-tailwind/react';
-// import { Select } from '@headlessui/react';
-import { Option } from '@material-tailwind/react';
 import Select from 'react-select';
-import AddButton from './AddButton'
 
 
 

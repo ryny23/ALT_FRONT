@@ -13,6 +13,7 @@ import {
   HiBell,
   HiFolder,
   HiMenu,
+  HiUpload,
   HiX
 } from 'react-icons/hi';
 
@@ -96,6 +97,7 @@ const Dashboard = () => {
     { to: "commentaire", icon: HiChat, text: "Commentaires" },
     { to: "expert", icon: HiUserGroup, text: "Experts" },
     { to: "avis", icon: HiStar, text: "Donner un avis" },
+    { to: "legal-text-manager", icon: HiUpload, text: "Importer / Exporter" },
     { to: "alertes", icon: HiBell, text: "Alertes", mobileOnly: true },
     { to: "dossier", icon: HiFolder, text: "Dossiers", mobileOnly: true },
   ];
@@ -127,6 +129,7 @@ const Dashboard = () => {
                       : 'text-gray-600 hover:text-green-600 dark:text-gray-300 dark:hover:text-white hover:bg-green-50 dark:hover:bg-green-800'
                   } rounded-lg`
                 }
+                onClick={() => window.innerWidth <= 1024 && setSidebarOpen(false)}
               >
                 <item.icon className="w-6 h-6 mr-3" />
                 {item.text}
@@ -151,7 +154,9 @@ const Dashboard = () => {
           </div>
           
           <div className="flex-1 max-w-xl mx-auto">
-            <SearchBar />
+            <SearchBar
+              className="z-50 absolute"
+            />
           </div>
           
           <div className="flex items-center lg:w-1/3 justify-end space-x-9">
@@ -178,37 +183,37 @@ const Dashboard = () => {
               
                 {/* dropdown menu items  */}
                 
-                <div className="top-[43px] z-20 absolute left-[-95px] w-[150px] mt-1 bg-white dark:bg-slate-700 divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
+                <div className="top-[43px] z-20 absolute left-[-95px] w-[150px] mt-1 bg-white dark:bg-slate-800 divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
                       <div className="py-[20px]">
                         <NavLink
                           to="profil"
-                          className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-950"
+                          className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                           Profil
                         </NavLink>
                         <NavLink
                           to="parametres"
-                          className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-950"
+                          className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                           Parametres
                         </NavLink>
                         {isExpert && (
                           <NavLink
                             to="parametres-expert"
-                            className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-950"
+                            className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
                           >
                             Paramètres experts
                           </NavLink>
                         )}
                         <NavLink
                           to="aide"
-                          className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-950"
+                          className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                           Aide
                         </NavLink>
                         <a
                           onClick={() => setShowConfirm(true)}
-                          className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-950"
+                          className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                           Déconnexion
                         </a>
@@ -220,7 +225,7 @@ const Dashboard = () => {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-white dark:bg-gray-900">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-white dark:bg-gray-800">
           <div className="container mx-auto">
             <Outlet />
           </div>
