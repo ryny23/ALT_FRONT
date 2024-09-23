@@ -1,194 +1,166 @@
-import React, { useState } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import React, { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ArrowLeft, ArrowRight, Upload, FileText, Check } from 'lucide-react'
+import ArticleImport from './ArticleImport'
+// import LegislationImport from './LegislationImport'
+// import DecisionImport from './DecisionImport'
+// import CommentaireImport from './CommentaireImport'
 
-const LegalTextManager = () => {
-  const [step, setStep] = useState(1);
-  const [action, setAction] = useState('');
-  const [textType, setTextType] = useState('');
-  const [linkedTypes, setLinkedTypes] = useState({});
-  const [structure, setStructure] = useState([]);
-  const [content, setContent] = useState('');
-  const [csvFile, setCsvFile] = useState(null);
+const textTypes = ["Article", "Législation", "Décision", "Commentaire"]
 
-  const elements = ['Section', 'Chapitre', 'Titre'];
+const steps = [
+  "Import",
+  "Sélectionner le type",
+  "Charger le fichier",
+  "Prévisualisation",
+  "Lier les textes",
+  "Structuration",
+  "Confirmation"
+]
 
-  const baseUrl = 'https://alt.back.qilinsa.com';
+export default function LegalTextmanager2() {
+  const [currentStep, setCurrentStep] = useState(0)
+  const [selectedType, setSelectedType] = useState("")
+  const [isImportComplete, setIsImportComplete] = useState(false)
 
-const createPost = async (data, type) => {
-  const endpoint = `/wp-json/wp/v2/${type}`;
-  const response = await fetch(baseUrl + endpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-  return response.json();
-};
-
-const importCsv = async (csvFile) => {
-  const formData = new FormData();
-  formData.append('file', csvFile);
-
-  const response = await fetch(`${baseUrl}/wp-json/wp/v2/import`, {
-    method: 'POST',
-    body: formData,
-  });
-
-  return response.json();
-};
-
-
-  const handleOnDragEnd = (result) => {
-    if (!result.destination) return;
-
-    const items = Array.from(structure);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    setStructure(items);
-  };
-
-  const handleFileChange = (e) => {
-    setCsvFile(e.target.files[0]);
-  };
-
-  const handleSubmit = async () => {
-    if (action === 'import' && csvFile) {
-      const result = await importCsv(csvFile);
-      console.log(result);
-    } else if (action === 'create') {
-      const data = { content, structure, linkedTypes };
-      const result = await createPost(data, textType);
-      console.log(result);
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 0:
+        return (
+          <motion.div className="flex flex-col items-center gap-4">
+            <Upload className="w-16 h-16 text-green-500" />
+            <h2 className="text-2xl font-bold">Importer un texte juridique</h2>
+            <p className="text-center text-gray-600">
+              Cliquez sur "Suivant" pour commencer le processus d'importation.
+            </p>
+          </motion.div>
+        )
+      case 1:
+        return (
+          <motion.div className="flex flex-col gap-4">
+            <label htmlFor="text-type" className="block text-sm font-medium text-gray-700">Sélectionnez le type de texte</label>
+            <select
+              id="text-type"
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value)}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            >
+              <option value="">Choisissez un type</option>
+              {textTypes.map(type => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+          </motion.div>
+        )
+      default:
+        switch (selectedType) {
+          case "Article":
+            return <ArticleImport currentStep={currentStep} />
+          case "Législation":
+            return <LegislationImport currentStep={currentStep} />
+          case "Décision":
+            return <DecisionImport currentStep={currentStep} />
+          case "Commentaire":
+            return <CommentaireImport currentStep={currentStep} />
+          default:
+            return null
+        }
     }
-  };
+  }
+
+  const renderStepIndicators = () => {
+    const currentIndex = steps.findIndex(step => step === steps[currentStep])
+    const prevStep = steps[currentIndex - 1]
+    const nextStep = steps[currentIndex + 1]
+
+    return (
+      <div className="flex justify-center items-center space-x-4 mb-8">
+        {prevStep && (
+          <motion.div className="text-sm text-gray-500">
+            {prevStep}
+          </motion.div>
+        )}
+        <motion.div className="text-lg font-bold bg-green-500 text-white rounded-full w-12 h-12 flex items-center justify-center">
+          {currentStep + 1}
+        </motion.div>
+        {nextStep && (
+          <motion.div className="text-sm text-gray-500">
+            {nextStep}
+          </motion.div>
+        )}
+      </div>
+    )
+  }
 
   return (
-    <div className="container mx-auto p-4">
-      {step === 1 && (
-        <div className="flex flex-col items-center space-y-4">
-          <h2 className="text-xl font-semibold">Choisissez une action</h2>
-          <button className="btn" onClick={() => { setAction('import'); setStep(2); }}>Importer</button>
-          <button className="btn" onClick={() => { setAction('create'); setStep(2); }}>Créer</button>
-          <button className="btn" onClick={() => { setAction('export'); setStep(2); }}>Exporter</button>
-        </div>
-      )}
-      {step === 2 && (
-        <div className="flex flex-col items-center space-y-4">
-          <h2 className="text-xl font-semibold">Sélectionnez un type de texte juridique</h2>
-          <select
-            className="select"
-            value={textType}
-            onChange={(e) => { setTextType(e.target.value); setStep(3); }}
+    <div className="max-w-2xl mx-auto p-4 md:p-6 space-y-6">
+      {!isImportComplete && renderStepIndicators()}
+
+      <AnimatePresence mode="wait">
+        {!isImportComplete ? (
+          <motion.div
+            key={currentStep}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+            className="bg-white rounded-lg border p-4 md:p-6 shadow-sm"
           >
-            <option value="">Sélectionner...</option>
-            <option value="legislations">Legislations</option>
-            <option value="commentaires">Commentaires</option>
-            <option value="articles">Articles</option>
-            <option value="decisions">Décisions</option>
-          </select>
+            {renderStepContent()}
+          </motion.div>
+        ) : (
+          <motion.div className="flex flex-col items-center gap-4 p-6 bg-green-100 rounded-lg">
+            <Check className="w-16 h-16 text-green-500" />
+            <h2 className="text-2xl font-bold text-green-700">Importation en cours...</h2>
+            <p className="text-center text-green-600">
+              Votre importation est en cours de traitement. Cela pourrait prendre plusieurs heures. Vous pouvez continuer en cliquant sur le bouton ci-dessous.
+            </p>
+            <button
+              onClick={() => {
+                setCurrentStep(0)
+                setSelectedType("")
+                setIsImportComplete(false)
+              }}
+              className="mt-4 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+            >
+              Nouvelle importation
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-          {textType && (
-            <div>
-              <h3>Associer à d'autres types :</h3>
-              {['legislations', 'commentaires', 'articles', 'decisions'].map((type) => (
-                <label key={type} className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    value={type}
-                    onChange={(e) => setLinkedTypes((prev) => ({
-                      ...prev,
-                      [e.target.value]: e.target.checked
-                    }))}
-                  />
-                  <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
-                </label>
-              ))}
-            </div>
-          )}
+      {!isImportComplete && (
+        <div className="flex justify-between">
+          <button
+            onClick={() => setCurrentStep(prev => Math.max(0, prev - 1))}
+            disabled={currentStep === 0}
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md disabled:opacity-50"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4 inline" /> Précédent
+          </button>
+          <button
+            onClick={() => {
+              if (currentStep === steps.length - 1) {
+                setIsImportComplete(true)
+              } else {
+                setCurrentStep(Math.min(steps.length - 1, currentStep + 1))
+              }
+            }}
+            disabled={currentStep === 1 && !selectedType}
+            className="px-4 py-2 bg-green-500 text-white rounded-md disabled:opacity-50"
+          >
+            {currentStep === steps.length - 1 ? (
+              <>
+                <FileText className="mr-2 h-4 w-4 inline" /> Confirmer l'importation
+              </>
+            ) : (
+              <>
+                Suivant <ArrowRight className="ml-2 h-4 w-4 inline" />
+              </>
+            )}
+          </button>
         </div>
       )}
-      {step === 3 && action === 'create' && (
-        <div className="flex flex-col items-center space-y-4">
-          <h2 className="text-xl font-semibold">Réajustez la structure du contenu</h2>
-          <DragDropContext onDragEnd={handleOnDragEnd}>
-            <Droppable droppableId="structure">
-              {(provided) => (
-                <ul className="space-y-2" {...provided.droppableProps} ref={provided.innerRef}>
-                  {structure.map((item, index) => (
-                    <Draggable key={item} draggableId={item} index={index}>
-                      {(provided) => (
-                        <li
-                          className="bg-gray-200 p-2 rounded"
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          ref={provided.innerRef}
-                        >
-                          {item}
-                        </li>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </ul>
-              )}
-            </Droppable>
-          </DragDropContext>
-
-          <div>
-            <h3>Ajouter des éléments :</h3>
-            {elements.map((el) => (
-              <button
-                key={el}
-                className="btn m-1"
-                onClick={() => setStructure([...structure, el])}
-              >
-                {el}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-      {step === 3 && action === 'import' && (
-        <div className="flex flex-col items-center space-y-4">
-          <h2 className="text-xl font-semibold">Importer un fichier CSV</h2>
-          <input type="file" accept=".csv" onChange={handleFileChange} />
-        </div>
-      )}
-      {step === 4 && action === 'create' && (
-        <div className="flex flex-col items-center space-y-4">
-          <h2 className="text-xl font-semibold">Créer un texte manuellement</h2>
-          <textarea
-            className="textarea"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            rows="10"
-            cols="50"
-            placeholder="Écrivez votre texte ici..."
-          />
-        </div>
-      )}
-      {step === 5 && (
-        <div className="flex flex-col items-center space-y-4">
-          <h2 className="text-xl font-semibold">Prévisualisation du texte</h2>
-          <div className="bg-gray-100 p-4 rounded">
-            {action === 'create' ? content : 'Prévisualisation indisponible pour l’importation'}
-          </div>
-        </div>
-      )}
-      {step === 6 && (
-        <div className="flex flex-col items-center space-y-4">
-          <h2 className="text-xl font-semibold">Confirmation</h2>
-          <button className="btn" onClick={handleSubmit}>Confirmer et Soumettre</button>
-        </div>
-      )}
-      <div className="mt-4 flex space-x-4">
-        {step > 1 && <button className="btn" onClick={() => setStep(step - 1)}>Retour</button>}
-        {step < 6 && <button className="btn" onClick={() => setStep(step + 1)}>Suivant</button>}
-      </div>
     </div>
-  );
-};
-
-export default LegalTextManager;
+  )
+}

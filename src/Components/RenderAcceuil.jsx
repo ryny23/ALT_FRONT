@@ -314,7 +314,7 @@ const RenderAcceuil = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        Bienvenue, <span className="font-bold text-green-500">{userName.charAt(0).toUpperCase() + userName.slice(1)}</span> !
+        Bienvenue, <span className="font-bold capitalize text-green-500">{userName}</span> !
       </motion.h1>
 
       <div className="grid grid-cols-1 md:grid-cols-6 gap-6">
