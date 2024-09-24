@@ -138,7 +138,7 @@ const Dashboard = () => {
                 }
                 onClick={() => {
                   handleNavigation(item.category);
-                  window.innerWidth <= 1024 && setSidebarOpen(false);
+                  // window.innerWidth <= 1024 && setSidebarOpen(false);
                 }}
               >
                 <item.icon className="w-6 h-6 mr-3" />
