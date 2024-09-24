@@ -175,10 +175,10 @@ const AuthForm = () => {
   
     const { conUsername, conPassword, conLoggedIn, conError, conRememberMe } = conState;
   
-    if (conLoggedIn || localStorage.getItem('token') || Cookies.get('token')) {
-      navigate('/authform');
-      return null;
-    }
+    // if (conLoggedIn || localStorage.getItem('token') || Cookies.get('token')) {
+    //   navigate('/authform');
+    //   return null;
+    // }
 
   return (
     <div className="w-full h-screen flex flex-col md:flex-row">
