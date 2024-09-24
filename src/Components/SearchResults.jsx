@@ -24,19 +24,7 @@ const SearchResults = () => {
   const { search } = useLocation();
   const navigate = useNavigate();
   const query = new URLSearchParams(search).get('query') || '';
-<<<<<<< HEAD
-  const [resultCounts, setResultCounts] = useState({
-    legislations: 0,
-    decisions: 0,
-    commentaires: 0,
-    articles: 0,
-    lois: 0,
-    documentsParlementaires: 0,
-    all: 0,
-  });
-=======
   const [resultCounts, setResultCounts] = useState({});
->>>>>>> main
   const [articleExcerpts, setArticleExcerpts] = useState({});
   const [legislationTitles, setLegislationTitles] = useState({});
   const { activeSearchCategory, setActiveSearchCategory } = useOutletContext();
@@ -107,11 +95,6 @@ const SearchResults = () => {
     }
   }, [fetchData]);
 
-  const handleResultClick = (result) => {
-    const basePath = `/dashboard/${result.type}/${result.id}`;
-    navigate(basePath);
-  };
-
   useEffect(() => {
     const fetchResults = async () => {
       if (!query) return;
@@ -128,47 +111,12 @@ const SearchResults = () => {
           `/wp-json/wp/v2/legislations?search=${query}`,
           `/wp-json/wp/v2/commentaires?search=${query}`,
           `/wp-json/wp/v2/articles?search=${query}`,
-          `/wp-json/wp/v2/legislations?categories_legislations=14&search=${query}`,
-          `/wp-json/wp/v2/legislations?categories_legislations=11&search=${query}`,
         ];
 
         const [decisions, allLegislations, commentaires, articles] = await Promise.all(
           endpoints.map(fetchData)
         );
 
-<<<<<<< HEAD
-        const [decisions, legislations, commentaires, articles, lois, documentsParlementaires] = responses.map(response => response.data);
-
-        setResultCounts({
-          decisions: decisions.length,
-          legislations: legislations.length,
-          commentaires: commentaires.length,
-          articles: articles.length,
-          lois: lois.length,
-          documentsParlementaires: documentsParlementaires.length,
-        });
-
-        const combinedResults = [
-          ...decisions.map(item => ({ ...item, type: 'decision' })),
-          ...legislations.map(item => ({ ...item, type: 'legislation' })),
-          ...commentaires.map(item => ({ ...item, type: 'commentaire' })),
-          ...articles.map(item => ({ ...item, type: 'article' })),
-          ...lois.map(item => ({ ...item, type: 'loi' })),
-          ...documentsParlementaires.map(item => ({ ...item, type: 'documentParlementaire' })),
-        ];
-
-        setResults(combinedResults);
-        setResultCounts(prevCounts => ({
-          ...prevCounts,
-          all: combinedResults.length,
-        }));
-
-        combinedResults.forEach(result => {
-          if (result.type === 'article' && !articleExcerpts[result.id]) {
-            fetchArticleExcerpt(result.id);
-            fetchLegislationTitle(result.id);
-          }
-=======
         const legislations = allLegislations.filter(leg => !leg.categories_legislations.includes(11) && !leg.categories_legislations.includes(14));
         const lois = allLegislations.filter(leg => leg.categories_legislations.includes(14));
         const documentsParlementaires = allLegislations.filter(leg => leg.categories_legislations.includes(11));
@@ -189,7 +137,6 @@ const SearchResults = () => {
           commentaires: commentaires.length,
           articles: articles.length,
           all: combinedResults.length,
->>>>>>> main
         });
 
         await Promise.all(combinedResults
@@ -247,12 +194,8 @@ const SearchResults = () => {
     fetchResults();
   }, [query, fetchData, fetchArticleData]);
 
-<<<<<<< HEAD
-  const highlightText = (text) => {
-=======
 
   const highlightText = useCallback((text) => {
->>>>>>> main
     if (!text) return text;
     const regex = new RegExp(`(${query})`, 'gi');
     return text.replace(regex, '<span class="bg-yellow-200">$1</span>');
@@ -262,10 +205,6 @@ const SearchResults = () => {
     if (!text || !query) return text;
     const queryIndex = text.toLowerCase().indexOf(query.toLowerCase());
     if (queryIndex === -1) return text.substring(0, 400);
-<<<<<<< HEAD
-
-=======
->>>>>>> main
     const start = Math.max(queryIndex - 200, 0);
     const end = Math.min(start + 400, text.length);
     return text.substring(start, end);
@@ -279,17 +218,6 @@ const SearchResults = () => {
 
   return (
     <section className="px-4 md:px-8 pt-4 bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
-<<<<<<< HEAD
-      {error && <div className="text-red-500">{error}</div>}
-      <div className="mb-4 flex flex-wrap font-medium justify-center items-center space-x-2 md:space-x-4">
-        <CategoryButton category="all" count={resultCounts.all} selectedCategory={selectedCategory} onClick={handleShowAll} />
-        <CategoryButton category="legislation" count={resultCounts.legislations} selectedCategory={selectedCategory} onClick={handleCategoryClick} />
-        <CategoryButton category="decision" count={resultCounts.decisions} selectedCategory={selectedCategory} onClick={handleCategoryClick} />
-        <CategoryButton category="commentaire" count={resultCounts.commentaires} selectedCategory={selectedCategory} onClick={handleCategoryClick} />
-        <CategoryButton category="article" count={resultCounts.articles} selectedCategory={selectedCategory} onClick={handleCategoryClick} />
-        <CategoryButton category="loi" count={resultCounts.lois} selectedCategory={selectedCategory} onClick={handleCategoryClick} />
-        <CategoryButton category="documentParlementaire" count={resultCounts.documentsParlementaires} selectedCategory={selectedCategory} onClick={handleCategoryClick} />
-=======
       {error && <div className="text-red-500 mb-4">{error}</div>}
       <div className="mb-4 flex flex-wrap font-medium justify-center items-center space-x-2 md:space-x-4">
         {Object.entries(categoryMapping).map(([key, value]) => (
@@ -302,7 +230,6 @@ const SearchResults = () => {
             onClick={key === 'all' ? handleShowAll : handleCategoryClick}
           />
         ))}
->>>>>>> main
       </div>
       
       {selectedCategory === 'legislation' && (
@@ -321,25 +248,6 @@ const SearchResults = () => {
       )}
       
       {loading && <div className='text-center my-28 text-3xl'>Recherche en cours...</div>}
-<<<<<<< HEAD
-      {results.length === 0 && !loading ? (
-        <div className='text-center my-28 text-3xl'>Aucun résultat trouvé</div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {results.map((result) => (
-            <ResultCard
-              key={result.id}
-              result={result}
-              selectedCategory={selectedCategory}
-              handleResultClick={handleResultClick}
-              highlightText={highlightText}
-              createExcerpt={createExcerpt}
-              legislationTitles={legislationTitles}
-              articleExcerpts={articleExcerpts}
-            />
-          ))}
-        </div>
-=======
       
       {!loading && (
         <>
@@ -392,66 +300,40 @@ const SearchResults = () => {
             </div>
           )}
         </>
->>>>>>> main
       )}
     </section>
   );
 };
 
-<<<<<<< HEAD
-const CategoryButton = ({ category, count, selectedCategory, onClick }) => (
-=======
 const CategoryButton = React.memo(({ category, display, count, selectedCategory, onClick }) => (
->>>>>>> main
   <span
     className={`cursor-pointer px-2 py-1 rounded ${selectedCategory === category ? 'bg-green-500 text-white' : 'hover:bg-gray-200 dark:hover:bg-gray-700'}`}
     onClick={() => onClick(category)}
   >
-<<<<<<< HEAD
-    {category.charAt(0).toUpperCase() + category.slice(1)} ({count})
-  </span>
-);
-
-const ResultCard = ({ result, selectedCategory, handleResultClick, highlightText, createExcerpt, legislationTitles, articleExcerpts }) => (
-  <div
-    className={`p-4 border rounded-lg hover:shadow-md transition-shadow duration-300
-      ${selectedCategory !== 'all' && selectedCategory !== result.type ? 'hidden' : ''}`}
-  >
-=======
     {display} ({count})
   </span>
 ));
 
 const ResultCard = React.memo(({ result, handleResultClick, highlightText, createExcerpt, legislationTitles, articleExcerpts, legislationSubTypes }) => (
   <div className="p-4 border rounded-lg hover:shadow-md transition-shadow duration-300">
->>>>>>> main
     <h3
       className="text-lg font-bold cursor-pointer hover:text-green-400 mb-2"
       onClick={() => handleResultClick(result)}
     >
       <span dangerouslySetInnerHTML={{ __html: highlightText(result.title.rendered) }} />
     </h3>
-<<<<<<< HEAD
-    <p className="text-sm text-gray-600 mb-2">{result.type}</p>
-=======
     <p className="text-sm text-gray-600 mb-2">
       {result.type === 'legislation' 
         ? `Législation : ${result.subType === 'general' ? '' : legislationSubTypes[result.subType]}`
         : result.type.charAt(0).toUpperCase() + result.type.slice(1)}
     </p>
->>>>>>> main
 
     {result.type === 'article' && legislationTitles[result.id] && (
       <p className="text-gray-600 mb-2 text-sm">
         Législation associée:{' '}
         <NavLink
           to={`/dashboard/legislation/${legislationTitles[result.id].id}`}
-<<<<<<< HEAD
-          className="cursor-pointer text-green-500 hover:underline"
-        >
-=======
           className="cursor-pointer text-green-500 hover:underline">
->>>>>>> main
           <span dangerouslySetInnerHTML={{ __html: highlightText(legislationTitles[result.id].title) }} />
         </NavLink>
       </p>
@@ -465,9 +347,6 @@ const ResultCard = React.memo(({ result, handleResultClick, highlightText, creat
       )}
     </div>
   </div>
-<<<<<<< HEAD
-);
-=======
 ));
 
 
@@ -524,6 +403,5 @@ const SimilarResultCard = React.memo(({ result, handleResultClick, highlightText
   </div>
 ));
 
->>>>>>> main
 
 export default SearchResults;
