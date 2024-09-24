@@ -104,7 +104,7 @@ const Dashboard = () => {
     { to: "commentaire", icon: HiChat, text: "Commentaires", category: "commentaire" },
     { to: "expert", icon: HiUserGroup, text: "Experts", category: "expert" },
     { to: "avis", icon: HiStar, text: "Donner un avis", category: "avis" },
-    // ...(importer ? [{ to: "legal-text-manager", icon: HiUpload, text: "Importer / Exporter", category: "legal-text-manager" }] : []),
+    ...(importer ? [{ to: "legal-text-manager", icon: HiUpload, text: "Importer / Exporter", category: "legal-text-manager" }] : []),
     { to: "alertes", icon: HiBell, text: "Alertes", mobileOnly: true, category: "alertes" },
     { to: "dossier", icon: HiFolder, text: "Dossiers", mobileOnly: true, category: "dossier" },
   ];
