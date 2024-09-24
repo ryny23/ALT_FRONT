@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-import React, { useState, useCallback, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, ArrowRight, Upload, FileText, Check, AlertTriangle, Plus, Trash2, Edit, Download } from 'lucide-react'
-=======
 import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, Reorder } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Upload, FileText, Check, AlertTriangle, Download, Edit, Trash, X, GripVertical, Link } from 'lucide-react'
->>>>>>> main
 import Papa from 'papaparse'
 import axios from 'axios'
 import Select from 'react-select'
@@ -31,88 +25,6 @@ const LegislationNode = React.memo(({ node, position, onDrop, onEdit, onDelete, 
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(node.content);
 
-<<<<<<< HEAD
-const API_BASE_URL = "https://alt.back.qilinsa.com/wp-json/wp/v2"
-
-const removeAccents = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-
-const StructureItem = ({ item, path, moveItem, addChild, removeItem, editItem, onDrop }) => {
-  const [{ isDragging }, drag] = useDrag({
-    type: 'STRUCTURE_ITEM',
-    item: { path, type: 'STRUCTURE_ITEM' },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  })
-
-  const [, drop] = useDrop({
-    accept: ['STRUCTURE_ITEM', 'LINKED_TEXT'],
-    hover(draggedItem, monitor) {
-      if (draggedItem.type === 'STRUCTURE_ITEM' && draggedItem.path !== path) {
-        moveItem(draggedItem.path, path)
-        draggedItem.path = path
-      }
-    },
-    drop(draggedItem, monitor) {
-      if (draggedItem.type === 'LINKED_TEXT') {
-        onDrop(draggedItem, path)
-      }
-    },
-  })
-
-  return (
-    <div 
-      ref={(node) => drag(drop(node))} 
-      style={{ opacity: isDragging ? 0.5 : 1, cursor: 'move' }} 
-      className={`mb-2 p-2 border rounded-md ${
-        item.type === 'Titre' ? 'bg-blue-100' : 
-        item.type === 'Chapitre' ? 'bg-green-100' : 
-        item.type === 'Section' ? 'bg-yellow-100' : 
-        item.type === 'Article' ? 'bg-red-100' : 
-        item.type === 'Décision' ? 'bg-purple-100' : 
-        item.type === 'Commentaire' ? 'bg-orange-100' : 
-        'bg-gray-100'
-      }`}
-    >
-      <div className="flex items-center justify-between">
-        <span>{item.type}: {item.content}</span>
-        <div>
-          {['Titre', 'Chapitre', 'Section', 'Article', 'Décision', 'Commentaire'].map((type, idx) => (
-            <button key={idx} onClick={() => addChild(path, type)} className={`mr-2 text-${
-              type === 'Titre' ? 'blue' : 
-              type === 'Chapitre' ? 'green' : 
-              type === 'Section' ? 'yellow' : 
-              type === 'Article' ? 'red' : 
-              type === 'Décision' ? 'purple' : 
-              'orange'
-            }-500`}>
-              <Plus size={16} />{type.charAt(0).toUpperCase()}
-            </button>
-          ))}
-          <button onClick={() => editItem(path)} className="text-blue-500 mr-2">
-            <Edit size={16} />
-          </button>
-          <button onClick={() => removeItem(path)} className="text-red-500">
-            <Trash2 size={16} />
-          </button>
-        </div>
-      </div>
-      {item.children && item.children.length > 0 && (
-        <div className="ml-4 mt-2">
-          {item.children.map((child, childIndex) => (
-            <StructureItem
-              key={childIndex}
-              item={child}
-              path={`${path}-${childIndex}`}
-              moveItem={moveItem}
-              addChild={addChild}
-              removeItem={removeItem}
-              editItem={editItem}
-              onDrop={onDrop}
-            />
-          ))}
-        </div>
-=======
   const handleEdit = () => {
     if (isEditing) {
       onEdit(node.id, editedContent);
@@ -151,7 +63,6 @@ const StructureItem = ({ item, path, moveItem, addChild, removeItem, editItem, o
         <button onClick={() => onRemove(node.id)} className="p-1 text-gray-500 hover:bg-gray-100 rounded">
           <X size={16} />
         </button>
->>>>>>> main
       )}
     </div>
   );
@@ -321,27 +232,6 @@ const LinkedTextBadge = () => (
   </span>
 )
 
-const LinkedTextItem = ({ text, onDragStart }) => {
-  const [{ isDragging }, drag] = useDrag({
-    type: 'LINKED_TEXT',
-    item: { type: 'LINKED_TEXT', text },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  })
-
-  return (
-    <div
-      ref={drag}
-      style={{ opacity: isDragging ? 0.5 : 1, cursor: 'move' }}
-      className="p-2 mb-2 border rounded-md bg-gray-100"
-      onDragStart={() => onDragStart(text)}
-    >
-      {text.type}: {text.title}
-    </div>
-  )
-}
-
 export default function LegalTextManager() {
   const [currentStep, setCurrentStep] = useState(0)
   const [selectedType, setSelectedType] = useState("")
@@ -351,11 +241,6 @@ export default function LegalTextManager() {
   const [isImportComplete, setIsImportComplete] = useState(false)
   const [error, setError] = useState(null)
   const [selectedLinkedTexts, setSelectedLinkedTexts] = useState({})
-<<<<<<< HEAD
-  const [showEditPopup, setShowEditPopup] = useState(false)
-  const [editingPath, setEditingPath] = useState(null)
-  const [editingContent, setEditingContent] = useState("")
-=======
   const [availableTexts, setAvailableTexts] = useState({})
   const [legislationStructures, setLegislationStructures] = useState([])
   const [selectedLegislationIndex, setSelectedLegislationIndex] = useState(null)
@@ -392,25 +277,16 @@ export default function LegalTextManager() {
       </LegislationNode>
     ))
   }
->>>>>>> main
 
   useEffect(() => {
     const fetchTexts = async () => {
       const texts = {}
       for (const type of textTypes) {
         try {
-<<<<<<< HEAD
-          const response = await fetch(`${API_BASE_URL}/${removeAccents(type.toLowerCase())}s`)
-          const data = await response.json()
-          texts[type] = data.map(item => ({
-            id: item.id,
-            title: item.title?.rendered || item.acf?.titre || 'Sans titre',
-=======
           const response = await axios.get(`${API_BASE_URL}/${removeAccents(type.toLowerCase())}s`)
           texts[type] = response.data.map(item => ({
             value: item.id.toString(),
             label: item.title?.rendered || item.acf?.titre || 'Sans titre',
->>>>>>> main
             type
           }))
         } catch (err) {
@@ -442,11 +318,7 @@ export default function LegalTextManager() {
           const headers = Object.keys(cleanedData[0] || {}).map(header => header.trim())
           let isValid = true
           let errorMessage = ""
-<<<<<<< HEAD
-
-=======
   
->>>>>>> main
           if (results.errors.length > 0) {
             errorMessage = `Erreur de parsing CSV: ${results.errors[0].message}`
             isValid = false
@@ -459,26 +331,6 @@ export default function LegalTextManager() {
   
           if (isValid) {
             if (selectedType === "Législation") {
-<<<<<<< HEAD
-              const requiredHeaders = [
-                "Titre_legislation",
-                "Date d'entrée en vigueur",
-                "Date dernière modification",
-                "Code visé"
-              ]
-              const missingHeaders = requiredHeaders.filter(header => !headers.includes(header))
-              if (missingHeaders.length > 0) {
-                errorMessage = `Le fichier CSV pour la législation ne contient pas les colonnes suivantes : ${missingHeaders.join(", ")}`
-                isValid = false
-              }
-            } else {
-              if (!headers.includes('Title') || !headers.includes('Content')) {
-                errorMessage = "Le fichier CSV pour les articles, commentaires ou décisions doit contenir les colonnes 'Title' et 'Content'"
-                isValid = false
-              }
-            }
-          }
-=======
               const structures = buildLegislationStructures(cleanedData)
               setLegislationStructures(structures)
               setParsedTexts(structures)
@@ -489,7 +341,6 @@ export default function LegalTextManager() {
               setLegislationLinkedTexts(linkedTexts)
             } else {
               setParsedTexts(cleanedData)
->>>>>>> main
 
               // Extraire les textes liés pour les autres types
               const linkedTexts = {}
@@ -512,11 +363,8 @@ export default function LegalTextManager() {
             setError(null)
           } else {
             setError(errorMessage)
-<<<<<<< HEAD
-=======
             setParsedTexts([])
             event.target.value = null
->>>>>>> main
           }
         }
       })
@@ -529,30 +377,6 @@ export default function LegalTextManager() {
     let currentStructure = null
     let currentLegislation = null
 
-<<<<<<< HEAD
-    const levels = ['Titre', 'Chapitre', 'Section', 'Texte lié']
-    for (const level of levels) {
-      if (item[level] && item[level].trim() !== '') {
-        let element = currentLevel.find(el => el.type === level && el.content === item[level])
-        if (!element) {
-          element = { type: level, content: item[level], children: [] }
-          currentLevel.push(element)
-        }
-        currentLevel = element.children
-      }
-    }
-
-    if (item['Texte lié'] && item['Contenu'] && item['Type de texte']) {
-      currentLevel.push({
-        type: item['Type de texte'],
-        content: item['Texte lié'],
-        text: item['Contenu']
-      })
-    }
-
-    return newStructure
-  }
-=======
     data.forEach((row) => {
       if (row.Titre_legislation && row.Titre_legislation !== currentLegislation) {
         if (currentStructure) {
@@ -583,144 +407,11 @@ export default function LegalTextManager() {
 
     return structures
   }, [])
->>>>>>> main
 
   const handleTextSelection = useCallback((index) => {
     setSelectedTexts(prev => 
       prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
     )
-<<<<<<< HEAD
-    if (!selectedLinkedTexts[index]) {
-      setSelectedLinkedTexts(prev => ({ ...prev, [index]: [] }))
-    }
-  }, [selectedLinkedTexts])
-
-  const addChild = useCallback((path, type) => {
-    setStructure(prev => {
-      const newStructure = JSON.parse(JSON.stringify(prev))
-      const indices = path === '-1' ? [] : path.split('-').map(Number)
-      let current = newStructure
-      for (let i = 0; i < indices.length; i++) {
-        if (!current[indices[i]]) {
-          return prev
-        }
-        current = current[indices[i]].children
-      }
-      current.push({ type, content: `Nouveau ${type}`, children: [] })
-      return newStructure
-    })
-  }, [])
-
-  const removeItem = useCallback((path) => {
-    setStructure(prev => {
-      const newStructure = JSON.parse(JSON.stringify(prev))
-      const indices = path.split('-').map(Number)
-      const lastIndex = indices.pop()
-      if (lastIndex === undefined) return prev
-      let current = newStructure
-      for (let i = 0; i < indices.length; i++) {
-        if (!current[indices[i]]) {
-          return prev
-        }
-        current = current[indices[i]].children
-      }
-      current.splice(lastIndex, 1)
-      return newStructure
-    })
-  }, [])
-
-  const moveItem = useCallback((fromPath, toPath) => {
-    setStructure(prev => {
-      const newStructure = JSON.parse(JSON.stringify(prev))
-      
-      const getItem = (structure, path) => {
-        const indices = path.split('-').map(Number)
-        let current = structure
-        for (let i = 0; i < indices.length; i++) {
-          if (!current[indices[i]]) {
-            return null
-          }
-          if (i === indices.length - 1) {
-            return current[indices[i]]
-          }
-          current = current[indices[i]].children
-        }
-        return null
-      }
-
-      const removeItem = (structure, path) => {
-        const indices = path.split('-').map(Number)
-        const lastIndex = indices.pop()
-        if (lastIndex === undefined) return null
-        let current = structure
-        for (let i = 0; i < indices.length; i++) {
-          if (!current[indices[i]]) {
-            return null
-          }
-          current = current[indices[i]].children
-        }
-        return current.splice(lastIndex, 1)[0]
-      }
-
-      const addItem = (structure, path, item) => {
-        const indices = path.split('-').map(Number)
-        let current = structure
-        for (let i = 0; i < indices.length; i++) {
-          if (!current[indices[i]]) {
-            current[indices[i]] = { type: 'Titre', content: 'Nouveau Titre', children: [] }
-          }
-          if (i === indices.length - 1) {
-            current[indices[i]].children.push(item)
-            return
-          }
-          current = current[indices[i]].children
-        }
-      }
-
-      const movedItem = removeItem(newStructure, fromPath)
-      if (movedItem) {
-        addItem(newStructure, toPath, movedItem)
-      }
-
-      return newStructure
-    })
-  }, [])
-
-  const editItem = useCallback((path) => {
-    const indices = path.split('-').map(Number)
-    let current = structure
-    for (let i = 0; i < indices.length; i++) {
-      if (!current[indices[i]]) {
-        return
-      }
-      if (i === indices.length - 1) {
-        setEditingPath(path)
-        setEditingContent(current[indices[i]].content)
-        setShowEditPopup(true)
-        return
-      }
-      current = current[indices[i]].children
-    }
-  }, [structure])
-
-  const handleEditConfirm = useCallback(() => {
-    if (!editingPath) return
-    setStructure(prev => {
-      const newStructure = JSON.parse(JSON.stringify(prev))
-      const indices = editingPath.split('-').map(Number)
-      let current = newStructure
-      for (let i = 0; i < indices.length; i++) {
-        if (!current[indices[i]]) {
-          return prev
-        }
-        if (i === indices.length - 1) {
-          current[indices[i]].content = editingContent
-          return newStructure
-        }
-        current = current[indices[i]].children
-      }
-      return prev
-=======
   }, [])
 
   const handleLinkedText = useCallback((selectedIndex, newLinkedTexts, type) => {
@@ -818,122 +509,9 @@ export default function LegalTextManager() {
         }
         return structure
       })
->>>>>>> main
     })
   }, [selectedLegislationIndex])
 
-<<<<<<< HEAD
-  const handleLinkedText = useCallback((sourceIndex, targetType, targetId) => {
-    setSelectedLinkedTexts(prev => {
-      const newLinkedTexts = { ...prev }
-      if (!newLinkedTexts[sourceIndex]) {
-        newLinkedTexts[sourceIndex] = []
-      }
-      const existingIndex = newLinkedTexts[sourceIndex].findIndex(item => item.id === targetId)
-      if (existingIndex > -1) {
-        newLinkedTexts[sourceIndex].splice(existingIndex, 1)
-      } else {
-        newLinkedTexts[sourceIndex].push({
-          id: targetId,
-          type: targetType,
-          title: availableTexts[targetType]?.find(text => text.id === targetId)?.title
-        })
-      }
-      return newLinkedTexts
-    })
-  }, [availableTexts])
-
-  const handleSelectAll = useCallback((sourceIndex, targetType, select) => {
-    setSelectedLinkedTexts(prev => {
-      const newLinkedTexts = { ...prev }
-      if (!newLinkedTexts[sourceIndex]) {
-        newLinkedTexts[sourceIndex] = []
-      }
-      if (select) {
-        const newTexts = availableTexts[targetType]
-          ?.filter(text => !newLinkedTexts[sourceIndex].some(item => item.id === text.id))
-          .map(text => ({
-            id: text.id,
-            type: targetType,
-            title: text.title
-          }))
-        newLinkedTexts[sourceIndex] = [...newLinkedTexts[sourceIndex], ...(newTexts || [])]
-      } else {
-        newLinkedTexts[sourceIndex] = newLinkedTexts[sourceIndex].filter(item => item.type !== targetType)
-      }
-      return newLinkedTexts
-    })
-  }, [availableTexts])
-
-  const exportStructure = useCallback(() => {
-    const flattenStructure = (structure, parent = '') => {
-      return structure.flatMap((item, index) => {
-        const currentPath = parent ? `${parent}-${index}` : `${index}`
-        const row = {
-          Titre_legislation: parsedTexts[0].Titre_legislation,
-          "Date d'entrée en vigueur": parsedTexts[0]["Date d'entrée en vigueur"],
-          "Date dernière modification": parsedTexts[0]["Date dernière modification"],
-          "Code visé": parsedTexts[0]["Code visé"],
-          Titre: item.type === 'Titre' ? item.content : '',
-          Chapitre: item.type === 'Chapitre' ? item.content : '',
-          Section: item.type === 'Section' ? item.content : '',
-          "Texte lié": ['Article', 'Décision', 'Commentaire'].includes(item.type) ? item.content : '',
-          Contenu: ['Article', 'Décision', 'Commentaire'].includes(item.type) ? item.text : '',
-          "Type de texte": ['Article', 'Décision', 'Commentaire'].includes(item.type) ? item.type : '',
-        }
-        return [
-          row,
-          ...(item.children ? flattenStructure(item.children, currentPath) : [])
-        ]
-      })
-    }
-
-    const flatStructure = flattenStructure(structure)
-    const csv = Papa.unparse(flatStructure)
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
-    const link = document.createElement('a')
-    if (link.download !== undefined) {
-      const url = URL.createObjectURL(blob)
-      link.setAttribute('href', url)
-      link.setAttribute('download', 'structure_exportee.csv')
-      link.style.visibility = 'hidden'
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-    }
-  }, [structure, parsedTexts])
-
-  const handleDrop = useCallback((draggedItem, targetPath) => {
-    setStructure(prev => {
-      const newStructure = JSON.parse(JSON.stringify(prev))
-      const indices = targetPath.split('-').map(Number)
-      let current = newStructure
-      for (let i = 0; i < indices.length; i++) {
-        if (!current[indices[i]]) {
-          return prev
-        }
-        if (i === indices.length - 1) {
-          current[indices[i]].children.push({
-            type: draggedItem.text.type,
-            content: draggedItem.text.title,
-            text: draggedItem.text.content
-          })
-          return newStructure
-        }
-        current = current[indices[i]].children
-      }
-      return prev
-    })
-    setSelectedLinkedTexts(prev => {
-      const newLinkedTexts = { ...prev }
-      Object.keys(newLinkedTexts).forEach(key => {
-        newLinkedTexts[Number(key)] = newLinkedTexts[Number(key)].filter(item => item.id !== draggedItem.text.id)
-      })
-      return newLinkedTexts
-    })
-  }, [])
-
-=======
   const handleBulkSelection = useCallback((select) => {
     setBulkSelection(select)
     if (!select) {
@@ -1020,7 +598,6 @@ export default function LegalTextManager() {
     }
   }, [selectedTexts, parsedTexts, selectedLinkedTexts, articlePositions, selectedType]);
   
->>>>>>> main
   const renderStepContent = useCallback(() => {
     const animationProps = {
       initial: { opacity: 0, y: 50 },
@@ -1115,142 +692,17 @@ export default function LegalTextManager() {
                 {parsedTexts.map((legislation, index) => (
                   <div key={index} className="mb-2">
                     <input
-<<<<<<< HEAD
-                      type="checkbox"
-                      id={`text-${index}`}
-                      checked={selectedTexts.includes(index)}
-                      onChange={() => handleTextSelection(index)}
-                      className="rounded text-blue-600 focus:ring-blue-500"
-=======
                       type="radio"
                       id={`legislation-${index}`}
                       name="legislation"
                       value={index}
                       checked={selectedLegislationIndex === index}
                       onChange={() => setSelectedLegislationIndex(index)}
->>>>>>> main
                     />
                     <label htmlFor={`legislation-${index}`} className="ml-2">
                       {legislation.Titre_legislation}
                     </label>
                   </div>
-<<<<<<< HEAD
-                  {selectedType === "Législation" ? (
-                    <div className="mt-2">
-                      <p><strong>Date d'entrée en vigueur:</strong> {text["Date d'entrée en vigueur"] || "N/A"}</p>
-                      <p><strong>Date dernière modification:</strong> {text["Date dernière modification"] || "N/A"}</p>
-                      <p><strong>Code visé:</strong> {text["Code visé"] || "N/A"}</p>
-                      <div className="mt-2">
-                        <h4 className="font-semibold">Structure:</h4>
-                        <ul className="list-disc list-inside">
-                          {text.structure.map((item, i) => (
-                            <li key={i}>{item.type}: {item.content}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  ) : (
-                    <p className="mt-2 text-sm text-gray-500">{text.Content.substring(0, 200)}...</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )
-      case 4:
-        return (
-          <motion.div {...animationProps}>
-            <h3 className="text-lg font-semibold">Lier les textes</h3>
-            <div className="space-y-4">
-              {selectedTexts.map((selectedIndex) => (
-                <div key={selectedIndex} className="border rounded-md p-4">
-                  <h4 className="font-medium mb-2">
-                    {selectedType === "Législation" 
-                      ? parsedTexts[selectedIndex].Titre_legislation 
-                      : parsedTexts[selectedIndex].Title}
-                  </h4>
-                  {textTypes.filter(type => type !== selectedType).map(type => (
-                    <div key={type} className="mt-2">
-                      <h5 className="font-medium">{type}s</h5>
-                      <div className="flex flex-wrap gap-2">
-                        {availableTexts[type]?.map(text => (
-                          <button
-                            key={text.id}
-                            onClick={() => handleLinkedText(selectedIndex, type, text.id)}
-                            className={`px-3 py-1 text-sm rounded-full ${
-                              selectedLinkedTexts[selectedIndex]?.some(item => item.id === text.id)
-                                ? 'bg-blue-500 text-white'
-                                : 'bg-gray-200 text-gray-700'
-                            }`}
-                          >
-                            {text.title}
-                          </button>
-                        ))}
-                      </div>
-                      <div className="mt-2">
-                        <button onClick={() => handleSelectAll(selectedIndex, type, true)} className="text-blue-500 mr-2">Tout sélectionner</button>
-                        <button onClick={() => handleSelectAll(selectedIndex, type, false)} className="text-blue-500">Tout désélectionner</button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )
-      case 5:
-        if (selectedType !== "Législation") return null
-        return (
-          <motion.div {...animationProps}>
-            <h3 className="text-lg font-semibold">Structuration de la législation</h3>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-4 h-4 bg-blue-100"></div>
-              <span>Titre</span>
-              <div className="w-4 h-4 bg-green-100"></div>
-              <span>Chapitre</span>
-              <div className="w-4 h-4 bg-yellow-100"></div>
-              <span>Section</span>
-              <div className="w-4 h-4 bg-red-100"></div>
-              <span>Article</span>
-              <div className="w-4 h-4 bg-purple-100"></div>
-              <span>Décision</span>
-              <div className="w-4 h-4 bg-orange-100"></div>
-              <span>Commentaire</span>
-            </div>
-            <DndProvider backend={HTML5Backend}>
-              <div className="flex">
-                <div className="w-3/4 h-[400px] rounded-md border p-4 overflow-auto">
-                  {structure.map((item, index) => (
-                    <StructureItem
-                      key={index}
-                      item={item}
-                      path={`${index}`}
-                      moveItem={moveItem}
-                      addChild={addChild}
-                      removeItem={removeItem}
-                      editItem={editItem}
-                      onDrop={handleDrop}
-                    />
-                  ))}
-                </div>
-                <div className="w-1/4 h-[400px] rounded-md border p-4 overflow-auto ml-4">
-                  <h4 className="font-semibold mb-2">Textes liés</h4>
-                  {Object.entries(selectedLinkedTexts).flatMap(([sourceIndex, texts]) =>
-                    texts.map((text, index) => (
-                      <LinkedTextItem key={`${sourceIndex}-${index}`} text={text} onDragStart={() => {}} />
-                    ))
-                  )}
-                </div>
-              </div>
-            </DndProvider>
-            <button
-              onClick={exportStructure}
-              className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md flex items-center"
-            >
-              <Download className="h-4 w-4 inline mr-2" />
-              Exporter la structure
-            </button>
-=======
                 ))}
               </div>
             ) : (
@@ -1287,7 +739,6 @@ export default function LegalTextManager() {
                 </div>
               </>
             )}
->>>>>>> main
           </motion.div>
         )
 
@@ -1434,41 +885,6 @@ export default function LegalTextManager() {
             <h3 className="text-lg font-semibold">Confirmation</h3>
             <p>Type de texte : {selectedType}</p>
             <p>Fichier : {file?.name}</p>
-<<<<<<< HEAD
-            <h4 className="font-semibold">Textes sélectionnés et leurs liaisons :</h4>
-            <div className="h-[300px] w-full rounded-md border p-4 overflow-auto">
-              {selectedTexts.map(index => (
-                <div key={index} className="mb-4">
-                  <p className="font-semibold">
-                    {selectedType === "Législation"
-                      ? parsedTexts[index].Titre_legislation
-                      : parsedTexts[index].Title}
-                  </p>
-                  <ul className="list-disc list-inside pl-4">
-                    {selectedLinkedTexts[index]?.map(item => (
-                      <li key={item.id}>
-                        {item.type}: {item.title}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-            {selectedType === "Législation" && (
-              <div>
-                <h4 className="font-semibold">Structure de la législation :</h4>
-                <div className="h-[200px] w-full rounded-md border p-4 overflow-auto">
-                  {structure.map((item, index) => (
-                    <div key={index} className="mb-2">
-                      <p><strong>{item.type}:</strong> {item.content}</p>
-                      {item.children && (
-                        <ul className="list-disc list-inside pl-4">
-                          {item.children.map((child, childIndex) => (
-                            <li key={childIndex}>{child.type}: {child.content}</li>
-                          ))}
-                        </ul>
-                      )}
-=======
             <h4 className="font-semibold">Structure du texte avec ses liaisons :</h4>
             <div className="h-[300px] rounded-md border p-4 overflow-auto">
               {selectedType === "Législation" ? (
@@ -1477,7 +893,6 @@ export default function LegalTextManager() {
                   {legislationStructures[selectedLegislationIndex]?.structure.map((node, index) => (
                     <div key={index} className="ml-4">
                       <p>{node.type}: {node.content}</p>
->>>>>>> main
                     </div>
                   ))}
                 </div>
@@ -1534,32 +949,6 @@ export default function LegalTextManager() {
             </button>
           </motion.div>
         )
-<<<<<<< HEAD
-      default:
-        return null
-    }
-  }, [currentStep, selectedType, file, parsedTexts, selectedTexts, structure, availableTexts, selectedLinkedTexts, handleFileChange, handleTextSelection, handleLinkedText, addChild, moveItem, removeItem, editItem, handleSelectAll, exportStructure, handleDrop])
-
-  const renderStepIndicators = useCallback(() => (
-    <div className="flex justify-between items-center overflow-x-auto pb-4">
-      {steps.map((step, index) => {
-        if (index === 5 && selectedType !== "Législation") return null
-        return (
-          <div key={step} className="flex flex-col items-center mx-2">
-            <motion.div
-              className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                index < currentStep
-                  ? 'bg-blue-500 text-white'
-                  : index === currentStep
-                  ? 'bg-gray-300 text-gray-700'
-                  : 'bg-gray-200 text-gray-400'
-              }`}
-              initial={false}
-              animate={{
-                scale: index === currentStep ? 1.2 : 1,
-                transition: { type: 'spring', stiffness: 500, damping: 30 }
-              }}
-=======
           default:
             return null
         }
@@ -1579,7 +968,6 @@ export default function LegalTextManager() {
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => handleDrop(e, node.id)}
               className="ml-4 border-l-2 border-gray-300 pl-2"
->>>>>>> main
             >
               {node.children && renderLegislationStructure(node.children)}
             </div>
@@ -1672,38 +1060,11 @@ export default function LegalTextManager() {
             }}
             className="mt-4 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
           >
-<<<<<<< HEAD
-            <Check className="w-16 h-16 text-green-500" />
-            <h2 className="text-2xl font-bold text-green-700">Importation réussie !</h2>
-            <p className="text-center text-green-600">
-              Votre importation a été effectuée avec succès.
-            </p>
-            <button
-              onClick={() => {
-                setCurrentStep(0)
-                setSelectedType("")
-                setFile(null)
-                setParsedTexts([])
-                setSelectedTexts([])
-                setStructure([])
-                setIsImportComplete(false)
-                setError(null)
-                setSelectedLinkedTexts({})
-              }}
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
-            >
-              Nouvelle importation
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-=======
             Nouvelle importation
           </button>
         </motion.div>
       )}
     </AnimatePresence>
->>>>>>> main
 
     {!isImportComplete && (
         <div className="flex justify-between">
@@ -1724,9 +1085,6 @@ export default function LegalTextManager() {
                 setCurrentStep(Math.min(steps.length - 1, nextStep))
               }
             }}
-<<<<<<< HEAD
-            disabled={error !== null}
-=======
             disabled={
               error !== null || 
               (currentStep === 1 && !selectedType) ||
@@ -1734,7 +1092,6 @@ export default function LegalTextManager() {
               (currentStep === 3 && selectedType !== "Législation" && selectedTexts.length === 0)
             }
             className="px-4 py-2 bg-green-500 text-white rounded-md disabled:opacity-50"
->>>>>>> main
           >
             {currentStep === steps.length - 1 ? (
               <>
@@ -1748,33 +1105,6 @@ export default function LegalTextManager() {
           </button>
         </div>
       )}
-<<<<<<< HEAD
-
-      {showEditPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg">
-            <h3 className="text-lg font-semibold mb-4">Modifier le contenu</h3>
-            <textarea
-              value={editingContent}
-              onChange={(e) => setEditingContent(e.target.value)}
-              className="w-full h-32 p-2 border rounded-md"
-            />
-            <div className="flex justify-end mt-4">
-              <button onClick={() => setShowEditPopup(false)} className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md mr-2">
-                Annuler
-              </button>
-              <button
-                onClick={handleEditConfirm}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md"
-              >
-                Confirmer
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-=======
->>>>>>> main
     </div>
   )
 }
