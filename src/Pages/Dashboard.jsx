@@ -22,6 +22,7 @@ const Dashboard = () => {
   const [avatarId, setAvatarId] = useState(null);
   const [theme, setTheme] = useState('');
   const [isExpert, setIsExpert] = useState(false);
+  const [importer, setImporter] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -65,6 +66,7 @@ const Dashboard = () => {
         });
         const userData = response.data;
         setTheme(userData.acf.theme);
+        setImporter(userData.acf.importer);
         setIsExpert(['Avocat', 'Notaire'].includes(userData.acf.profession));
 
         if (userData.acf.avatar) {
@@ -97,10 +99,11 @@ const Dashboard = () => {
     { to: "commentaire", icon: HiChat, text: "Commentaires" },
     { to: "expert", icon: HiUserGroup, text: "Experts" },
     { to: "avis", icon: HiStar, text: "Donner un avis" },
-    { to: "legal-text-manager", icon: HiUpload, text: "Importer / Exporter" },
+    ...(importer ? [{ to: "legal-text-manager", icon: HiUpload, text: "Importer / Exporter" }] : []),
     { to: "alertes", icon: HiBell, text: "Alertes", mobileOnly: true },
     { to: "dossier", icon: HiFolder, text: "Dossiers", mobileOnly: true },
   ];
+  
 
   return (
     <div className="flex h-screen bg-white dark:bg-gray-900">
@@ -184,7 +187,7 @@ const Dashboard = () => {
                 {/* dropdown menu items  */}
                 
                 <div className="top-[43px] z-20 absolute left-[-95px] w-[150px] mt-1 bg-white dark:bg-slate-800 divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
-                      <div className="py-[20px]">
+                      <div className="py-[20px]"> 
                         <NavLink
                           to="profil"
                           className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"

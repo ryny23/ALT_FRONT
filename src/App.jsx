@@ -46,6 +46,9 @@ import DecisionImport from "./Pages/DecisionImport";
 import ArticleImport from "./Pages/ArticleImport";
 import LegislationImport from "./Pages/LegislationImport";
 import ImportPage from "./Pages/ImportPage";
+import CsvDecisionImporter from "./Pages/CsvDecisionImporter";
+import CsvArticleImporter from "./Pages/CsvArticleImporter";
+import ArticleImporter from "./Pages/ArticleImporter";
 
 
 
@@ -64,6 +67,9 @@ const router = createBrowserRouter(
                 <Route path="decisionimport" element={<DecisionImport />} />
                 <Route path="importpage" element={<ImportPage />} />
                 <Route path="legislationimport" element={<LegislationImport />} />
+                <Route path="csvdecisionimporter" element={<CsvDecisionImporter />} />
+                <Route path="csvarticleimporter" element={<CsvArticleImporter />} />
+                <Route path="articleimporter" element={<ArticleImporter />} />
 
                 {/* PLATEFORME */}
                 <Route path="fonctionnalites" element={<Fonctionnalites/>}/>
@@ -106,6 +112,7 @@ const router = createBrowserRouter(
                 <Route path="results" element={<SearchResults />} />
                 <Route path="/dashboard/recherche/historique" element={<Historique />}/>
                 <Route path="legal-text-manager" element={<LegalTextManager2 />} />
+                <Route path="articleimporter" element={<ArticleImporter />} />
                 
                 
                 {/* TEXTES JURIDIQUES */}

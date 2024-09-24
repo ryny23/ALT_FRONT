@@ -7,6 +7,25 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import CitationImage from '../assets/Citation.png';
 import anime from '../assets/anime.svg'
 
+// Normalization for case-insensitive and accent-insensitive comparison
+const normalizeString = (str) => {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+};
+
+// Static data for locations
+const locations = {
+  'Adamaoua': ["Ngaoundéré", "Banyo", "Tignère", "Vina", "Djohong", "Gbaya", "Bouba", "Mbere", "Mayo-Baléo", "Tibati"],
+  'Centre': ["Yaoundé", "Obala", "Ayos", "Ebolowa", "Mengang", "Nkometou", "Bafia", "Ntui", "Mbalmayo", "Biyem-Assi"],
+  'Est': ["Bertoua", "Abong-Mbang", "Belabo", "Batouri", "Gari-Gombo", "Kentzé", "Lomié", "Ngoura", "Yokadouma", "Nguélémendouka"],
+  'Extrême-Nord': ["Maroua", "Kousseri", "Yagoua", "Kaélé", "Mora", "Kolofata", "Roua", "Pétévo", "Waza", "Moulvoudaye"],
+  'Littoral': ["Douala", "Bonabéri", "Deïdo", "Akwa", "Bassa", "Limbe", "Tiko", "Buea", "Idanau", "Manoka"],
+  'Nord': ["Garoua", "Maroua", "Koza", "Mokolo", "Pitoa", "Figuil", "Mayo-Oulo", "Mandara", "Ngong", "Tchaourou"],
+  'Nord-Ouest': ["Bamenda", "Fundong", "Bali", "Bafut", "Oku", "Ndop", "Wum", "Kumbo", "Batibo", "Bafut"],
+  'Sud-Ouest': ["Limbe", "Buea", "Tiko", "Muea", "Fako", "Mbonge", "Buea II", "Limbe II", "Muea", "Limbe"],
+  'Sud': ["Ebolowa", "Akom", "Obala", "Ngoulemakong", "Mven", "Akom II", "Nkomo", "Bipindi", "Kribi", "Campo"],
+  'Ouest': ["Dschang", "Foumban", "Bafoussam", "Dibang", "Dizangué", "Fongondé", "Nkong-Zem", "Sia", "Bansoa", "Dschang"]
+};
+
 
 
 export default function Component() {
@@ -19,9 +38,12 @@ export default function Component() {
   const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const authToken = localStorage.getItem('token'); // Replace with your actual token
   const expertsPerPage = 4;
 
-  const authToken = localStorage.getItem('token'); // Replace with your actual token
+  
+  const [suggestions, setSuggestions] = useState([]);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     const fetchExperts = async () => {
@@ -73,22 +95,67 @@ export default function Component() {
     fetchExperts();
   }, [selectedType]);
 
-  const filteredExperts = expertsData.filter((expert) => {
-    const searchTerms = searchTerm.toLowerCase().split(' ');
-    const matchesSearch = searchTerms.every(term =>
-      expert.acf.nom.toLowerCase().includes(term) ||
-      expert.acf.prenom.toLowerCase().includes(term) ||
-      expert.acf.adresse.toLowerCase().includes(term) ||
-      expert.acf.profession.toLowerCase().includes(term) ||
-      expert.acf.specialite.some(spec => spec.toLowerCase().includes(term))
-    );
+  // Filtrer les suggestions de lieux en fonction du terme de recherche
+  useEffect(() => {
+    if (searchTerm) {
+      const filteredSuggestions = getSuggestions(searchTerm);
+      setSuggestions(filteredSuggestions.slice(0, 10));
+    } else {
+      setSuggestions([]);
+    }
+  }, [searchTerm]);
 
+// Fonction pour obtenir les suggestions de lieux (ville, région)
+const getSuggestions = (term) => {
+  const normalizedTerm = normalizeString(term);
+  const matches = [];
+  Object.entries(locations).forEach(([region, cities]) => {
+    cities.forEach(city => {
+      const cityRegion = `${city}, ${region}`;
+      if (normalizeString(city).includes(normalizedTerm) || normalizeString(region).includes(normalizedTerm)) {
+        matches.push(cityRegion);
+      }
+    });
+  });
+  return matches;
+};
+
+// Gérer la sélection d'un lieu dans les suggestions
+const handleSelectLocation = (location) => {
+  setSearchTerm(location);
+  setSuggestions([]);
+};
+
+
+
+// Filtrage des experts en tenant compte des villes et des régions
+const filteredExperts = expertsData.filter((expert) => {
+  const searchTerms = searchTerm.toLowerCase().split(' ');
+  const matchesSearch = searchTerms.every(term =>
+    expert.acf.nom.toLowerCase().includes(term) ||
+    expert.acf.prenom.toLowerCase().includes(term) ||
+    expert.acf.adresse.toLowerCase().includes(term) ||
+    expert.acf.profession.toLowerCase().includes(term) ||
+    expert.acf.specialite.some(spec => spec.toLowerCase().includes(term))
+  );
+  const matchesLocation = searchTerms.every(term => {
     return (
-      (selectedDomain ? expert.acf.specialite.includes(selectedDomain) : true) &&
-      (selectedLocation ? expert.acf.adresse.includes(selectedLocation) : true) &&
-      (selectedType ? expert.acf.profession === selectedType : true) &&
-      matchesSearch
+      normalizeString(expert.acf.adresse).includes(term) ||
+      Object.entries(locations).some(([region, cities]) => {
+        return (
+          cities.some(city => normalizeString(city).includes(term) && normalizeString(expert.acf.adresse).includes(city)) ||
+          normalizeString(region).includes(term) && normalizeString(expert.acf.adresse).includes(region)
+        );
+      })
     );
+  });
+  
+  return (
+    (selectedDomain ? expert.acf.specialite.includes(selectedDomain) : true) &&
+    (selectedLocation ? matchesLocation : true) &&
+    (selectedType ? expert.acf.profession === selectedType : true) &&
+    matchesSearch
+  );
   });
 
   const pageCount = Math.ceil(filteredExperts.length / expertsPerPage);

@@ -55,13 +55,13 @@ function CsvImporter() {
 
     try {
       for (const row of csvData) {
-        const { Titre_legislation, Titre, Chapitre, Section, Code_visé, Date_entrée, Date_modification } = row;
+        const { Titre_legislation, Titre, Chapitre, Section, Code_visé, Date_entrée, Date_modification, Article } = row;
         
         const formattedDateEntree = formatDate(Date_entrée);
         const formattedDateModification = formatDate(Date_modification);
         
         let response;
-        if (!Titre && !Chapitre && !Section) {
+        if (!Titre && !Chapitre && !Section && !Article) {
           // Crée une législation
           response = await fetch('https://alt.back.qilinsa.com/wp-json/wp/v2/legislations', {
             method: 'POST',
@@ -73,11 +73,9 @@ function CsvImporter() {
               title: Titre_legislation, 
               acf:{
                 code: Code_visé,
-              date_entree: formattedDateEntree,
-              date_modif: formattedDateModification,
-
+                date_entree: formattedDateEntree,
+                date_modif: formattedDateModification,
               },
-              
               status: 'publish',
             })
           });
@@ -93,7 +91,7 @@ function CsvImporter() {
             throw new Error(`Erreur lors de la création de la législation: ${errorData.message}`);
           }
 
-        } else if (!Chapitre && !Section) {
+        } else if (!Chapitre && !Section && !Article) {
           // Crée un titre avec l'ID de la législation dans ACF
           response = await fetch('https://alt.back.qilinsa.com/wp-json/wp/v2/titres', {
             method: 'POST',
@@ -119,7 +117,7 @@ function CsvImporter() {
             throw new Error(`Erreur lors de la création du titre: ${errorData.message}`);
           }
 
-        } else if (!Section) {
+        } else if (!Section && !Article) {
           // Crée un chapitre avec l'ID du titre ou de la législation dans ACF
           const legislationOuTitreId = lastTitreId ? lastTitreId : lastLegislationId;
 
@@ -148,7 +146,7 @@ function CsvImporter() {
             throw new Error(`Erreur lors de la création du chapitre: ${errorData.message}`);
           }
 
-        } else {
+        } else if (!Article){
           // Crée une section avec l'ID du chapitre, du titre ou de la législation dans ACF
           const legislationOuTitreOuChapitreId = lastChapitreId ? lastChapitreId : (lastTitreId ? lastTitreId : lastLegislationId);
 
@@ -174,6 +172,43 @@ function CsvImporter() {
             const errorData = await response.json();
             throw new Error(`Erreur lors de la création de la section: ${errorData.message}`);
           }
+        } else {
+          // Récupère l'article avec son identifiant et fait le mapping avec la législation
+          response = await fetch(`https://alt.back.qilinsa.com/wp-json/wp/v2/articles/${Article}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
+          if (response.ok) {
+            const articleData = await response.json();
+
+            // Faire le mapping de l'article avec la législation
+            response = await fetch(`https://alt.back.qilinsa.com/wp-json/wp/v2/articles/${Article}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                acf: {
+                  Legislation_ou_titre_ou_chapitre_ou_section: lastLegislationId // Mappe l'ID de la législation à l'article
+                }
+              })
+            });
+
+            if (response.ok) {
+              console.log('Article mis à jour avec succès:', articleData.title.rendered, 'avec ID de législation:', lastLegislationId);
+            } else {
+              const errorData = await response.json();
+              throw new Error(`Erreur lors du mapping de l'article: ${errorData.message}`);
+            }
+          } else {
+            const errorData = await response.json();
+            throw new Error(`Erreur lors de la récupération de l'article: ${errorData.message}`);
+          }
         }
       }
       setMessage('Importation réussie !');
@@ -183,6 +218,8 @@ function CsvImporter() {
       setLoading(false);
     }
   };
+
+
 
   return (
     <div className="container mx-auto p-6 bg-white shadow-md rounded-lg">

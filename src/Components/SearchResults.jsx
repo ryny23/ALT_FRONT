@@ -14,7 +14,9 @@ const SearchResults = ({ activePage }) => {
     decisions: 0,
     commentaires: 0,
     articles: 0,
-    all: results.length,
+    lois: 0,
+    documentsParlementaires: 0,
+    all: 0,
   });
   const [articleExcerpts, setArticleExcerpts] = useState({});
   const [legislationTitles, setLegislationTitles] = useState({});
@@ -26,6 +28,11 @@ const SearchResults = ({ activePage }) => {
 
   const handleShowAll = () => {
     setSelectedCategory('all');
+  };
+
+  const handleResultClick = (result) => {
+    const basePath = `/dashboard/${result.type}/${result.id}`;
+    navigate(basePath);
   };
 
   useEffect(() => {
@@ -43,20 +50,37 @@ const SearchResults = ({ activePage }) => {
           `/wp-json/wp/v2/legislations?search=${query}`,
           `/wp-json/wp/v2/commentaires?search=${query}`,
           `/wp-json/wp/v2/articles?search=${query}`,
+          `/wp-json/wp/v2/legislations?categories_legislations=14&search=${query}`,
+          `/wp-json/wp/v2/legislations?categories_legislations=11&search=${query}`,
         ];
 
         const responses = await Promise.all(endpoints.map(endpoint => axios.get(`${altUrl}${endpoint}`)));
 
+        const [decisions, legislations, commentaires, articles, lois, documentsParlementaires] = responses.map(response => response.data);
+
         setResultCounts({
-          legislations: responses[1]?.data.length || 0,
-          decisions: responses[0]?.data.length || 0,
-          commentaires: responses[2]?.data.length || 0,
-          articles: responses[3]?.data.length || 0,
+          decisions: decisions.length,
+          legislations: legislations.length,
+          commentaires: commentaires.length,
+          articles: articles.length,
+          lois: lois.length,
+          documentsParlementaires: documentsParlementaires.length,
         });
 
-        const combinedResults = responses.flatMap(response => response.data);
+        const combinedResults = [
+          ...decisions.map(item => ({ ...item, type: 'decision' })),
+          ...legislations.map(item => ({ ...item, type: 'legislation' })),
+          ...commentaires.map(item => ({ ...item, type: 'commentaire' })),
+          ...articles.map(item => ({ ...item, type: 'article' })),
+          ...lois.map(item => ({ ...item, type: 'loi' })),
+          ...documentsParlementaires.map(item => ({ ...item, type: 'documentParlementaire' })),
+        ];
 
         setResults(combinedResults);
+        setResultCounts(prevCounts => ({
+          ...prevCounts,
+          all: combinedResults.length,
+        }));
 
         combinedResults.forEach(result => {
           if (result.type === 'article' && !articleExcerpts[result.id]) {
@@ -119,11 +143,6 @@ const SearchResults = ({ activePage }) => {
     fetchResults();
   }, [query]);
 
-  const handleResultClick = (result) => {
-    const basePath = `/dashboard/${result.type}/${result.id}`;
-    navigate(basePath);
-  };
-
   const highlightText = (text) => {
     if (!text) return text;
     const regex = new RegExp(`(${query})`, 'gi');
@@ -134,7 +153,7 @@ const SearchResults = ({ activePage }) => {
     if (!text || !query) return text;
 
     const queryIndex = text.toLowerCase().indexOf(query.toLowerCase());
-    if (queryIndex === -1) return text.substring(0, 400); // Return first 400 chars if query not found
+    if (queryIndex === -1) return text.substring(0, 400);
 
     const start = Math.max(queryIndex - 200, 0);
     const end = Math.min(start + 400, text.length);
@@ -143,88 +162,82 @@ const SearchResults = ({ activePage }) => {
   };
 
   return (
-    <section className="px-8 pt-4 bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
+    <section className="px-4 md:px-8 pt-4 bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
       {error && <div className="text-red-500">{error}</div>}
-      <div className="mb-4 flex font-medium justify-center items-center space-x-4">
-        <span
-          className={`cursor-pointer ${selectedCategory === 'all' ? 'text-green-500' : ''}`}
-          onClick={handleShowAll}
-        >
-          Tout ({results.length})
-        </span>
-        <span> | </span>
-        <span
-          className={`cursor-pointer ${selectedCategory === 'legislation' ? 'text-green-500' : ''}`}
-          onClick={() => handleCategoryClick('legislation')}
-        >
-          Législations ({resultCounts.legislations})
-        </span>
-        <span> | </span>
-        <span
-          className={`cursor-pointer ${selectedCategory === 'decision' ? 'text-green-500' : ''}`}
-          onClick={() => handleCategoryClick('decision')}
-        >
-          Décisions ({resultCounts.decisions})
-        </span>
-        <span> | </span>
-        <span
-          className={`cursor-pointer ${selectedCategory === 'commentaire' ? 'text-green-500' : ''}`}
-          onClick={() => handleCategoryClick('commentaire')}
-        >
-          Commentaires ({resultCounts.commentaires})
-        </span>
-        <span> | </span>
-        <span
-          className={`cursor-pointer ${selectedCategory === 'article' ? 'text-green-500' : ''}`}
-          onClick={() => handleCategoryClick('article')}
-        >
-          Articles ({resultCounts.articles})
-        </span>
+      <div className="mb-4 flex flex-wrap font-medium justify-center items-center space-x-2 md:space-x-4">
+        <CategoryButton category="all" count={resultCounts.all} selectedCategory={selectedCategory} onClick={handleShowAll} />
+        <CategoryButton category="legislation" count={resultCounts.legislations} selectedCategory={selectedCategory} onClick={handleCategoryClick} />
+        <CategoryButton category="decision" count={resultCounts.decisions} selectedCategory={selectedCategory} onClick={handleCategoryClick} />
+        <CategoryButton category="commentaire" count={resultCounts.commentaires} selectedCategory={selectedCategory} onClick={handleCategoryClick} />
+        <CategoryButton category="article" count={resultCounts.articles} selectedCategory={selectedCategory} onClick={handleCategoryClick} />
+        <CategoryButton category="loi" count={resultCounts.lois} selectedCategory={selectedCategory} onClick={handleCategoryClick} />
+        <CategoryButton category="documentParlementaire" count={resultCounts.documentsParlementaires} selectedCategory={selectedCategory} onClick={handleCategoryClick} />
       </div>
       {loading && <div className='text-center my-28 text-3xl'>Recherche en cours...</div>}
       {results.length === 0 && !loading ? (
         <div className='text-center my-28 text-3xl'>Aucun résultat trouvé</div>
       ) : (
-        results.map((result) => (
-          <div
-            key={result.id}
-            className={`p-4 border-b hover:bg-gray-100 dark:hover:bg-gray-700
-              ${selectedCategory !== 'all' && selectedCategory !== result.type ? 'hidden' : ''}`}
-          >
-            <h3
-              className="text-lg font-bold cursor-pointer hover:text-green-400"
-              onClick={() => handleResultClick(result)}
-            >
-              <span dangerouslySetInnerHTML={{ __html: highlightText(result.title.rendered) }} />
-            </h3>
-            <p>{result.type}</p>
-
-            {result.type === 'article' && legislationTitles[result.id] && (
-              <p className="text-gray-600 mb-2">
-                Législation associée:{' '}
-                <NavLink
-                  to={`/dashboard/legislation/${legislationTitles[result.id].id}`}
-                  className="cursor-pointer text-green-500 hover:underline"
-                >
-                  <span dangerouslySetInnerHTML={{ __html: highlightText(legislationTitles[result.id].title) }} />
-                </NavLink>
-              </p>
-            )}
-
-            {result.excerpt?.rendered ? (
-              <div
-                className="mb-2 text-sm"
-                dangerouslySetInnerHTML={{ __html: highlightText(createExcerpt(result.excerpt.rendered)) }}
-              />
-            ) : (
-              <div className="mb-2 text-sm">
-                <span dangerouslySetInnerHTML={{ __html: highlightText(createExcerpt(result.content?.rendered || 'Pas de contenu')) }} />
-              </div>
-            )}
-          </div>
-        )))}
-      </section>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {results.map((result) => (
+            <ResultCard
+              key={result.id}
+              result={result}
+              selectedCategory={selectedCategory}
+              handleResultClick={handleResultClick}
+              highlightText={highlightText}
+              createExcerpt={createExcerpt}
+              legislationTitles={legislationTitles}
+              articleExcerpts={articleExcerpts}
+            />
+          ))}
+        </div>
+      )}
+    </section>
   );
 };
+
+const CategoryButton = ({ category, count, selectedCategory, onClick }) => (
+  <span
+    className={`cursor-pointer px-2 py-1 rounded ${selectedCategory === category ? 'bg-green-500 text-white' : 'hover:bg-gray-200 dark:hover:bg-gray-700'}`}
+    onClick={() => onClick(category)}
+  >
+    {category.charAt(0).toUpperCase() + category.slice(1)} ({count})
+  </span>
+);
+
+const ResultCard = ({ result, selectedCategory, handleResultClick, highlightText, createExcerpt, legislationTitles, articleExcerpts }) => (
+  <div
+    className={`p-4 border rounded-lg hover:shadow-md transition-shadow duration-300
+      ${selectedCategory !== 'all' && selectedCategory !== result.type ? 'hidden' : ''}`}
+  >
+    <h3
+      className="text-lg font-bold cursor-pointer hover:text-green-400 mb-2"
+      onClick={() => handleResultClick(result)}
+    >
+      <span dangerouslySetInnerHTML={{ __html: highlightText(result.title.rendered) }} />
+    </h3>
+    <p className="text-sm text-gray-600 mb-2">{result.type}</p>
+
+    {result.type === 'article' && legislationTitles[result.id] && (
+      <p className="text-gray-600 mb-2 text-sm">
+        Législation associée:{' '}
+        <NavLink
+          to={`/dashboard/legislation/${legislationTitles[result.id].id}`}
+          className="cursor-pointer text-green-500 hover:underline"
+        >
+          <span dangerouslySetInnerHTML={{ __html: highlightText(legislationTitles[result.id].title) }} />
+        </NavLink>
+      </p>
+    )}
+
+    <div className="text-sm">
+      {result.type === 'article' && articleExcerpts[result.id] ? (
+        <span dangerouslySetInnerHTML={{ __html: highlightText(createExcerpt(articleExcerpts[result.id])) }} />
+      ) : (
+        <span dangerouslySetInnerHTML={{ __html: highlightText(createExcerpt(result.excerpt?.rendered || result.content?.rendered || 'Pas de contenu')) }} />
+      )}
+    </div>
+  </div>
+);
 
 export default SearchResults;
