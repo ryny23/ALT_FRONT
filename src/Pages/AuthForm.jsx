@@ -162,6 +162,8 @@ const AuthForm = () => {
           setConState({ ...conState, conError: 'Identifiants invalides', conLoading: false });
         });
     };
+
+    
   
     const handleOnChangeCon = (event) => {
       const { name, value, type, checked } = event.target;

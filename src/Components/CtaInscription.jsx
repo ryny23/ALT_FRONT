@@ -1,5 +1,5 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 
 const CtaInscription = () => {
   return (
@@ -27,11 +27,11 @@ const CtaInscription = () => {
                   <p className="pb-6 mt-6 text-l leading-8 text-gray-300">
                   Inscrivez-vous dès maintenant pour bénéficier d'un accès gratuit d'un mois à notre plateforme premium.
                   </p>
-                  <Link to="/authform?tab=register">
+                  <NavLink to="/authform?tab=register">
                     <button className='bg-gradient-to-br from-slate-800 to-slate-900 text-white py-2 px-4 transition-all duration-300 rounded hover:bg-white hover:text-cyan-200'>
                       <strong>S'inscrire</strong>
                     </button>
-                  </Link>
+                  </NavLink>
                 </div>
             </div>
           </div>
