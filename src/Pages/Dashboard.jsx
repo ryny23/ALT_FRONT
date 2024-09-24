@@ -104,7 +104,7 @@ const Dashboard = () => {
     { to: "commentaire", icon: HiChat, text: "Commentaires", category: "commentaire" },
     { to: "expert", icon: HiUserGroup, text: "Experts", category: "expert" },
     { to: "avis", icon: HiStar, text: "Donner un avis", category: "avis" },
-    ...(importer ? [{ to: "legal-text-manager", icon: HiUpload, text: "Importer / Exporter", category: "legal-text-manager" }] : []),
+    // ...(importer ? [{ to: "legal-text-manager", icon: HiUpload, text: "Importer / Exporter", category: "legal-text-manager" }] : []),
     { to: "alertes", icon: HiBell, text: "Alertes", mobileOnly: true, category: "alertes" },
     { to: "dossier", icon: HiFolder, text: "Dossiers", mobileOnly: true, category: "dossier" },
   ];
@@ -136,10 +136,10 @@ const Dashboard = () => {
                       : 'text-gray-600 hover:text-green-600 dark:text-gray-300 dark:hover:text-white hover:bg-green-50 dark:hover:bg-green-800'
                   } rounded-lg`
                 }
-                // onClick={() => {
-                //   handleNavigation(item.category);
-                //   window.innerWidth <= 1024 && setSidebarOpen(false);
-                // }}
+                onClick={() => {
+                  handleNavigation(item.category);
+                  window.innerWidth <= 1024 && setSidebarOpen(false);
+                }}
               >
                 <item.icon className="w-6 h-6 mr-3" />
                 {item.text}
