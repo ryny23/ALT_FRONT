@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const SearchBar = () => {
+const SearchBar = ({ activeSearchCategory, setActiveSearchCategory, setSearchQuery }) => {
     const [query, setQuery] = useState('');
     const [searchHistory, setSearchHistory] = useState([]);
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);

@@ -39,7 +39,9 @@ export default function Component() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const authToken = localStorage.getItem('token'); // Replace with your actual token
-  const expertsPerPage = 4;
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentApiPage, setCurrentApiPage] = useState(1);
+  const expertsPerPage = 20; // Increased from 4 to fetch more experts per API call
 
   
   const [suggestions, setSuggestions] = useState([]);
@@ -50,16 +52,41 @@ export default function Component() {
       setLoading(true);
       setError('');
       try {
-        // Fetch experts data
-        const response = await axios.get('https://alt.back.qilinsa.com/wp-json/wp/v2/users?professions=Avocat,Notaire', {
-          headers: {
-            Authorization: `Bearer ${authToken}`
-          },
-        });
-        setExpertsData(response.data);
+        let allExperts = [];
+        let page = 1;
+        let hasMorePages = true;
+
+        while (hasMorePages) {
+          const response = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/users`, {
+            params: {
+              professions: 'Avocat,Notaire',
+              per_page: 100, // Maximum allowed by WordPress API
+              page: page,
+            },
+            headers: {
+              Authorization: `Bearer ${authToken}`
+            },
+          });
+
+          const validExperts = response.data.filter(expert => 
+            expert.acf && expert.acf.nom && expert.acf.prenom && 
+            expert.acf.nom.trim() !== '' && expert.acf.prenom.trim() !== ''
+          );
+
+          allExperts = [...allExperts, ...validExperts];
+
+          if (response.data.length < 100) {
+            hasMorePages = false;
+          } else {
+            page++;
+          }
+        }
+
+        setExpertsData(allExperts);
+        setTotalPages(Math.ceil(allExperts.length / expertsPerPage));
 
         // Fetch avatar URLs
-        const avatarRequests = response.data.map(async (expert) => {
+        const avatarRequests = allExperts.map(async (expert) => {
           if (expert.acf.avatar) {
             try {
               const avatarResponse = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/media/${expert.acf.avatar}`, {
@@ -105,6 +132,59 @@ export default function Component() {
     }
   }, [searchTerm]);
 
+
+    // Updated filteredExperts function
+    const filteredExperts = expertsData.filter((expert) => {
+      const searchTerms = searchTerm.toLowerCase().split(' ');
+      const matchesSearch = searchTerms.every(term =>
+        expert.acf.nom.toLowerCase().includes(term) ||
+        expert.acf.prenom.toLowerCase().includes(term) ||
+        (expert.acf.adresse && expert.acf.adresse.toLowerCase().includes(term)) ||
+        (Array.isArray(expert.acf.profession) 
+          ? expert.acf.profession.some(prof => prof.toLowerCase().includes(term))
+          : typeof expert.acf.profession === 'string' 
+            ? expert.acf.profession.toLowerCase().includes(term)
+            : false) ||
+        (expert.acf.specialite && expert.acf.specialite.some(spec => spec.toLowerCase().includes(term)))
+      );
+      const matchesLocation = searchTerms.every(term => {
+        return (
+          (expert.acf.adresse && normalizeString(expert.acf.adresse).includes(term)) ||
+          Object.entries(locations).some(([region, cities]) => {
+            return (
+              cities.some(city => normalizeString(city).includes(term) && expert.acf.adresse && normalizeString(expert.acf.adresse).includes(city)) ||
+              normalizeString(region).includes(term) && expert.acf.adresse && normalizeString(expert.acf.adresse).includes(region)
+            );
+          })
+        );
+      });
+      
+      return (
+        (selectedDomain ? expert.acf.specialite && expert.acf.specialite.includes(selectedDomain) : true) &&
+        (selectedLocation ? matchesLocation : true) &&
+        (selectedType 
+          ? (Array.isArray(expert.acf.profession) 
+              ? expert.acf.profession.includes(selectedType)
+              : expert.acf.profession === selectedType)
+          : true) &&
+        matchesSearch
+      );
+    });
+  
+    const pageCount = Math.ceil(filteredExperts.length / expertsPerPage);
+    const displayedExperts = filteredExperts.slice(
+      currentPage * expertsPerPage,
+      (currentPage + 1) * expertsPerPage
+    );
+  
+    const handlePageClick = (data) => {
+      setCurrentPage(data.selected);
+    };
+
+
+
+
+
 // Fonction pour obtenir les suggestions de lieux (ville, région)
 const getSuggestions = (term) => {
   const normalizedTerm = normalizeString(term);
@@ -127,46 +207,6 @@ const handleSelectLocation = (location) => {
 };
 
 
-
-// Filtrage des experts en tenant compte des villes et des régions
-const filteredExperts = expertsData.filter((expert) => {
-  const searchTerms = searchTerm.toLowerCase().split(' ');
-  const matchesSearch = searchTerms.every(term =>
-    expert.acf.nom.toLowerCase().includes(term) ||
-    expert.acf.prenom.toLowerCase().includes(term) ||
-    expert.acf.adresse.toLowerCase().includes(term) ||
-    expert.acf.profession.toLowerCase().includes(term) ||
-    expert.acf.specialite.some(spec => spec.toLowerCase().includes(term))
-  );
-  const matchesLocation = searchTerms.every(term => {
-    return (
-      normalizeString(expert.acf.adresse).includes(term) ||
-      Object.entries(locations).some(([region, cities]) => {
-        return (
-          cities.some(city => normalizeString(city).includes(term) && normalizeString(expert.acf.adresse).includes(city)) ||
-          normalizeString(region).includes(term) && normalizeString(expert.acf.adresse).includes(region)
-        );
-      })
-    );
-  });
-  
-  return (
-    (selectedDomain ? expert.acf.specialite.includes(selectedDomain) : true) &&
-    (selectedLocation ? matchesLocation : true) &&
-    (selectedType ? expert.acf.profession === selectedType : true) &&
-    matchesSearch
-  );
-  });
-
-  const pageCount = Math.ceil(filteredExperts.length / expertsPerPage);
-  const displayedExperts = filteredExperts.slice(
-    currentPage * expertsPerPage,
-    (currentPage + 1) * expertsPerPage
-  );
-
-  const handlePageClick = (data) => {
-    setCurrentPage(data.selected);
-  };
 
   const navigate = useNavigate();
 

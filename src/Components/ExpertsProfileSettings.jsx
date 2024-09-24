@@ -874,21 +874,6 @@ const ExpertsProfileSettings = () => {
                       isSearchable
                     />
                   </label>
-                  {/* {selectedDecisions.map((selectedDecision, index) => (
-        <div key={index} className="flex flex-col">
-          <label className="mb-2 text-gray-700">Sélectionnez une décision:</label>
-          <select
-            value={selectedDecision}
-            onChange={(event) => handleSelectChange(index, event)}
-            className="bg-white border-gray-500 focus:border-gray-500 focus:ring-gray-500 p-2 rounded"
-          >
-            <option value="" disabled>Choisir une décision</option>
-            {decisions.map((decision, i) => (
-              <option key={i} value={decision}>{decision}</option>
-            ))}
-          </select>
-        </div>
-      ))} */}
                 </div>
               </div>
               <div className="grid gap-2">

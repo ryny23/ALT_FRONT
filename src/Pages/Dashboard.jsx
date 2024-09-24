@@ -27,6 +27,7 @@ const Dashboard = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [activeSearchCategory, setActiveSearchCategory] = useState('all');
   const sidebarRef = useRef(null);
 
   useEffect(() => {
@@ -86,6 +87,10 @@ const Dashboard = () => {
     document.documentElement.classList.toggle('dark', theme);
   }, [theme]);
 
+  const handleNavigation = (category) => {
+    setActiveSearchCategory(category);
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('conUserName');
@@ -93,6 +98,7 @@ const Dashboard = () => {
   };
 
   const navItems = [
+<<<<<<< HEAD
     { to: "", icon: HiHome, text: "Accueil" },
     { to: "decision", icon: HiDocumentText, text: "Décisions" },
     { to: "legislation", icon: HiScale, text: "Législations" },
@@ -102,6 +108,17 @@ const Dashboard = () => {
     ...(importer ? [{ to: "legal-text-manager", icon: HiUpload, text: "Importer / Exporter" }] : []),
     { to: "alertes", icon: HiBell, text: "Alertes", mobileOnly: true },
     { to: "dossier", icon: HiFolder, text: "Dossiers", mobileOnly: true },
+=======
+    { to: "", icon: HiHome, text: "Accueil", category: "all" },
+    { to: "decision", icon: HiDocumentText, text: "Décisions", category: "decision" },
+    { to: "legislation", icon: HiScale, text: "Législations", category: "legislation" },
+    { to: "commentaire", icon: HiChat, text: "Commentaires", category: "commentaire" },
+    { to: "expert", icon: HiUserGroup, text: "Experts", category: "expert" },
+    { to: "avis", icon: HiStar, text: "Donner un avis", category: "avis" },
+    ...(importer ? [{ to: "legal-text-manager", icon: HiUpload, text: "Importer / Exporter", category: "legal-text-manager" }] : []),
+    { to: "alertes", icon: HiBell, text: "Alertes", mobileOnly: true, category: "alertes" },
+    { to: "dossier", icon: HiFolder, text: "Dossiers", mobileOnly: true, category: "dossier" },
+>>>>>>> main
   ];
   
 
@@ -132,7 +149,14 @@ const Dashboard = () => {
                       : 'text-gray-600 hover:text-green-600 dark:text-gray-300 dark:hover:text-white hover:bg-green-50 dark:hover:bg-green-800'
                   } rounded-lg`
                 }
+<<<<<<< HEAD
                 // onClick={() => window.innerWidth <= 1024 && setSidebarOpen(false)}
+=======
+                onClick={() => {
+                  handleNavigation(item.category);
+                  window.innerWidth <= 1024 && setSidebarOpen(false);
+                }}
+>>>>>>> main
               >
                 <item.icon className="w-6 h-6 mr-3" />
                 {item.text}
@@ -159,6 +183,8 @@ const Dashboard = () => {
           <div className="flex-1 max-w-xl mx-auto">
             <SearchBar
               className="z-50 absolute"
+              activeSearchCategory={activeSearchCategory}
+              setActiveSearchCategory={setActiveSearchCategory}
             />
           </div>
           
@@ -184,6 +210,7 @@ const Dashboard = () => {
                 <span className="text-xs text-gray-700 dark:text-gray-300">Compte</span>
               </button>
               
+<<<<<<< HEAD
                 {/* dropdown menu items  */}
                 
                 <div className="top-[43px] z-20 absolute left-[-95px] w-[150px] mt-1 bg-white dark:bg-slate-800 divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
@@ -223,6 +250,45 @@ const Dashboard = () => {
                       </div>
                     </div>
 
+=======
+              {/* dropdown menu items */}
+              <div className="top-[43px] z-20 absolute left-[-95px] w-[150px] mt-1 bg-white dark:bg-slate-800 divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
+                <div className="py-[20px]"> 
+                  <NavLink
+                    to="profil"
+                    className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Profil
+                  </NavLink>
+                  <NavLink
+                    to="parametres"
+                    className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Parametres
+                  </NavLink>
+                  {isExpert && (
+                    <NavLink
+                      to="parametres-expert"
+                      className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      Paramètres experts
+                    </NavLink>
+                  )}
+                  <NavLink
+                    to="aide"
+                    className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Aide
+                  </NavLink>
+                  <a
+                    onClick={() => setShowConfirm(true)}
+                    className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Déconnexion
+                  </a>
+                </div>
+              </div>
+>>>>>>> main
             </div>
           </div>
         </header>
@@ -230,7 +296,7 @@ const Dashboard = () => {
         {/* Page content */}
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-white dark:bg-gray-800">
           <div className="container mx-auto">
-            <Outlet />
+            <Outlet context={{ activeSearchCategory, setActiveSearchCategory }} />
           </div>
         </main>
       </div>
