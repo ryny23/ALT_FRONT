@@ -409,6 +409,76 @@ export default function LegislationImport({ currentStep, onComplete }) {
 
   const renderStepContent = () => {
     switch (currentStep) {
+      case 0:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-green-500">Charger le fichier CSV</h2>
+            <div className="bg-white p-4 rounded-md shadow">
+              <p className="text-sm text-gray-600 mb-2">
+                Le fichier CSV doit contenir les colonnes suivantes : Title, Content, Date_entree (obligatoires),
+                ID_decision, ID_commentaire, ID_legislation, Position_legislation (optionnelles)
+              </p>
+              <label htmlFor="file-upload" className="block text-sm font-medium text-gray-700 mb-2">Fichier CSV</label>
+              <input
+                id="file-upload"
+                type="file"
+                accept=".csv"
+                onChange={handleFileChange}
+                className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+              />
+            </div>
+            {error && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <AlertTriangle className="w-5 h-5 inline mr-2" />
+                {error}
+              </div>
+            )}
+          </div>
+        );
+        case 1:
+          return (
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold text-green-500">Prévisualisation des articles</h2>
+              <div className="bg-white p-4 rounded-md shadow max-h-96 overflow-y-auto">
+                <div className="flex justify-between mb-4">
+                  <button
+                    onClick={() => setSelectedArticles(parsedArticles.map((_, index) => index))}
+                    className="text-green-500"
+                  >
+                    Tout sélectionner
+                  </button>
+                  <button
+                    onClick={() => setSelectedArticles([])}
+                    className="text-green-500"
+                  >
+                    Tout désélectionner
+                  </button>
+                </div>
+                {parsedArticles.map((article, index) => (
+                  <div key={index} className="mb-4 p-3 border-b last:border-b-0">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id={`article-${index}`}
+                          checked={selectedArticles.includes(index)}
+                          onChange={() => handleArticleSelection(index)}
+                          className="mr-3 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                        />
+                        <label htmlFor={`article-${index}`} className="text-sm font-medium text-gray-700">
+                          {article.Title} - <span className="text-gray-500">{article.Date_entree}</span>
+                        </label>
+                      </div>
+                      {(article.ID_decision || article.ID_commentaire || article.ID_legislation) && (
+                        <span className="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Déjà lié</span>
+                      )}
+                    </div>
+                    <p className="mt-2 text-sm text-gray-500">{article.Content.substring(0, 100)}...</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
       case 2:
         return (
           <motion.div className="flex flex-col gap-4">
