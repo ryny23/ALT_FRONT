@@ -1,411 +1,383 @@
-import React, { useState, useCallback, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { AlertTriangle, Link, Download, Check, X, Edit, Trash, GripVertical } from 'lucide-react'
-import Papa from 'papaparse'
-import axios from 'axios'
-import Select from 'react-select'
+import React, { useState, useCallback, useEffect } from 'react';
+import { motion, AnimatePresence, Reorder } from 'framer-motion';
+import { ArrowLeft, ArrowRight, Upload, FileText, Check, AlertTriangle, Download, Edit, X, GripVertical, Link } from 'lucide-react';
+import Papa from 'papaparse';
+import axios from 'axios';
+import Select from 'react-select';
 
-const API_BASE_URL = "https://alt.back.qilinsa.com/wp-json/wp/v2"
+const API_BASE_URL = "https://alt.back.qilinsa.com/wp-json/wp/v2";
 
-const removeAccents = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+const steps = [
+  "Charger le fichier",
+  "Prévisualisation",
+  "Lier les textes",
+  "Structurer la législation",
+  "Confirmation"
+];
 
-const LinkedTextBadge = () => (
-  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
-    <Link className="w-3 h-3 mr-1" />
-    Lié
-  </span>
-)
-
-const LegislationNode = React.memo(({ node, position, onDrop, onEdit, onDelete, onRemove }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedContent, setEditedContent] = useState(node.content);
-
-  const handleEdit = () => {
-    if (isEditing) {
-      onEdit(node.id, editedContent);
-    }
-    setIsEditing(!isEditing);
-  };
-
+const LegislationNode = React.memo(({ node, onEdit, onDelete, canEdit, onDragEnd }) => {
   return (
-    <div
-      className="flex items-center space-x-2 mb-2 p-2 border rounded cursor-move"
-      draggable
-      onDragStart={(e) => {
-        e.dataTransfer.setData('text/plain', JSON.stringify({ ...node, position }));
-      }}
-      onDragOver={(e) => e.preventDefault()}
-      onDrop={(e) => onDrop(e, node.id, position)}
-    >
-      <GripVertical className="text-gray-400" />
-      {isEditing ? (
-        <input
-          value={editedContent}
-          onChange={(e) => setEditedContent(e.target.value)}
-          className="flex-grow border rounded px-2 py-1"
-        />
-      ) : (
-        <span className="flex-grow">{node.type}: {node.content}</span>
-      )}
-      <span className="text-gray-500">{position}</span>
-      <button onClick={handleEdit} className="p-1 text-blue-500 hover:bg-blue-100 rounded">
-        {isEditing ? <X size={16} /> : <Edit size={16} />}
-      </button>
-      <button onClick={() => onDelete(node.id)} className="p-1 text-red-500 hover:bg-red-100 rounded">
-        <Trash size={16} />
-      </button>
-      {node.type === 'article' && (
-        <button onClick={() => onRemove(node.id)} className="p-1 text-gray-500 hover:bg-gray-100 rounded">
-          <X size={16} />
-        </button>
-      )}
-    </div>
+    <Reorder.Item value={node} id={node.id} onDragEnd={onDragEnd}>
+      <div className={`flex items-center space-x-2 mb-2 p-2 border rounded ${canEdit ? 'cursor-move' : ''}`}>
+        {canEdit && <GripVertical className="text-gray-400" />}
+        <span>{node.type}: {node.content}</span>
+        {canEdit && (
+          <>
+            <button onClick={() => onEdit(node)} className="px-2 py-1 bg-blue-500 text-white rounded">
+              <Edit className="w-4 h-4" />
+            </button>
+            <button onClick={() => onDelete(node)} className="px-2 py-1 bg-red-500 text-white rounded">
+              <X className="w-4 h-4" />
+            </button>
+          </>
+        )}
+      </div>
+    </Reorder.Item>
   );
 });
 
-const StructureArticles = ({ selectedLegislation, selectedArticles, onStructureComplete }) => {
-  const [legislationStructure, setLegislationStructure] = useState([]);
-  const [loading, setLoading] = useState(true);
+const LegislationImport = () => {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [file, setFile] = useState(null);
+  const [parsedLegislations, setParsedLegislations] = useState([]);
+  const [selectedLegislationIndex, setSelectedLegislationIndex] = useState(null);
   const [error, setError] = useState(null);
-  const [articlePositions, setArticlePositions] = useState({});
+  const [legislationStructures, setLegislationStructures] = useState([]);
+  const [canEditStructure, setCanEditStructure] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
+  const [isImportComplete, setIsImportComplete] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [importStatus, setImportStatus] = useState(null);
+  const [importError, setImportError] = useState(null);
+  const [availableTexts, setAvailableTexts] = useState({});
+  const [selectedLinkedTexts, setSelectedLinkedTexts] = useState([]);
 
-  useEffect(() => {
-    const fetchLegislationStructure = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await axios.get(`${API_BASE_URL}/legislations/${selectedLegislation.value}`);
-        const identifiers = res.data.acf.titre_ou_chapitre_ou_section_ou_articles;
-        const endpoints = ['titres', 'chapitres', 'sections', 'articles'];
-        
-        const fetchData = async (id) => {
-          for (let endpoint of endpoints) {
-            try {
-              const res = await axios.get(`${API_BASE_URL}/${endpoint}/${id}`);
-              if (res.data) {
-                return { 
-                  ...res.data, 
-                  type: endpoint.slice(0, -1), 
-                  id: res.data.id,
-                  content: res.data.title?.rendered || res.data.acf?.titre || 'Sans titre'
-                };
-              }
-            } catch (err) {
-              // Continue to the next endpoint if not found
-            }
-          }
-          return null;
-        };
-
-        const structureData = await Promise.all(identifiers.map(fetchData));
-        const validStructureData = structureData.filter(item => item !== null);
-        
-        setLegislationStructure(updatePositions(validStructureData));
-      } catch (error) {
-        console.error("Erreur lors de la récupération de la structure de la législation:", error);
-        setError("Erreur lors de la récupération de la structure de la législation");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchLegislationStructure();
-  }, [selectedLegislation]);
-
-  const updatePositions = (structure) => {
-    return structure.map((item, index) => ({
-      ...item,
-      position: index + 1
-    }));
+  const generateFileName = () => {
+    const now = new Date();
+    const date = `${now.getDate()}_${now.getMonth() + 1}_${now.getFullYear()}`;
+    const time = `${now.getHours()}h${now.getMinutes()}min`;
+    return `Legislation_${date}_${time}.csv`;
   };
-
-  const handleDrop = useCallback((e, targetId) => {
-    e.preventDefault();
-    const draggedArticle = JSON.parse(e.dataTransfer.getData('text/plain'));
-    
-    setLegislationStructure(prevStructure => {
-      const newStructure = [...prevStructure];
-      const targetIndex = newStructure.findIndex(item => item.id === targetId);
-      
-      // Remove the article if it's already in the structure
-      const existingIndex = newStructure.findIndex(item => item.id === draggedArticle.id);
-      if (existingIndex !== -1) {
-        newStructure.splice(existingIndex, 1);
-      }
-      
-      // Insert the article at the new position
-      newStructure.splice(targetIndex + 1, 0, draggedArticle);
-      
-      // Update positions
-      const newArticlePositions = {};
-      newStructure.forEach((item, index) => {
-        if (item.type === 'article') {
-          newArticlePositions[item.id] = index + 1;
-        }
-      });
-      setArticlePositions(newArticlePositions);
-      
-      return newStructure;
-    });
-  }, []);
-
-  const handleEdit = (id, newContent) => {
-    setLegislationStructure(prevStructure => 
-      prevStructure.map(item => 
-        item.id === id ? { ...item, content: newContent } : item
-      )
-    );
-  };
-
-  const handleDelete = (id) => {
-    setLegislationStructure(prevStructure => 
-      prevStructure.filter(item => item.id !== id)
-    );
-  };
-
-  const handleRemove = (id) => {
-    setLegislationStructure(prevStructure => 
-      prevStructure.filter(item => item.id !== id)
-    );
-  };
-
-  const handleComplete = useCallback(() => {
-    onStructureComplete(articlePositions);
-  }, [articlePositions, onStructureComplete]);
-
-  if (loading) return <div>Chargement de la structure de la législation...</div>;
-  if (error) return <div>Erreur: {error}</div>;
-
-  return (
-    <div className="flex space-x-4">
-      <div className="w-2/3 border p-4 rounded">
-        <h4 className="font-medium mb-2">Structure de la législation</h4>
-        {legislationStructure.map((item) => (
-          <div
-            key={item.id}
-            className="p-2 border mb-2 rounded"
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => handleDrop(e, item.id)}
-          >
-            {item.type}: {item.content} - Position: {item.position}
-          </div>
-        ))}
-      </div>
-      <div className="w-1/3 border p-4 rounded">
-        <h4 className="font-medium mb-2">Articles à placer</h4>
-        {selectedArticles.map((article) => (
-          <div
-            key={article.id}
-            className="p-2 border mb-2 rounded cursor-move"
-            draggable
-            onDragStart={(e) => {
-              e.dataTransfer.setData('text/plain', JSON.stringify({
-                id: article.id,
-                type: 'article',
-                content: article.Title
-              }));
-            }}
-          >
-            {article.Title}
-          </div>
-        ))}
-      </div>
-      <button
-        onClick={handleComplete}
-        className="mt-4 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-      >
-        Valider la structure
-      </button>
-    </div>
-  );
-};
-
-export default function LegislationImport({ currentStep, onComplete }) {
-  const [file, setFile] = useState(null)
-  const [parsedTexts, setParsedTexts] = useState([])
-  const [selectedTexts, setSelectedTexts] = useState([])
-  const [error, setError] = useState(null)
-  const [selectedLinkedTexts, setSelectedLinkedTexts] = useState({})
-  const [availableTexts, setAvailableTexts] = useState({})
-  const [bulkSelection, setBulkSelection] = useState(false)
-  const [bulkLinkedTexts, setBulkLinkedTexts] = useState({})
-  const [linkedTextsFromFile, setLinkedTextsFromFile] = useState({})
-  const [selectedLegislation, setSelectedLegislation] = useState(null)
-  const [articlePositions, setArticlePositions] = useState({})
-
-  useEffect(() => {
-    const fetchTexts = async () => {
-      const texts = {}
-      const textTypes = ["Législation", "Décision", "Commentaire"]
-      for (const type of textTypes) {
-        try {
-          const response = await axios.get(`${API_BASE_URL}/${removeAccents(type.toLowerCase())}s`)
-          texts[type] = response.data.map(item => ({
-            value: item.id.toString(),
-            label: item.title?.rendered || item.acf?.titre || 'Sans titre',
-            type
-          }))
-        } catch (err) {
-          console.error(`Erreur lors de la récupération des ${type}s:`, err)
-          texts[type] = []
-        }
-      }
-      setAvailableTexts(texts)
-    }
-    fetchTexts()
-  }, [])
-
-  const validateCSV = (results) => {
-    const requiredColumns = ['Title', 'Content', 'Législations_liés', 'Décisions_liés', 'Commentaires_liés']
-    const headers = results.meta.fields
-
-    const missingColumns = requiredColumns.filter(col => !headers.includes(col))
-    if (missingColumns.length > 0) {
-      setError(`Colonnes manquantes dans le CSV : ${missingColumns.join(', ')}`)
-      return false
-    }
-
-    if (results.data.length === 0) {
-      setError("Le fichier CSV est vide")
-      return false
-    }
-
-    return true
-  }
 
   const handleFileChange = useCallback((event) => {
-    const uploadedFile = event.target.files?.[0]
+    const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
-      setFile(uploadedFile)
+      setFile(uploadedFile);
       Papa.parse(uploadedFile, {
         header: true,
         skipEmptyLines: true,
         complete: (results) => {
-          if (!validateCSV(results)) {
-            return
-          }
-
           const cleanedData = results.data.map(row => {
-            const cleanedRow = {}
+            const cleanedRow = {};
             Object.keys(row).forEach(key => {
-              cleanedRow[key.trim()] = row[key]
-            })
-            return cleanedRow
-          })
-  
+              cleanedRow[key.trim()] = row[key];
+            });
+            return cleanedRow;
+          });
+
           if (results.errors.length > 0) {
-            setError(`Erreur de parsing CSV: ${results.errors[0].message}`)
+            setError(`Erreur de parsing CSV: ${results.errors[0].message}`);
+            setParsedLegislations([]);
+          } else if (cleanedData.length === 0) {
+            setError("Le fichier CSV est vide");
+            setParsedLegislations([]);
+          } else if (!validateCSVStructure(cleanedData)) {
+            setError("La structure du fichier CSV est invalide");
+            setParsedLegislations([]);
           } else {
-            setParsedTexts(cleanedData)
-            setError(null)
-  
-            const linkedTexts = {}
-            ["Législation", "Décision", "Commentaire"].forEach(type => {
-              const columnName = `${type}s_liés`
-              cleanedData.forEach((row, index) => {
-                if (row[columnName]) {
-                  const texts = row[columnName].split(',').map(text => {
-                    const [label, id] = text.trim().split('|')
-                    return { value: id, label, type }
-                  })
-                  linkedTexts[index] = [...(linkedTexts[index] || []), ...texts]
-                }
-              })
-            })
-            setLinkedTextsFromFile(linkedTexts)
+            setParsedLegislations(cleanedData);
+            const structures = buildLegislationStructures(cleanedData);
+            setLegislationStructures(structures);
+            setError(null);
           }
         }
-      })
+      });
     }
-  }, [])
+  }, []);
 
-  const handleTextSelection = useCallback((index) => {
-    setSelectedTexts(prev => 
-      prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
-    )
-  }, [])
+  const validateCSVStructure = (data) => {
+    const requiredColumns = ['Titre_legislation', 'Date_entree', 'Code_visee', 'Titre', 'Chapitre', 'Section', 'Article'];
+    return requiredColumns.every(column => data[0].hasOwnProperty(column));
+  };
 
-  const handleLinkedText = useCallback((selectedIndex, newLinkedTexts, type) => {
-    setSelectedLinkedTexts(prev => {
-      const updatedLinkedTexts = { ...prev }
-      if (!updatedLinkedTexts[selectedIndex]) {
-        updatedLinkedTexts[selectedIndex] = []
+  const buildLegislationStructures = useCallback((data) => {
+    const structures = [];
+    let currentStructure = null;
+    let currentTitle = '';
+    let currentChapter = '';
+    let currentSection = '';
+
+    data.forEach((row) => {
+      if (!currentStructure || row.Titre_legislation !== currentStructure.Titre_legislation) {
+        if (currentStructure) {
+          structures.push(currentStructure);
+        }
+        currentStructure = {
+          Titre_legislation: row.Titre_legislation,
+          "Date d'entrée en vigueur": row.Date_entree,
+          "Code visé": row.Code_visee,
+          structure: []
+        };
+        currentTitle = '';
+        currentChapter = '';
+        currentSection = '';
       }
-      updatedLinkedTexts[selectedIndex] = updatedLinkedTexts[selectedIndex]
-        .filter(text => text.type !== type)
-        .concat(newLinkedTexts)
-      return updatedLinkedTexts
-    })
-  }, [])
 
-  const handleBulkSelection = useCallback((select) => {
-    setBulkSelection(select)
-    if (!select) {
-      setSelectedLinkedTexts({})
+      if (row.Titre && row.Titre !== currentTitle) {
+        currentTitle = row.Titre;
+        currentStructure.structure.push({
+          id: Math.random().toString(36).substr(2, 9),
+          type: 'Titre',
+          content: row.Titre,
+        });
+      }
+
+      if (row.Chapitre && row.Chapitre !== currentChapter) {
+        currentChapter = row.Chapitre;
+        currentStructure.structure.push({
+          id: Math.random().toString(36).substr(2, 9),
+          type: 'Chapitre',
+          content: row.Chapitre,
+        });
+      }
+
+      if (row.Section && row.Section !== currentSection) {
+        currentSection = row.Section;
+        currentStructure.structure.push({
+          id: Math.random().toString(36).substr(2, 9),
+          type: 'Section',
+          content: row.Section,
+        });
+      }
+
+      if (row.Article) {
+        currentStructure.structure.push({
+          id: Math.random().toString(36).substr(2, 9),
+          type: 'Article',
+          content: row.Article,
+        });
+      }
+    });
+
+    if (currentStructure) {
+      structures.push(currentStructure);
     }
-  }, [])
 
-  const handleBulkLinkedText = useCallback((selectedOptions) => {
-    setBulkLinkedTexts(selectedOptions)
-    if (bulkSelection) {
-      const newSelectedLinkedTexts = {}
-      selectedTexts.forEach(selectedIndex => {
-        newSelectedLinkedTexts[selectedIndex] = selectedOptions
-      })
-      setSelectedLinkedTexts(newSelectedLinkedTexts)
+    return structures;
+  }, []);
+
+  const handleLegislationSelection = useCallback((index) => {
+    setSelectedLegislationIndex(index);
+  }, []);
+
+  const handleEdit = useCallback((node) => {
+    const newContent = prompt("Entrez le nouveau contenu:", node.content);
+    if (newContent !== null) {
+      setLegislationStructures(prevStructures => {
+        return prevStructures.map((structure, index) => {
+          if (index === selectedLegislationIndex) {
+            return {
+              ...structure,
+              structure: structure.structure.map((item) => 
+                item.id === node.id ? { ...item, content: newContent } : item
+              )
+            };
+          }
+          return structure;
+        });
+      });
     }
-  }, [bulkSelection, selectedTexts])
+  }, [selectedLegislationIndex]);
 
-  const handleStructureComplete = useCallback((positions) => {
-    setArticlePositions(positions)
-  }, [])
+  const handleDelete = useCallback((node) => {
+    setLegislationStructures(prevStructures => {
+      return prevStructures.map((structure, index) => {
+        if (index === selectedLegislationIndex) {
+          return {
+            ...structure,
+            structure: structure.structure.filter((item) => item.id !== node.id)
+          };
+        }
+        return structure;
+      });
+    });
+  }, [selectedLegislationIndex]);
+
+  const handleDrop = useCallback((event, targetIndex) => {
+    event.preventDefault();
+    const droppedText = JSON.parse(event.dataTransfer.getData('text/plain'));
+    setLegislationStructures(prevStructures => {
+      const newStructures = [...prevStructures];
+      if (selectedLegislationIndex !== null) {
+        const currentStructure = [...newStructures[selectedLegislationIndex].structure];
+        currentStructure.splice(targetIndex + 1, 0, {
+          id: Math.random().toString(36).substr(2, 9),
+          type: 'Article',
+          content: droppedText.label,
+          linkedTextId: droppedText.value
+        });
+        newStructures[selectedLegislationIndex].structure = currentStructure;
+      }
+      return newStructures;
+    });
+  }, [selectedLegislationIndex]);
 
   const exportModifiedCSV = useCallback(() => {
-    const exportData = selectedTexts.map(index => {
-      const article = parsedTexts[index]
-      const linkedTexts = selectedLinkedTexts[index] || []
-      const exportRow = { ...article, position: articlePositions[article.id] || '' }
-      
-      ["Législation", "Décision", "Commentaire"].forEach(type => {
-        const textsOfType = linkedTexts.filter(t => t.type === type)
-        exportRow[`${type}s_liés`] = textsOfType.map(t => `${t.label}${t.value ? `|${t.value}` : ''}`).join(', ')
-      })
+    if (selectedLegislationIndex !== null) {
+      const selectedLegislation = legislationStructures[selectedLegislationIndex];
+      let currentTitle = '';
+      let currentChapter = '';
+      let currentSection = '';
+      const exportData = selectedLegislation.structure.map((item) => {
+        const baseInfo = {
+          Titre_legislation: selectedLegislation.Titre_legislation,
+          "Date_entree": selectedLegislation["Date d'entrée en vigueur"],
+          "Code_visee": selectedLegislation["Code visé"],
+          Titre: '',
+          Chapitre: '',
+          Section: '',
+          Article: '',
+        };
 
-      return exportRow
-    })
-
-    const csv = Papa.unparse(exportData)
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
-    const link = document.createElement('a')
-    if (link.download !== undefined) {
-      const url = URL.createObjectURL(blob)
-      link.setAttribute('href', url)
-      link.setAttribute('download', 'articles_modifiés.csv')
-      link.style.visibility = 'hidden'
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-    }
-  }, [selectedTexts, parsedTexts, selectedLinkedTexts, articlePositions])
-
-  const handleComplete = useCallback(async () => {
-    try {
-      const importData = selectedTexts.map(index => {
-        const article = parsedTexts[index]
-        return {
-          title: article.Title,
-          content: article.Content,
-          legislation: selectedLegislation?.value,
-          position: articlePositions[article.id] || null,
-          linkedTexts: selectedLinkedTexts[index] || []
+        switch (item.type) {
+          case 'Titre':
+            currentTitle = item.content;
+            currentChapter = '';
+            currentSection = '';
+            baseInfo.Titre = item.content;
+            break;
+          case 'Chapitre':
+            currentChapter = item.content;
+            currentSection = '';
+            baseInfo.Chapitre = item.content;
+            break;
+          case 'Section':
+            currentSection = item.content;
+            baseInfo.Section = item.content;
+            break;
+          case 'Article':
+            baseInfo.Article = item.linkedTextId ? `${item.linkedTextId}` : item.content;
+            break;
         }
-      })
 
-      await axios.post(`${API_BASE_URL}/import/articles`, importData)
-      onComplete(importData)
-    } catch (error) {
-      setError("Une erreur est survenue lors de l'importation des articles")
+        baseInfo.Titre = currentTitle;
+        baseInfo.Chapitre = currentChapter;
+        baseInfo.Section = currentSection;
+
+        return baseInfo;
+      });
+
+      const csv = Papa.unparse(exportData, {
+        quotes: false, // Ceci empêche Papa Parse d'ajouter des guillemets autour des champs
+        quoteChar: '"', // Spécifie le caractère de citation si nécessaire
+        escapeChar: '"', // Spécifie le caractère d'échappement si nécessaire
+        delimiter: ",", // Spécifie le délimiteur (virgule par défaut)
+        header: true, // Inclut les en-têtes de colonne
+        newline: "\r\n", // Spécifie le caractère de nouvelle ligne
+      });
+  
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      return { csv, blob };
     }
-  }, [selectedTexts, parsedTexts, selectedLegislation, articlePositions, selectedLinkedTexts, onComplete])
+    return null;
+  }, [legislationStructures, selectedLegislationIndex]);
+
+  const handleExportClick = () => {
+    const result = exportModifiedCSV();
+    if (result) {
+      const { blob } = result;
+      const link = document.createElement('a');
+      if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', generateFileName());
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
+  };
+
+  const handleImportConfirmation = async () => {
+    try {
+      setImportStatus('pending');
+      setImportError(null);
+
+      const result = exportModifiedCSV();
+      if (!result) {
+        throw new Error('Aucune législation sélectionnée pour l\'exportation');
+      }
+
+      const { csv } = result;
+      const formData = new FormData();
+      const blob = new Blob([csv], { type: 'text/csv' });
+      formData.append('file', blob, generateFileName());
+
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        throw new Error('Token d\'authentification non trouvé');
+      }
+
+      const response = await axios.post('https://alt.back.qilinsa.com/wp-json/wp/v2/importlegislations', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+
+      if (response.status === 200) {
+        setImportStatus('success');
+        setIsImportComplete(true);
+      } else {
+        throw new Error('Réponse inattendue du serveur');
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'importation:', error);
+      setImportStatus('error');
+      setImportError(error.message || 'Une erreur est survenue lors de l\'importation');
+    }
+  };
+
+  const fetchAvailableTexts = useCallback(async () => {
+    try {
+      const [articlesResponse, decisionsResponse, commentairesResponse] = await Promise.all([
+        axios.get(`${API_BASE_URL}/articles`),
+        axios.get(`${API_BASE_URL}/decisions`),
+        axios.get(`${API_BASE_URL}/commentaires`)
+      ]);
+
+      setAvailableTexts({
+        articles: articlesResponse.data.map(article => ({
+          value: article.id.toString(),
+          label: article.title.rendered,
+          type: 'Article'
+        })),
+        decisions: decisionsResponse.data.map(decision => ({
+          value: decision.id.toString(),
+          label: decision.title.rendered,
+          type: 'Décision'
+        })),
+        commentaires: commentairesResponse.data.map(commentaire => ({
+          value: commentaire.id.toString(),
+          label: commentaire.title.rendered,
+          type: 'Commentaire'
+        }))
+      });
+    } catch (error) {
+      console.error('Erreur lors de la récupération des textes:', error);
+      setError('Erreur lors de la récupération des textes disponibles');
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchAvailableTexts();
+  }, [fetchAvailableTexts]);
+
+  const handleLinkedTextSelection = useCallback((selectedOptions) => {
+    setSelectedLinkedTexts(selectedOptions);
+  }, []);
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -415,8 +387,7 @@ export default function LegislationImport({ currentStep, onComplete }) {
             <h2 className="text-xl font-semibold text-green-500">Charger le fichier CSV</h2>
             <div className="bg-white p-4 rounded-md shadow">
               <p className="text-sm text-gray-600 mb-2">
-                Le fichier CSV doit contenir les colonnes suivantes : Title, Content, Date_entree (obligatoires),
-                ID_decision, ID_commentaire, ID_legislation, Position_legislation (optionnelles)
+                Le fichier CSV doit contenir les colonnes suivantes : Titre_legislation, Date_entree, Code_visee, Titre, Chapitre, Section, Article
               </p>
               <label htmlFor="file-upload" className="block text-sm font-medium text-gray-700 mb-2">Fichier CSV</label>
               <input
@@ -435,242 +406,309 @@ export default function LegislationImport({ currentStep, onComplete }) {
             )}
           </div>
         );
-        case 1:
-          return (
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-green-500">Prévisualisation des articles</h2>
-              <div className="bg-white p-4 rounded-md shadow max-h-96 overflow-y-auto">
-                <div className="flex justify-between mb-4">
-                  <button
-                    onClick={() => setSelectedArticles(parsedArticles.map((_, index) => index))}
-                    className="text-green-500"
-                  >
-                    Tout sélectionner
-                  </button>
-                  <button
-                    onClick={() => setSelectedArticles([])}
-                    className="text-green-500"
-                  >
-                    Tout désélectionner
-                  </button>
-                </div>
-                {parsedArticles.map((article, index) => (
-                  <div key={index} className="mb-4 p-3 border-b last:border-b-0">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <input
-                          type="checkbox"
-                          id={`article-${index}`}
-                          checked={selectedArticles.includes(index)}
-                          onChange={() => handleArticleSelection(index)}
-                          className="mr-3 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-                        />
-                        <label htmlFor={`article-${index}`} className="text-sm font-medium text-gray-700">
-                          {article.Title} - <span className="text-gray-500">{article.Date_entree}</span>
-                        </label>
-                      </div>
-                      {(article.ID_decision || article.ID_commentaire || article.ID_legislation) && (
-                        <span className="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Déjà lié</span>
-                      )}
+      case 1:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-green-500">Prévisualisation des législations</h2>
+            <div className="bg-white p-4 rounded-md shadow max-h-96 overflow-y-auto">
+              {legislationStructures.map((legislation, index) => (
+                <div key={index} className="mb-4 p-3 border-b last:border-b-0">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <input
+                        type="radio"
+                        id={`legislation-${index}`}
+                        checked={selectedLegislationIndex === index}
+                        onChange={() => handleLegislationSelection(index)}
+                        className="mr-3 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
+                      />
+                      <label htmlFor={`legislation-${index}`} className="text-sm font-medium text-gray-700">
+                        {legislation.Titre_legislation}
+                      </label>
                     </div>
-                    <p className="mt-2 text-sm text-gray-500">{article.Content.substring(0, 100)}...</p>
+                  </div>
+                  <p className="mt-1 text-xs text-blue-500">Date d'entrée : {legislation["Date d'entrée en vigueur"]}</p>
+                  <p className="mt-1 text-xs text-green-500">Code visé : {legislation["Code visé"]}</p>
+                  <p className="mt-1 text-xs">Nombre d'éléments : {legislation.structure.length}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      case 2:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-green-500">Lier les textes</h2>
+            <div className="bg-white p-4 rounded-md shadow">
+              <Select
+                isMulti
+                options={[...availableTexts.articles, ...availableTexts.decisions, ...availableTexts.commentaires]}
+                value={selectedLinkedTexts}
+                onChange={handleLinkedTextSelection}
+                placeholder="Sélectionnez les textes à lier"
+                className="mb-4"
+              />
+              <div className="mt-4">
+                <h3 className="text-lg font-medium mb-2">Textes sélectionnés :</h3>
+                <ul className="list-disc list-inside">
+                  {selectedLinkedTexts.map((text) => (
+                    <li key={text.value}>{text.label} ({text.type})</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        );
+      case 3:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-green-500">Structurer la législation</h2>
+            {selectedLegislationIndex !== null && (
+              <div className="flex space-x-4">
+                <div className="w-2/3 border p-4 rounded">
+                  <h4 className="font-medium mb-2">Structure de la législation</h4>
+                  <Reorder.Group
+                    axis="y"
+                    onReorder={(newOrder) => {
+                      setLegislationStructures(prevStructures => {
+                        const newStructures = [...prevStructures];
+                        newStructures[selectedLegislationIndex] = {
+                          ...newStructures[selectedLegislationIndex],
+                          structure: newOrder
+                        };
+                        return newStructures;
+                      });
+                    }}
+                    values={legislationStructures[selectedLegislationIndex]?.structure || []}
+                  >
+                    {legislationStructures[selectedLegislationIndex]?.structure.map((node, index) => (
+                      <div
+                        key={node.id}
+                        onDragOver={(e) => e.preventDefault()}
+                        onDrop={(e) => handleDrop(e, index)}
+                      >
+                        <LegislationNode
+                          node={node}
+                          onEdit={handleEdit}
+                          onDelete={handleDelete}
+                          canEdit={canEditStructure}
+                          onDragEnd={() => {/* Logique de mise à jour si nécessaire */}}
+                        />
+                      </div>
+                    ))}
+                  </Reorder.Group>
+                </div>
+                <div className="w-1/3 border p-4 rounded">
+                  <h4 className="font-medium mb-2">Textes liés</h4>
+                  {selectedLinkedTexts.map((text) => (
+                    <div
+                      key={text.value}
+                      className="mb-2 p-2 border rounded cursor-move"
+                      draggable
+                      onDragStart={(e) => {
+                        e.dataTransfer.setData('text/plain', JSON.stringify(text));
+                      }}
+                    >
+                      {text.label} ({text.type})
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div className="mt-4 flex justify-between items-center">
+              <button
+                onClick={() => {
+                  if (!canEditStructure) {
+                    setShowWarning(true);
+                  } else {
+                    setCanEditStructure(false);
+                  }
+                }}
+                className={`px-4 py-2 rounded-md ${
+                  canEditStructure
+                    ? 'bg-red-500 text-white'
+                    : 'bg-green-500 text-white'
+                }`}
+              >
+                {canEditStructure ? 'Désactiver la modification' : 'Modifier la structure'}
+              </button>
+              <button
+                onClick={handleExportClick}
+                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+              >
+                <Download className="h-4 w-4 inline mr-2" />
+                Exporter le CSV modifié
+              </button>
+            </div>
+            {showWarning && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                <div className="bg-white p-6 rounded-lg">
+                  <h4 className="text-lg font-bold mb-4">Attention</h4>
+                  <p>Modifier la structure d'un texte juridique est une action conséquente. Êtes-vous sûr de vouloir continuer ?</p>
+                  <div className="mt-4 flex justify-end space-x-4">
+                    <button
+                      onClick={() => setShowWarning(false)}
+                      className="px-4 py-2 bg-gray-300 rounded-md"
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      onClick={() => {
+                        setCanEditStructure(true);
+                        setShowWarning(false);
+                      }}
+                      className="px-4 py-2 bg-green-500 text-white rounded-md"
+                    >
+                      Confirmer
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      case 4:
+        if (!legislationStructures.length || selectedLegislationIndex === null) return null;
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-green-500">Confirmation</h2>
+            <div className="bg-white p-4 rounded-md shadow">
+              <h3 className="text-lg font-medium mb-2">Récapitulatif de l'importation</h3>
+              <p>Législation sélectionnée : {legislationStructures[selectedLegislationIndex].Titre_legislation}</p>
+              <p>Nombre d'éléments : {legislationStructures[selectedLegislationIndex].structure.length}</p>
+              
+              <h4 className="text-md font-medium mt-4 mb-2">Structure de la législation :</h4>
+              <div className="max-h-60 overflow-y-auto">
+                {legislationStructures[selectedLegislationIndex].structure.map((item, index) => (
+                  <div key={index} className="ml-4">
+                    <p>{item.type}: {item.content} {item.linkedTextId ? `(ID: ${item.linkedTextId})` : ''}</p>
                   </div>
                 ))}
               </div>
             </div>
-          );
-      case 2:
-        return (
-          <motion.div className="flex flex-col gap-4">
-            <label htmlFor="file-upload" className="block text-sm font-medium text-gray-700">Chargez votre fichier CSV</label>
-            <input
-              id="file-upload"
-              type="file"
-              accept=".csv"
-              onChange={handleFileChange}
-              className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
-            />
-            {error && (
-              <div className="text-red-500 flex items-center gap-2 mt-2">
-                <AlertTriangle className="w-4 h-4" />
-                {error}
-              </div>
-            )}
-            {file && !error && (
-              <p className="mt-2 text-sm text-green-600">
-                Fichier chargé avec succès : {file.name}
-              </p>
-            )}
-            <div className="mt-4 p-4 bg-blue-50 rounded-md">
-              <h4 className="text-sm font-medium text-blue-800 mb-2">Format du fichier CSV pour les articles :</h4>
-              <ul className="list-disc list-inside text-sm text-blue-700">
-                <li>Title : Titre de l'article</li>
-                <li>Content : Contenu de l'article</li>
-                <li>Législations_liés : Liste des législations liées (format : "Nom|ID, Nom|ID")</li>
-                <li>Décisions_liés : Liste des décisions liées (format : "Nom|ID, Nom|ID")</li>
-                <li>Commentaires_liés : Liste des commentaires liés (format : "Nom|ID, Nom|ID")</li>
-              </ul>
-            </div>
-          </motion.div>
-        )
-      case 3:
-        return (
-          <motion.div>
-            <h3 className="text-lg font-semibold mb-4">Prévisualisation et sélection des articles</h3>
-            <p>Nom du fichier : {file?.name}</p>
-            <div className="flex justify-between mb-2">
-              <button onClick={() => setSelectedTexts(parsedTexts.map((_, index) => index))} className="text-green-500">
-                Tout sélectionner
-              </button>
-              <button onClick={() => setSelectedTexts([])} className="text-green-500">
-                Tout désélectionner
+            
+            <div className="flex justify-between items-center">
+              <p className="text-sm text-gray-600">Veuillez vérifier que toutes les informations ci-dessus sont correctes avant de procéder à l'importation.</p>
+              <button
+                onClick={handleExportClick}
+                className="mt-4 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors duration-200"
+              >
+                <Download className="inline-block mr-2 h-4 w-4" />
+                Exporter le CSV modifié
               </button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {parsedTexts.map((text, index) => (
-                <div key={index} className="bg-white p-4 rounded-lg shadow-md">
-                  <div className="flex items-center justify-between mb-2">
-                    <label htmlFor={`text-${index}`} className="text-sm font-medium text-gray-700 flex items-center">
-                      <input
-                        type="checkbox"
-                        id={`text-${index}`}
-                        checked={selectedTexts.includes(index)}
-                        onChange={() => handleTextSelection(index)}
-                        className="mr-2 rounded text-green-600 focus:ring-green-500"
-                      />
-                      {text.Title}
-                    </label>
-                    {linkedTextsFromFile[index] && linkedTextsFromFile[index].length > 0 && (
-                      <LinkedTextBadge />
-                    )}
-                  </div>
-                  <p className="text-sm text-gray-500 line-clamp-3">{text.Content}</p>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )
-      case 4:
-        return (
-          <motion.div className="flex flex-col gap-4">
-            <h3 className="text-lg font-semibold">Lier les articles</h3>
-            <div className="space-y-4">
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">Lier à une législation :</label>
-                <Select
-                  options={availableTexts["Législation"] || []}
-                  value={selectedLegislation}
-                  onChange={(selected) => setSelectedLegislation(selected)}
-                  className="w-full"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={bulkSelection}
-                    onChange={(e) => handleBulkSelection(e.target.checked)}
-                    className="mr-2"
-                  />
-                  Liaison en bloc
-                </label>
-              </div>
-              {bulkSelection ? (
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1">Lier les textes en bloc :</label>
-                  <Select
-                    options={availableTexts["Commentaire"].concat(availableTexts["Décision"])}
-                    value={bulkLinkedTexts}
-                    onChange={handleBulkLinkedText}
-                    isMulti
-                    className="w-full"
-                  />
-                </div>
-              ) : (
-                selectedTexts.map((selectedIndex) => (
-                  <div key={selectedIndex} className="border rounded-md p-4">
-                    <h4 className="font-medium mb-2">{parsedTexts[selectedIndex].Title}</h4>
-                    {["Décision", "Commentaire"].map(type => (
-                      <div key={type} className="mb-4">
-                        <label className="block text-sm font-medium mb-1">{`Lier ${type}s:`}</label>
-                        <Select
-                          options={availableTexts[type] || []}
-                          value={selectedLinkedTexts[selectedIndex]?.filter(text => text.type === type) || []}
-                          onChange={(selectedOptions) => handleLinkedText(selectedIndex, selectedOptions, type)}
-                          isMulti
-                          className="w-full"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                ))
-              )}
-            </div>
-          </motion.div>
-        )
-      case 5:
-        return (
-          <motion.div className="flex flex-col gap-4">
-            <h3 className="text-lg font-semibold">Structurer les articles dans la législation</h3>
-            {selectedLegislation ? (
-              <StructureArticles
-                selectedLegislation={selectedLegislation}
-                selectedArticles={selectedTexts.map(index => parsedTexts[index])}
-                onStructureComplete={handleStructureComplete}
-              />
-            ) : (
-              <div>Veuillez d'abord sélectionner une législation.</div>
-            )}
-          </motion.div>
-        )
-      case 6:
-        return (
-          <motion.div className="flex flex-col gap-4">
-            <h3 className="text-lg font-semibold">Confirmation</h3>
-            <p>Fichier : {file?.name}</p>
-            <h4 className="font-semibold">Structure du texte avec ses liaisons :</h4>
-            <div className="h-[300px] rounded-md border p-4 overflow-auto">
-              {selectedTexts.map(index => {
-                const article = parsedTexts[index]
-                return (
-                  <div key={index} className="mb-4">
-                    <p className="font-semibold">{article.Title}</p>
-                    <p><strong>Législation:</strong> {selectedLegislation?.label}</p>
-                    <p><strong>Position:</strong> {articlePositions[article.id] || 'Non définie'}</p>
-                    {["Décision", "Commentaire"].map(type => {
-                      const textsOfType = selectedLinkedTexts[index]?.filter(text => text.type === type) || []
-                      if (textsOfType.length > 0) {
-                        return (
-                          <p key={type}>
-                            <strong>{type}s:</strong> {textsOfType.map(text => text.label).join(', ')}
-                          </p>
-                        )
-                      }
-                      return null
-                    })}
-                  </div>
-                )
-              })}
-            </div>
-            <button
-              onClick={exportModifiedCSV}
-              className="mt-4 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-            >
-              <Download className="h-4 w-4 inline mr-2" />
-              Exporter le CSV modifié
-            </button>
-            <button
-              onClick={handleComplete}
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-            >
-              Terminer l'importation
-            </button>
-          </motion.div>
-        )
+          </div>
+        );
       default:
-        return null
+        return null;
     }
-  }
+  };
 
-  return renderStepContent()
-}
+  const renderStepIndicators = useCallback(() => (
+    <div className="flex justify-between items-center overflow-x-auto pb-4">
+      {steps.map((step, index) => (
+        <div key={step} className="flex flex-col items-center mx-2">
+          <motion.div
+            className={`w-8 h-8 rounded-full flex items-center justify-center ${
+              index < currentStep
+                ? 'bg-green-500 text-white'
+                : index === currentStep
+                ? 'bg-gray-300 text-gray-700'
+                : 'bg-gray-200 text-gray-400'
+            }`}
+            initial={false}
+            animate={{
+              scale: index === currentStep ? 1.2 : 1,
+              transition: { type: 'spring', stiffness: 500, damping: 30 }
+            }}
+          >
+            {index < currentStep ? (
+              <Check className="w-5 h-5" />
+            ) : (
+              <span className="text-sm">{index + 1}</span>
+            )}
+          </motion.div>
+          <span className="text-xs mt-1 whitespace-nowrap">{step}</span>
+        </div>
+      ))}
+    </div>
+  ), [currentStep]);
+
+  return (
+    <div className="max-w-2xl mx-auto p-4 md:p-6 space-y-6">
+      {!isImportComplete && renderStepIndicators()}
+
+      <AnimatePresence mode="wait">
+        {!isImportComplete ? (
+          <motion.div
+            key={currentStep}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+            className="bg-white rounded-lg border p-4 md:p-6 shadow-sm"
+          >
+            {renderStepContent()}
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+            className="flex flex-col items-center gap-4 p-6 bg-green-100 rounded-lg"
+          >
+            <Check className="w-16 h-16 text-green-500" />
+            <h2 className="text-2xl font-bold text-green-700">Importation en cours...</h2>
+            <p className="text-center text-green-600">
+              Votre importation a été prise en compte et sera exécutée en arrière-plan.
+              Cela peut prendre plusieurs heures. Nous vous tiendrons informé de l'avancement.
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {!isImportComplete && (
+        <div className="flex justify-between">
+          <button
+            onClick={() => setCurrentStep(prev => Math.max(0, prev - 1))}
+            disabled={currentStep === 0}
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md disabled:opacity-50"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4 inline" /> Précédent
+          </button>
+          {currentStep === steps.length - 1 ? (
+            <button
+              onClick={handleImportConfirmation}
+              disabled={importStatus === 'pending' || selectedLegislationIndex === null}
+              className="px-4 py-2 bg-green-500 text-white rounded-md disabled:opacity-50"
+            >
+              {importStatus === 'pending' ? (
+                'Importation en cours...'
+              ) : (
+                <>
+                  <FileText className="mr-2 h-4 w-4 inline" /> Confirmer l'importation
+                </>
+              )}
+            </button>
+          ) : (
+            <button
+              onClick={() => setCurrentStep(prev => Math.min(steps.length - 1, prev + 1))}
+              disabled={error !== null || (currentStep === 1 && selectedLegislationIndex === null)}
+              className="px-4 py-2 bg-green-500 text-white rounded-md disabled:opacity-50"
+            >
+              Suivant <ArrowRight className="ml-2 h-4 w-4 inline" />
+            </button>
+          )}
+        </div>
+      )}
+
+      {importStatus === 'error' && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <strong className="font-bold">Erreur!</strong>
+          <span className="block sm:inline"> {importError}</span></div>
+      )}
+    </div>
+  );
+};
+
+export default LegislationImport;
