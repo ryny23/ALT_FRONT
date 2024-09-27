@@ -223,43 +223,43 @@ const handleSelectLocation = (location) => {
     <div className="w-full min-h-screen bg-gray-100 dark:bg-dark-background text-light-text dark:text-dark-text p-4 sm:p-6 md:p-8">
       <header className="mb-8 flex flex-col items-center justify-center">
         <h1 className="text-2xl sm:text-3xl font-bold mb-6">Trouvez un expert</h1>
-        <div className="space-y-4 flex flex-col items-center">
-          <div className="sm:w-[650px] w-full flex items-center">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-3 sm:pl-4 md:pl-8">
-              <svg
-                className="w-5 h-5 text-gray-400"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <path
-                  d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
-            <input
-              type="search"
-              placeholder="Rechercher un expert par nom, ville, region ou domaine..."
-              className="w-full border-1 rounded-3xl py-2 px-4 pl-12 dark:bg-gray-800 border-gray-400 focus:ring-0 focus:border-1 sm:text-sm"
-              onChange={(e) => setSearchTerm(e.target.value)}
-              value={searchTerm}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleSearch(e);
-                }
-              }}
-            />
+        <div className="space-y-4 flex flex-col items-center w-full max-w-3xl">
+          <div className="w-full">
+            <div className="">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3 sm:pl-4">
+                <svg
+                  className="w-5 h-5 text-gray-400"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+              <input
+                type="search"
+                placeholder="Rechercher un expert par nom, ville, region ou domaine..."
+                className="w-full border-1 rounded-3xl py-2 px-4 pl-12 dark:bg-gray-800 border-gray-400 focus:ring-0 focus:border-1 sm:text-sm"
+                onChange={(e) => setSearchTerm(e.target.value)}
+                value={searchTerm}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearch(e);
+                  }
+                }}
+              />
+            </div>
             {suggestions.length > 0 && (
-              <ul
-                className="absolute z-10 w-[300px] max-h-[300px] overflow-y-auto mt-2 dark:bg-dark-background border  border-gray-300 rounded-lg shadow-lg"
-              >
+              <ul className="w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                 {suggestions.map((suggestion, index) => (
                   <li
                     key={index}
-                    className="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-950 cursor-pointer"
+                    className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
                     onClick={() => handleSelectLocation(suggestion)}
                   >
                     {suggestion}
@@ -268,12 +268,12 @@ const handleSelectLocation = (location) => {
               </ul>
             )}
           </div>
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-8">
-            <div className="flex border border-gray-400 px-3 rounded-3xl justify-between text-sm items-center gap-8 w-full sm:w-auto">
-              <span className="text-light-text dark:text-dark-text">Domaine:</span>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-8 w-full">
+            <div className="flex border border-gray-400 px-3 rounded-3xl justify-between text-sm items-center gap-2 w-full sm:w-1/2">
+              <span className="text-light-text dark:text-dark-text whitespace-nowrap">Domaine:</span>
               <select
                 id="domaine"
-                className="bg-gray-100 text-sm dark:bg-dark-background border-none focus:border-none focus:ring-0 text-light-text dark:text-dark-text p-2 rounded-lg w-full sm:w-[200px]"
+                className="bg-transparent text-sm border-none focus:border-none focus:ring-0 text-light-text dark:text-dark-text p-2 rounded-lg w-full"
                 value={selectedDomain}
                 onChange={(e) => setSelectedDomain(e.target.value)}
               >
@@ -288,11 +288,11 @@ const handleSelectLocation = (location) => {
                 </option>
               </select>
             </div>
-            <div className="flex border border-gray-400 px-3 rounded-3xl justify-between text-sm items-center gap-3 w-full sm:w-auto">
-              <span className="text-light-text dark:text-dark-text">Type d'expert:</span>
+            <div className="flex border border-gray-400 px-3 rounded-3xl justify-between text-sm items-center gap-2 w-full sm:w-1/2">
+              <span className="text-light-text dark:text-dark-text whitespace-nowrap">Type d'expert:</span>
               <select
                 id="type"
-                className="bg-gray-100 ml-8 text-sm dark:bg-dark-background border-none focus:border-none focus:ring-0 text-light-text dark:text-dark-text p-2 rounded-lg w-full sm:w-[150px]"
+                className="bg-transparent text-sm border-none focus:border-none focus:ring-0 text-light-text dark:text-dark-text p-2 rounded-lg w-full"
                 value={selectedType}
                 onChange={(e) => setSelectedType(e.target.value)}
               >
@@ -306,6 +306,7 @@ const handleSelectLocation = (location) => {
       </header>
 
       <main className="space-y-6">
+
         {loading && (
           <div className="flex justify-center items-center">
             <Spinner size="xl" />
