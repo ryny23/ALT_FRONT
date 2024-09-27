@@ -228,60 +228,79 @@ const LegislationImport = () => {
       let currentTitle = '';
       let currentChapter = '';
       let currentSection = '';
+      
+      // Function to escape and quote a value if necessary
+      const escapeValue = (value, forceNoQuotes = false) => {
+        if (forceNoQuotes) return value;
+        if (value.includes(',') || value.includes('"') || value.includes('\n')) {
+          return `"${value.replace(/"/g, '""')}"`;
+        }
+        return value;
+      };
+  
+      // Create the header row
+      const headerRow = 'Titre_legislation,Date_entree,Code_visee,Titre,Chapitre,Section,Article';
+      
+      // Create the legislation info row
+      const legislationInfoRow = `${selectedLegislation.Titre_legislation},${selectedLegislation["Date d'entrée en vigueur"]},${selectedLegislation["Code visé"]},,,,`;
+      
+      // Create the rest of the data
       const exportData = selectedLegislation.structure.map((item) => {
-        const baseInfo = {
-          Titre_legislation: selectedLegislation.Titre_legislation,
-          "Date_entree": selectedLegislation["Date d'entrée en vigueur"],
-          "Code_visee": selectedLegislation["Code visé"],
-          Titre: '',
-          Chapitre: '',
-          Section: '',
-          Article: '',
-        };
-
+        const baseInfo = [
+          selectedLegislation.Titre_legislation,
+          selectedLegislation["Date d'entrée en vigueur"],
+          selectedLegislation["Code visé"],
+          '',
+          '',
+          '',
+          ''
+        ];
+  
         switch (item.type) {
           case 'Titre':
             currentTitle = item.content;
             currentChapter = '';
             currentSection = '';
-            baseInfo.Titre = item.content;
+            baseInfo[3] = item.content;
             break;
           case 'Chapitre':
             currentChapter = item.content;
             currentSection = '';
-            baseInfo.Chapitre = item.content;
+            baseInfo[4] = item.content;
             break;
           case 'Section':
             currentSection = item.content;
-            baseInfo.Section = item.content;
+            baseInfo[5] = item.content;
             break;
           case 'Article':
-            baseInfo.Article = item.linkedTextId ? `${item.linkedTextId}` : item.content;
+            baseInfo[6] = item.linkedTextId ? `${item.linkedTextId}` : item.content;
             break;
         }
-
-        baseInfo.Titre = currentTitle;
-        baseInfo.Chapitre = currentChapter;
-        baseInfo.Section = currentSection;
-
-        return baseInfo;
-      });
-
-      const csv = Papa.unparse(exportData, {
-        quotes: false, // Ceci empêche Papa Parse d'ajouter des guillemets autour des champs
-        quoteChar: '"', // Spécifie le caractère de citation si nécessaire
-        escapeChar: '"', // Spécifie le caractère d'échappement si nécessaire
-        delimiter: ",", // Spécifie le délimiteur (virgule par défaut)
-        header: true, // Inclut les en-têtes de colonne
-        newline: "\r\n", // Spécifie le caractère de nouvelle ligne
+  
+        baseInfo[3] = currentTitle;
+        baseInfo[4] = currentChapter;
+        baseInfo[5] = currentSection;
+  
+        return baseInfo.map((value, index) => escapeValue(value, index < 3)).join(',');
       });
   
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      return { csv, blob };
+      // Check if the first data row is already a legislation info row
+      const isFirstRowLegislationInfo = exportData.length > 0 &&
+        exportData[0].split(',').slice(3).every(val => val === '');
+  
+      // Combine all rows, conditionally including the legislationInfoRow
+      const allRows = [
+        headerRow,
+        ...(isFirstRowLegislationInfo ? [] : [legislationInfoRow]),
+        ...exportData
+      ].join('\r\n');
+  
+      const blob = new Blob([allRows], { type: 'text/csv' });
+      return { csv: allRows, blob };
     }
     return null;
   }, [legislationStructures, selectedLegislationIndex]);
-
+  
   const handleExportClick = () => {
     const result = exportModifiedCSV();
     if (result) {
@@ -298,35 +317,35 @@ const LegislationImport = () => {
       }
     }
   };
-
+  
   const handleImportConfirmation = async () => {
     try {
       setImportStatus('pending');
       setImportError(null);
-
+  
       const result = exportModifiedCSV();
       if (!result) {
         throw new Error('Aucune législation sélectionnée pour l\'exportation');
       }
-
+  
       const { csv } = result;
       const formData = new FormData();
       const blob = new Blob([csv], { type: 'text/csv' });
       formData.append('file', blob, generateFileName());
-
+  
       const token = localStorage.getItem('token');
-
+  
       if (!token) {
         throw new Error('Token d\'authentification non trouvé');
       }
-
+  
       const response = await axios.post('https://alt.back.qilinsa.com/wp-json/wp/v2/importlegislations', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${token}`
         },
       });
-
+  
       if (response.status === 200) {
         setImportStatus('success');
         setIsImportComplete(true);

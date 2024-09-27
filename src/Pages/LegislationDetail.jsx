@@ -23,9 +23,9 @@ const LegislationDetail = () => {
         const res = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/legislations/${id}`);
         setLegislation(res.data);
 
-        const identifiers = res.data.acf.titre_ou_chapitre_ou_section_ou_articles;
-        const decisionIdentifiers = res.data.acf.decision.slice(0, 3);
-        const commentIdentifiers = res.data.acf.commentaire.slice(0, 3);
+        const identifiers = res.data.acf.titre_ou_chapitre_ou_section_ou_articles || [];
+        const decisionIdentifiers = res.data.acf.decision ? res.data.acf.decision.slice(0, 3) : [];
+        const commentIdentifiers = res.data.acf.commentaire ? res.data.acf.commentaire.slice(0, 3) : [];
 
         const fetchData = async (id) => {
           for (let endpoint of endpoints) {
@@ -36,7 +36,7 @@ const LegislationDetail = () => {
               // Continue to the next endpoint if not found
             }
           }
-          throw new Error('Data not found in any endpoint');
+          return null; // Return null if data not found in any endpoint
         };
 
         const fetchDecisions = async (id) => {
@@ -44,7 +44,7 @@ const LegislationDetail = () => {
             const res = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/decisions/${id}`);
             return res.data;
           } catch (err) {
-            throw new Error('Decision not found');
+            return null; // Return null if decision not found
           }
         };
 
@@ -53,7 +53,7 @@ const LegislationDetail = () => {
             const res = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/commentaires/${id}`);
             return res.data;
           } catch (err) {
-            throw new Error('Comment not found');
+            return null; // Return null if comment not found
           }
         };
 
@@ -61,9 +61,9 @@ const LegislationDetail = () => {
         const decisionsData = await Promise.all(decisionIdentifiers.map(fetchDecisions));
         const commentsData = await Promise.all(commentIdentifiers.map(fetchComments));
 
-        setDetails(detailsData);
-        setDecisions(decisionsData);
-        setComments(commentsData);
+        setDetails(detailsData.filter(Boolean));
+        setDecisions(decisionsData.filter(Boolean));
+        setComments(commentsData.filter(Boolean));
       } catch (err) {
         setError('Failed to fetch legislation or details');
       } finally {
@@ -96,6 +96,8 @@ const LegislationDetail = () => {
 
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
+  if (!legislation) return <p className="text-center">Législation non trouvée.</p>;
+
   return (
     <div className="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
       <div className="flex-1 container mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -108,7 +110,7 @@ const LegislationDetail = () => {
                   onClick={() => scrollToSection(`detail-${item.id}`)}
                   className="cursor-pointer text-blue-500 text-sm text-start dark:text-blue-200 hover:underline"
                 >
-                  {extractLastPart(item.title.rendered)} {/* Affiche uniquement la dernière partie */}
+                  {extractLastPart(item.title.rendered)}
                 </a>
               </li>
             ))}
@@ -120,7 +122,7 @@ const LegislationDetail = () => {
                 >
                   Décisions
                 </a>
-                <ul className=" space-y-2">
+                <ul className="space-y-2">
                   {decisions.map((decision, index) => (
                     <li key={index}>
                       <a
