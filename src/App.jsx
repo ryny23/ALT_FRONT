@@ -40,6 +40,7 @@ import Detailslayout from "./layout/Detailslayout";
 import Commentaires from "./Pages/Commentaires";
 import SearchResults from './Components/SearchResults';
 import Historique from "./Components/Historique";
+import DataFetcherAndUploader from "./Components/DataFetcherAndUploader";
 import LegalTextManager2 from "./Pages/LegalTextmanager2";
 import CommentImport from "./Pages/CommentImport";
 import DecisionImport from "./Pages/DecisionImport";
@@ -49,6 +50,7 @@ import ImportPage from "./Pages/ImportPage";
 import CsvDecisionImporter from "./Pages/CsvDecisionImporter";
 import CsvArticleImporter from "./Pages/CsvArticleImporter";
 import ArticleImporter from "./Pages/ArticleImporter";
+
 
 
 
@@ -69,7 +71,7 @@ const router = createBrowserRouter(
                 <Route path="legislationimport" element={<LegislationImport />} />
                 <Route path="csvdecisionimporter" element={<CsvDecisionImporter />} />
                 <Route path="csvarticleimporter" element={<CsvArticleImporter />} />
-                <Route path="articleimporter" element={<ArticleImporter />} />
+                
 
                 {/* PLATEFORME */}
                 <Route path="fonctionnalites" element={<Fonctionnalites/>}/>
@@ -113,6 +115,8 @@ const router = createBrowserRouter(
                 <Route path="/dashboard/recherche/historique" element={<Historique />}/>
                 <Route path="legal-text-manager" element={<LegalTextManager2 />} />
                 <Route path="articleimporter" element={<ArticleImporter />} />
+                <Route path="DataFetcherAndUploader" element={<DataFetcherAndUploader />} />
+                
                 
                 
                 {/* TEXTES JURIDIQUES */}

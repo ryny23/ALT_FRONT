@@ -22,7 +22,7 @@ function FileUpload() {
     formData.append('file', selectedFile);
 
     try {
-      const response = await axios.post('https://alt.back.qilinsa.com/wp-json/wp/v2/importlegislations', formData, {
+      const response = await axios.post('https://alt.back.qilinsa.com/wp-json/wp/v2/importdecisions', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${token}`

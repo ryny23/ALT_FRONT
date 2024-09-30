@@ -12,6 +12,7 @@ import CtaInscription from '../Components/CtaInscription';
 import TextGenerateEffect from '../Components/TextGenerateEffect';
 import anime from '../assets/anime.svg';
 
+
 const text = `ALT est la première plateforme d'intelligence juridique dédiée aux professionnels du droit au Cameroun. Grâce à des technologies de pointe, nous centralisons et analysons en profondeur l'ensemble des textes législatifs, jurisprudences et réglementations pour vous fournir des informations juridiques toujours à jour et exploitables. Notre mission : vous permettre de gagner un temps précieux et un avantage concurrentiel décisif.`;
 
 function Home() {

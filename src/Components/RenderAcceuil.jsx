@@ -197,6 +197,7 @@ const RenderAcceuil = () => {
         setExperts(expertsRes.data);
         setLoading(false);
       } catch (error) {
+        console.error('Erreur lors de la récupération des données :', error);
         setError('Erreur lors de la récupération des données.');
         setLoading(false);
       }
