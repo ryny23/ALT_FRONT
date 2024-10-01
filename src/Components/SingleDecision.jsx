@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-
 import anime from '../assets/anime.svg';
 import parse from 'html-react-parser';
 
@@ -18,21 +17,25 @@ const SingleDecision = () => {
         const res = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/decisions/${id}`);
         setDecision(res.data);
 
-        const commentIdentifiers = res.data.acf.commentaire.slice(0, 3); // Récupère uniquement les 3 premiers commentaires
+        // Vérifiez si la décision a des commentaires avant de les récupérer
+        if (res.data.acf.commentaire && res.data.acf.commentaire.length > 0) {
+          const commentIdentifiers = res.data.acf.commentaire.slice(0, 3);
 
-        const fetchComments = async (id) => {
-          try {
-            const res = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/commentaires/${id}`);
-            return res.data;
-          } catch (err) {
-            throw new Error('Comment not found');
-          }
-        };
+          const fetchComments = async (id) => {
+            try {
+              const res = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/commentaires/${id}`);
+              return res.data;
+            } catch (err) {
+              console.warn(`Comment with id ${id} not found`);
+              return null;
+            }
+          };
 
-        const commentsData = await Promise.all(commentIdentifiers.map(fetchComments));
-        setComments(commentsData);
+          const commentsData = await Promise.all(commentIdentifiers.map(fetchComments));
+          setComments(commentsData.filter(comment => comment !== null));
+        }
       } catch (err) {
-        setError('Failed to fetch decision or comments');
+        setError('Failed to fetch decision');
       } finally {
         setLoading(false);
       }
@@ -58,68 +61,44 @@ const SingleDecision = () => {
 
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
-  return (
+  if (!decision) return <p className="text-center">No decision found</p>;
 
-    <div>
-      
-      <div className="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
-      
+  return (
+    <div className="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
       <div className="flex-1 container mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-4 gap-8">
         <aside className="lg:col-span-1 dark:bg-gray-700 p-4 rounded-xl shadow lg:sticky lg:top-0 lg:max-h-screen lg:overflow-y-auto">
           <h2 className="text-xl font-bold mb-4">Autour de la decision</h2>
           <ul className="space-y-2">
-
-            <li>
-                <a
-                  onClick={() => scrollToSection('comments')}
-                  className="cursor-pointer text-blue-500 hover:underline"
-                >
+            {comments.length > 0 && (
+              <li>
+                <a onClick={() => scrollToSection('comments')} className="cursor-pointer text-blue-500 hover:underline">
                   Commentaires
                 </a>
-                
-            </li>
+              </li>
+            )}
             <h2 className="text-xl font-bold mb-4">Texte Integral</h2>
             <li>
-              <a
-                onClick={() => scrollToSection('title')}
-                className="cursor-pointer text-blue-500 hover:underline"
-              >
+              <a onClick={() => scrollToSection('title')} className="cursor-pointer text-blue-500 hover:underline">
                 Titre
               </a>
             </li>
-            
-            
-            
             <li>
-              <a
-                onClick={() => scrollToSection('descriptif')}
-                className="cursor-pointer text-blue-500 hover:underline"
-              >
+              <a onClick={() => scrollToSection('descriptif')} className="cursor-pointer text-blue-500 hover:underline">
                 Descriptif
               </a>
             </li>
             <li>
-              <a
-                onClick={() => scrollToSection('resume')}
-                className="cursor-pointer text-blue-500 hover:underline"
-              >
+              <a onClick={() => scrollToSection('resume')} className="cursor-pointer text-blue-500 hover:underline">
                 Résumé
               </a>
             </li>
             <li>
-              <a
-                onClick={() => scrollToSection('informations')}
-                className="cursor-pointer text-blue-500 hover:underline"
-              >
+              <a onClick={() => scrollToSection('informations')} className="cursor-pointer text-blue-500 hover:underline">
                 Informations
               </a>
             </li>
-
             <li>
-              <a
-                onClick={() => scrollToSection('text')}
-                className="cursor-pointer text-blue-500 hover:underline"
-              >
+              <a onClick={() => scrollToSection('text')} className="cursor-pointer text-blue-500 hover:underline">
                 Texte de la decision
               </a>
             </li>
@@ -158,8 +137,6 @@ const SingleDecision = () => {
           </div>
         </main>
       </div>
-      
-    </div>
     </div>
   );
 };

@@ -246,8 +246,10 @@ const ArticleImport = () => {
       return exportRow;
     });
   
-    const csv = Papa.unparse(exportData);
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const csv = Papa.unparse(exportData, {
+      encoding: 'UTF-8' // Ajout de l'encodage UTF-8 pour l'export
+    });
+    const blob = new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]), csv], { type: 'text/csv;charset=utf-8;' });
     return { csv, blob };
   }, [selectedArticles, parsedArticles, selectedLinkedTexts, selectedLegislation, legislationStructure]);
 
@@ -375,7 +377,7 @@ const ArticleImport = () => {
 
       const { csv } = exportModifiedCSV();
       const formData = new FormData();
-      const blob = new Blob([csv], { type: 'text/csv' });
+      const blob = new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]), csv], { type: 'text/csv;charset=utf-8;' });
       formData.append('file', blob, generateFileName());
 
       const token = localStorage.getItem('token');

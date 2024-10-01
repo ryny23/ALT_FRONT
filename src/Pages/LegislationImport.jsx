@@ -222,84 +222,84 @@ const LegislationImport = () => {
     });
   }, [selectedLegislationIndex]);
 
-  const exportModifiedCSV = useCallback(() => {
-    if (selectedLegislationIndex !== null) {
-      const selectedLegislation = legislationStructures[selectedLegislationIndex];
-      let currentTitle = '';
-      let currentChapter = '';
-      let currentSection = '';
-      
-      // Function to escape and quote a value if necessary
-      const escapeValue = (value, forceNoQuotes = false) => {
-        if (forceNoQuotes) return value;
-        if (value.includes(',') || value.includes('"') || value.includes('\n')) {
-          return `"${value.replace(/"/g, '""')}"`;
-        }
-        return value;
-      };
-  
-      // Create the header row
-      const headerRow = 'Titre_legislation,Date_entree,Code_visee,Titre,Chapitre,Section,Article';
-      
-      // Create the legislation info row
-      const legislationInfoRow = `${selectedLegislation.Titre_legislation},${selectedLegislation["Date d'entrée en vigueur"]},${selectedLegislation["Code visé"]},,,,`;
-      
-      // Create the rest of the data
-      const exportData = selectedLegislation.structure.map((item) => {
-        const baseInfo = [
-          selectedLegislation.Titre_legislation,
-          selectedLegislation["Date d'entrée en vigueur"],
-          selectedLegislation["Code visé"],
-          '',
-          '',
-          '',
-          ''
-        ];
-  
-        switch (item.type) {
-          case 'Titre':
-            currentTitle = item.content;
-            currentChapter = '';
-            currentSection = '';
-            baseInfo[3] = item.content;
-            break;
-          case 'Chapitre':
-            currentChapter = item.content;
-            currentSection = '';
-            baseInfo[4] = item.content;
-            break;
-          case 'Section':
-            currentSection = item.content;
-            baseInfo[5] = item.content;
-            break;
-          case 'Article':
-            baseInfo[6] = item.linkedTextId ? `${item.linkedTextId}` : item.content;
-            break;
-        }
-  
-        baseInfo[3] = currentTitle;
-        baseInfo[4] = currentChapter;
-        baseInfo[5] = currentSection;
-  
-        return baseInfo.map((value, index) => escapeValue(value, index < 3)).join(',');
-      });
-  
-      // Check if the first data row is already a legislation info row
-      const isFirstRowLegislationInfo = exportData.length > 0 &&
-        exportData[0].split(',').slice(3).every(val => val === '');
-  
-      // Combine all rows, conditionally including the legislationInfoRow
-      const allRows = [
-        headerRow,
-        ...(isFirstRowLegislationInfo ? [] : [legislationInfoRow]),
-        ...exportData
-      ].join('\r\n');
-  
-      const blob = new Blob([allRows], { type: 'text/csv' });
-      return { csv: allRows, blob };
-    }
-    return null;
-  }, [legislationStructures, selectedLegislationIndex]);
+const exportModifiedCSV = useCallback(() => {
+  if (selectedLegislationIndex !== null) {
+    const selectedLegislation = legislationStructures[selectedLegislationIndex];
+    let currentTitle = '';
+    let currentChapter = '';
+    let currentSection = '';
+    
+    // Function to escape and quote a value if necessary
+    const escapeValue = (value, forceNoQuotes = false) => {
+      if (forceNoQuotes) return value;
+      if (value.includes(',') || value.includes('"') || value.includes('\n')) {
+        return `"${value.replace(/"/g, '""')}"`;
+      }
+      return value;
+    };
+
+    // Create the header row
+    const headerRow = 'Titre_legislation,Date_entree,Code_visee,Titre,Chapitre,Section,Article';
+    
+    // Create the legislation info row
+    const legislationInfoRow = `${selectedLegislation.Titre_legislation},${selectedLegislation["Date d'entrée en vigueur"]},${selectedLegislation["Code visé"]},,,,`;
+    
+    // Create the rest of the data
+    const exportData = selectedLegislation.structure.map((item) => {
+      const baseInfo = [
+        selectedLegislation.Titre_legislation,
+        selectedLegislation["Date d'entrée en vigueur"],
+        selectedLegislation["Code visé"],
+        '',
+        '',
+        '',
+        ''
+      ];
+
+      switch (item.type) {
+        case 'Titre':
+          currentTitle = item.content;
+          currentChapter = '';
+          currentSection = '';
+          baseInfo[3] = item.content;
+          break;
+        case 'Chapitre':
+          currentChapter = item.content;
+          currentSection = '';
+          baseInfo[4] = item.content;
+          break;
+        case 'Section':
+          currentSection = item.content;
+          baseInfo[5] = item.content;
+          break;
+        case 'Article':
+          baseInfo[6] = item.linkedTextId ? `${item.linkedTextId}` : item.content;
+          break;
+      }
+
+      baseInfo[3] = currentTitle;
+      baseInfo[4] = currentChapter;
+      baseInfo[5] = currentSection;
+
+      return baseInfo.map((value, index) => escapeValue(value, index < 3)).join(',');
+    });
+
+    // Check if the first data row is already a legislation info row
+    const isFirstRowLegislationInfo = exportData.length > 0 &&
+      exportData[0].split(',').slice(3).every(val => val === '');
+
+    // Combine all rows, conditionally including the legislationInfoRow
+    const allRows = [
+      headerRow,
+      ...(isFirstRowLegislationInfo ? [] : [legislationInfoRow]),
+      ...exportData
+    ].join('\r\n');
+
+    const blob = new Blob(["\uFEFF" + allRows], { type: 'text/csv;charset=utf-8;' });
+    return { csv: allRows, blob };
+  }
+  return null;
+}, [legislationStructures, selectedLegislationIndex]);
   
   const handleExportClick = () => {
     const result = exportModifiedCSV();
@@ -330,7 +330,7 @@ const LegislationImport = () => {
   
       const { csv } = result;
       const formData = new FormData();
-      const blob = new Blob([csv], { type: 'text/csv' });
+      const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
       formData.append('file', blob, generateFileName());
   
       const token = localStorage.getItem('token');

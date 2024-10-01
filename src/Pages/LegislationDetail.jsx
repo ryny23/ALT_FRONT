@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import Nav from '../Components/Nav';
-import Footer from '../Components/Footer';
 import anime from '../assets/anime.svg';
-import parse from 'html-react-parser';
 
 const LegislationDetail = () => {
   const { id } = useParams();
@@ -16,6 +13,13 @@ const LegislationDetail = () => {
   const [error, setError] = useState('');
 
   const endpoints = ['titres', 'chapitres', 'sections', 'articles'];
+
+  // Function to decode HTML entities
+  const decodeHTMLEntities = (text) => {
+    const textArea = document.createElement('textarea');
+    textArea.innerHTML = text;
+    return textArea.value;
+  };
 
   useEffect(() => {
     const fetchLegislation = async () => {
@@ -82,7 +86,7 @@ const LegislationDetail = () => {
   };
 
   const extractLastPart = (text) => {
-    const parts = text.split(' &#8211; ');
+    const parts = decodeHTMLEntities(text).split(' – ');
     return parts[parts.length - 1];
   };
 
@@ -162,13 +166,13 @@ const LegislationDetail = () => {
         </aside>
         <main className="lg:col-span-3 dark:bg-gray-800 p-6 rounded shadow">
           <div className="text-lg leading-relaxed">
-            <h1 className="text-3xl font-bold mb-6">{legislation.title.rendered}</h1>
-            <div dangerouslySetInnerHTML={{ __html: legislation.content.rendered }} className="mb-6" />
+            <h1 className="text-3xl font-bold mb-6">{decodeHTMLEntities(legislation.title.rendered)}</h1>
+            <div dangerouslySetInnerHTML={{ __html: decodeHTMLEntities(legislation.content.rendered) }} className="mb-6" />
             <div>
               {details.map((item, index) => (
                 <div key={index} className="mb-6" id={`detail-${item.id}`}>
                   <h3 className="text-xl font-semibold mb-2">{extractLastPart(item.title.rendered)}</h3>
-                  <div dangerouslySetInnerHTML={{ __html: item.content.rendered }} />
+                  <div dangerouslySetInnerHTML={{ __html: decodeHTMLEntities(item.content.rendered) }} />
                 </div>
               ))}
             </div>
@@ -178,7 +182,7 @@ const LegislationDetail = () => {
                 {decisions.map((decision, index) => (
                   <div key={index} className="mb-6" id={`decision-${decision.id}`}>
                     <h3 className="text-xl font-semibold mb-2">{extractLastPart(decision.title.rendered)}</h3>
-                    <div dangerouslySetInnerHTML={{ __html: decision.content.rendered }} />
+                    <div dangerouslySetInnerHTML={{ __html: decodeHTMLEntities(decision.content.rendered) }} />
                   </div>
                 ))}
               </div>
@@ -189,7 +193,7 @@ const LegislationDetail = () => {
                 {comments.map((comment, index) => (
                   <div key={index} className="mb-6" id={`comment-${comment.id}`}>
                     <h3 className="text-xl font-semibold mb-2">{extractLastPart(comment.title.rendered)}</h3>
-                    <div dangerouslySetInnerHTML={{ __html: comment.content.rendered }} />
+                    <div dangerouslySetInnerHTML={{ __html: decodeHTMLEntities(comment.content.rendered) }} />
                   </div>
                 ))}
               </div>
