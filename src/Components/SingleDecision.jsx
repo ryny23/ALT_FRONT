@@ -18,8 +18,8 @@ const SingleDecision = () => {
         setDecision(res.data);
 
         // Vérifiez si la décision a des commentaires avant de les récupérer
-        if (res.data.acf.commentaire && res.data.acf.commentaire.length > 0) {
-          const commentIdentifiers = res.data.acf.commentaire.slice(0, 3);
+        if (res.data.acf.commentaire_decision && res.data.acf.commentaire_decision.length > 0) {
+          const commentIdentifiers = res.data.acf.commentaire_decision.slice(0, 3);
 
           const fetchComments = async (id) => {
             try {
