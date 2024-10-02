@@ -41,6 +41,30 @@ const CommentaireImport = () => {
     return `Commentaires_${date}_${time}.csv`;
   };
 
+  const checkExistingCommentaires = async (commentaires) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/commentaires`);
+      const existingCommentaires = response.data;
+      
+      const updatedCommentaires = commentaires.map(commentaire => {
+        const existingCommentaire = existingCommentaires.find(existing => 
+          existing.title.rendered === commentaire.Title
+        );
+
+        if (existingCommentaire) {
+          return { ...commentaire, exists: true, id: existingCommentaire.id };
+        }
+
+        return commentaire;
+      });
+
+      setParsedCommentaires(updatedCommentaires);
+    } catch (error) {
+      console.error("Erreur lors de la vérification des commentaires existants:", error);
+      setError("Impossible de vérifier les commentaires existants");
+    }
+  };
+
   const handleFileChange = useCallback((event) => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
@@ -67,7 +91,7 @@ const CommentaireImport = () => {
             setError("La structure du fichier CSV est invalide");
             setParsedCommentaires([]);
           } else {
-            setParsedCommentaires(cleanedData);
+            checkExistingCommentaires(cleanedData);
             setError(null);
           }
         }
@@ -81,10 +105,14 @@ const CommentaireImport = () => {
   };
 
   const handleCommentaireSelection = useCallback((index) => {
+    const commentaire = parsedCommentaires[index];
+    if (commentaire.exists) {
+      return;
+    }
     setSelectedCommentaires(prev => 
       prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
     );
-  }, []);
+  }, [parsedCommentaires]);
 
   const handleLinkedText = useCallback((selectedIndex, newLinkedTexts, type) => {
     setSelectedLinkedTexts(prev => {
@@ -299,7 +327,7 @@ const CommentaireImport = () => {
             <div className="bg-white p-4 rounded-md shadow max-h-96 overflow-y-auto">
               <div className="flex justify-between mb-4">
                 <button
-                  onClick={() => setSelectedCommentaires(parsedCommentaires.map((_, index) => index))}
+                  onClick={() => setSelectedCommentaires(parsedCommentaires.map((_, index) => index).filter(index => !parsedCommentaires[index].exists))}
                   className="text-green-500"
                 >
                   Tout sélectionner
@@ -312,7 +340,7 @@ const CommentaireImport = () => {
                 </button>
               </div>
               {parsedCommentaires.map((commentaire, index) => (
-                <div key={index} className="mb-4 p-3 border-b last:border-b-0">
+                <div key={index} className={`mb-4 p-3 border-b last:border-b-0 ${commentaire.exists ? 'bg-red-100' : ''}`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
                       <input
@@ -320,12 +348,16 @@ const CommentaireImport = () => {
                         id={`commentaire-${index}`}
                         checked={selectedCommentaires.includes(index)}
                         onChange={() => handleCommentaireSelection(index)}
+                        disable={commentaire.exists}
                         className="mr-3 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                       />
                       <label htmlFor={`commentaire-${index}`} className="text-sm font-medium text-gray-700">
                         {commentaire.Title}
                       </label>
                     </div>
+                    {commentaire.exists && (
+                      <span className="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Existant</span>
+                    )}
                     {(commentaire.ID_decisions || commentaire.ID_articles || commentaire.ID_legislation) && (
                       <span className="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Déjà lié</span>
                     )}

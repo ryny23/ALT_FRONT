@@ -59,14 +59,39 @@ const LegislationImport = () => {
     return `Legislation_${date}_${time}.csv`;
   };
 
-  const handleFileChange = useCallback((event) => {
+  const checkExistingLegislations = async (legislations) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/legislations`);
+      const existingLegislations = response.data;
+      
+      const updatedLegislations = legislations.map(legislation => {
+        const existingLegislation = existingLegislations.find(existing => 
+          existing.title.rendered === legislation.Titre_legislation
+        );
+
+        if (existingLegislation) {
+          return { ...legislation, exists: true, id: existingLegislation.id };
+        }
+
+        return legislation;
+      });
+
+      return updatedLegislations;
+    } catch (error) {
+      console.error("Erreur lors de la vérification des législations existantes:", error);
+      setError("Impossible de vérifier les législations existantes");
+      return legislations;
+    }
+  };
+
+  const handleFileChange = useCallback(async (event) => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
       setFile(uploadedFile);
       Papa.parse(uploadedFile, {
         header: true,
         skipEmptyLines: true,
-        complete: (results) => {
+        complete: async (results) => {
           const cleanedData = results.data.map(row => {
             const cleanedRow = {};
             Object.keys(row).forEach(key => {
@@ -85,8 +110,9 @@ const LegislationImport = () => {
             setError("La structure du fichier CSV est invalide");
             setParsedLegislations([]);
           } else {
-            setParsedLegislations(cleanedData);
-            const structures = buildLegislationStructures(cleanedData);
+            const checkedLegislations = await checkExistingLegislations(cleanedData);
+            setParsedLegislations(checkedLegislations);
+            const structures = buildLegislationStructures(checkedLegislations);
             setLegislationStructures(structures);
             setError(null);
           }
@@ -116,7 +142,9 @@ const LegislationImport = () => {
           Titre_legislation: row.Titre_legislation,
           "Date d'entrée en vigueur": row.Date_entree,
           "Code visé": row.Code_visee,
-          structure: []
+          structure: [],
+          exists: row.exists,
+          id: row.id
         };
         currentTitle = '';
         currentChapter = '';
@@ -167,8 +195,10 @@ const LegislationImport = () => {
   }, []);
 
   const handleLegislationSelection = useCallback((index) => {
-    setSelectedLegislationIndex(index);
-  }, []);
+    if (!legislationStructures[index].exists) {
+      setSelectedLegislationIndex(index);
+    }
+  }, [legislationStructures]);
 
   const handleEdit = useCallback((node) => {
     const newContent = prompt("Entrez le nouveau contenu:", node.content);
@@ -222,84 +252,78 @@ const LegislationImport = () => {
     });
   }, [selectedLegislationIndex]);
 
-const exportModifiedCSV = useCallback(() => {
-  if (selectedLegislationIndex !== null) {
-    const selectedLegislation = legislationStructures[selectedLegislationIndex];
-    let currentTitle = '';
-    let currentChapter = '';
-    let currentSection = '';
-    
-    // Function to escape and quote a value if necessary
-    const escapeValue = (value, forceNoQuotes = false) => {
-      if (forceNoQuotes) return value;
-      if (value.includes(',') || value.includes('"') || value.includes('\n')) {
-        return `"${value.replace(/"/g, '""')}"`;
-      }
-      return value;
-    };
+  const exportModifiedCSV = useCallback(() => {
+    if (selectedLegislationIndex !== null) {
+      const selectedLegislation = legislationStructures[selectedLegislationIndex];
+      let currentTitle = '';
+      let currentChapter = '';
+      let currentSection = '';
+      
+      const escapeValue = (value, forceNoQuotes = false) => {
+        if (forceNoQuotes) return value;
+        if (value.includes(',') || value.includes('"') || value.includes('\n')) {
+          return `"${value.replace(/"/g, '""')}"`;
+        }
+        return value;
+      };
 
-    // Create the header row
-    const headerRow = 'Titre_legislation,Date_entree,Code_visee,Titre,Chapitre,Section,Article';
-    
-    // Create the legislation info row
-    const legislationInfoRow = `${selectedLegislation.Titre_legislation},${selectedLegislation["Date d'entrée en vigueur"]},${selectedLegislation["Code visé"]},,,,`;
-    
-    // Create the rest of the data
-    const exportData = selectedLegislation.structure.map((item) => {
-      const baseInfo = [
-        selectedLegislation.Titre_legislation,
-        selectedLegislation["Date d'entrée en vigueur"],
-        selectedLegislation["Code visé"],
-        '',
-        '',
-        '',
-        ''
-      ];
+      const headerRow = 'Titre_legislation,Date_entree,Code_visee,Titre,Chapitre,Section,Article';
+      
+      const legislationInfoRow = `${selectedLegislation.Titre_legislation},${selectedLegislation["Date d'entrée en vigueur"]},${selectedLegislation["Code visé"]},,,,`;
+      
+      const exportData = selectedLegislation.structure.map((item) => {
+        const baseInfo = [
+          selectedLegislation.Titre_legislation,
+          selectedLegislation["Date d'entrée en vigueur"],
+          selectedLegislation["Code visé"],
+          '',
+          '',
+          '',
+          ''
+        ];
 
-      switch (item.type) {
-        case 'Titre':
-          currentTitle = item.content;
-          currentChapter = '';
-          currentSection = '';
-          baseInfo[3] = item.content;
-          break;
-        case 'Chapitre':
-          currentChapter = item.content;
-          currentSection = '';
-          baseInfo[4] = item.content;
-          break;
-        case 'Section':
-          currentSection = item.content;
-          baseInfo[5] = item.content;
-          break;
-        case 'Article':
-          baseInfo[6] = item.linkedTextId ? `${item.linkedTextId}` : item.content;
-          break;
-      }
+        switch (item.type) {
+          case 'Titre':
+            currentTitle = item.content;
+            currentChapter = '';
+            currentSection = '';
+            baseInfo[3] = item.content;
+            break;
+          case 'Chapitre':
+            currentChapter = item.content;
+            currentSection = '';
+            baseInfo[4] = item.content;
+            break;
+          case 'Section':
+            currentSection = item.content;
+            baseInfo[5] = item.content;
+            break;
+          case 'Article':
+            baseInfo[6] = item.linkedTextId ? `${item.linkedTextId}` : item.content;
+            break;
+        }
 
-      baseInfo[3] = currentTitle;
-      baseInfo[4] = currentChapter;
-      baseInfo[5] = currentSection;
+        baseInfo[3] = currentTitle;
+        baseInfo[4] = currentChapter;
+        baseInfo[5] = currentSection;
 
-      return baseInfo.map((value, index) => escapeValue(value, index < 3)).join(',');
-    });
+        return baseInfo.map((value, index) => escapeValue(value, index < 3)).join(',');
+      });
 
-    // Check if the first data row is already a legislation info row
-    const isFirstRowLegislationInfo = exportData.length > 0 &&
-      exportData[0].split(',').slice(3).every(val => val === '');
+      const isFirstRowLegislationInfo = exportData.length > 0 &&
+        exportData[0].split(',').slice(3).every(val => val === '');
 
-    // Combine all rows, conditionally including the legislationInfoRow
-    const allRows = [
-      headerRow,
-      ...(isFirstRowLegislationInfo ? [] : [legislationInfoRow]),
-      ...exportData
-    ].join('\r\n');
+      const allRows = [
+        headerRow,
+        ...(isFirstRowLegislationInfo ? [] : [legislationInfoRow]),
+        ...exportData
+      ].join('\r\n');
 
-    const blob = new Blob(["\uFEFF" + allRows], { type: 'text/csv;charset=utf-8;' });
-    return { csv: allRows, blob };
-  }
-  return null;
-}, [legislationStructures, selectedLegislationIndex]);
+      const blob = new Blob(["\uFEFF" + allRows], { type: 'text/csv;charset=utf-8;' });
+      return { csv: allRows, blob };
+    }
+    return null;
+  }, [legislationStructures, selectedLegislationIndex]);
   
   const handleExportClick = () => {
     const result = exportModifiedCSV();
@@ -431,7 +455,7 @@ const exportModifiedCSV = useCallback(() => {
             <h2 className="text-xl font-semibold text-green-500">Prévisualisation des législations</h2>
             <div className="bg-white p-4 rounded-md shadow max-h-96 overflow-y-auto">
               {legislationStructures.map((legislation, index) => (
-                <div key={index} className="mb-4 p-3 border-b last:border-b-0">
+                <div key={index} className={`mb-4 p-3 border-b last:border-b-0 ${legislation.exists ? 'bg-red-100' : ''}`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
                       <input
@@ -439,12 +463,16 @@ const exportModifiedCSV = useCallback(() => {
                         id={`legislation-${index}`}
                         checked={selectedLegislationIndex === index}
                         onChange={() => handleLegislationSelection(index)}
+                        disabled={legislation.exists}
                         className="mr-3 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
                       />
                       <label htmlFor={`legislation-${index}`} className="text-sm font-medium text-gray-700">
                         {legislation.Titre_legislation}
                       </label>
                     </div>
+                    {legislation.exists && (
+                      <span className="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Existant</span>
+                    )}
                   </div>
                   <p className="mt-1 text-xs text-blue-500">Date d'entrée : {legislation["Date d'entrée en vigueur"]}</p>
                   <p className="mt-1 text-xs text-green-500">Code visé : {legislation["Code visé"]}</p>
@@ -724,7 +752,8 @@ const exportModifiedCSV = useCallback(() => {
       {importStatus === 'error' && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
           <strong className="font-bold">Erreur!</strong>
-          <span className="block sm:inline"> {importError}</span></div>
+          <span className="block sm:inline"> {importError}</span>
+        </div>
       )}
     </div>
   );

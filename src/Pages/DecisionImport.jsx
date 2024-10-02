@@ -41,6 +41,30 @@ const DecisionImport = () => {
     return `Decisions_${date}_${time}.csv`;
   };
 
+  const checkExistingDecisions = async (decisions) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/decisions`);
+      const existingDecisions = response.data;
+      
+      const updatedDecisions = decisions.map(decision => {
+        const existingDecision = existingDecisions.find(existing => 
+          existing.title.rendered === decision.Title
+        );
+
+        if (existingDecision) {
+          return { ...decision, exists: true, id: existingDecision.id };
+        }
+
+        return decision;
+      });
+
+      setParsedDecisions(updatedDecisions);
+    } catch (error) {
+      console.error("Erreur lors de la vérification des décisions existantes:", error);
+      setError("Impossible de vérifier les décisions existantes");
+    }
+  };
+
   const handleFileChange = useCallback((event) => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
@@ -48,7 +72,7 @@ const DecisionImport = () => {
       Papa.parse(uploadedFile, {
         header: true,
         skipEmptyLines: true,
-        encoding: 'UTF-8', // Ajout de l'encodage UTF-8
+        encoding: 'UTF-8',
         complete: (results) => {
           const cleanedData = results.data.map(row => {
             const cleanedRow = {};
@@ -68,7 +92,7 @@ const DecisionImport = () => {
             setError("La structure du fichier CSV est invalide");
             setParsedDecisions([]);
           } else {
-            setParsedDecisions(cleanedData);
+            checkExistingDecisions(cleanedData);
             setError(null);
           }
         }
@@ -82,10 +106,14 @@ const DecisionImport = () => {
   };
 
   const handleDecisionSelection = useCallback((index) => {
+    const decision = parsedDecisions[index];
+    if (decision.exists) {
+      return;
+    }
     setSelectedDecisions(prev => 
       prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
     );
-  }, []);
+  }, [parsedDecisions]);
 
   const handleLinkedText = useCallback((selectedIndex, newLinkedTexts, type) => {
     setSelectedLinkedTexts(prev => {
@@ -144,7 +172,7 @@ const DecisionImport = () => {
     });
   
     const csv = Papa.unparse(exportData, {
-      encoding: 'UTF-8' // Ajout de l'encodage UTF-8 pour l'export
+      encoding: 'UTF-8'
     });
     const blob = new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]), csv], { type: 'text/csv;charset=utf-8;' });
     return { csv, blob };
@@ -302,7 +330,7 @@ const DecisionImport = () => {
             <div className="bg-white p-4 rounded-md shadow max-h-96 overflow-y-auto">
               <div className="flex justify-between mb-4">
                 <button
-                  onClick={() => setSelectedDecisions(parsedDecisions.map((_, index) => index))}
+                  onClick={() => setSelectedDecisions(parsedDecisions.map((_, index) => index).filter(index => !parsedDecisions[index].exists))}
                   className="text-green-500"
                 >
                   Tout sélectionner
@@ -315,7 +343,7 @@ const DecisionImport = () => {
                 </button>
               </div>
               {parsedDecisions.map((decision, index) => (
-                <div key={index} className="mb-4 p-3 border-b last:border-b-0">
+                <div key={index} className={`mb-4 p-3 border-b last:border-b-0 ${decision.exists ? 'bg-red-100' : ''}`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
                       <input
@@ -323,12 +351,16 @@ const DecisionImport = () => {
                         id={`decision-${index}`}
                         checked={selectedDecisions.includes(index)}
                         onChange={() => handleDecisionSelection(index)}
+                        disabled={decision.exists}
                         className="mr-3 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                       />
                       <label htmlFor={`decision-${index}`} className="text-sm font-medium text-gray-700">
                         {decision.Title}
                       </label>
                     </div>
+                    {decision.exists && (
+                      <span className="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Existant</span>
+                    )}
                     {(decision.ID_articles || decision.ID_commentaires || decision.ID_legislation) && (
                       <span className="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Déjà lié</span>
                     )}

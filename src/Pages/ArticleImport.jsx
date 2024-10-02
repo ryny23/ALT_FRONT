@@ -21,6 +21,14 @@ const removeAccentsAndLowerCase = (str) => {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 };
 
+const formatDate = (date) => {
+  if (date.includes('/')) {
+    const [day, month, year] = date.split('/');
+    return `${year}${month}${day}`;
+  }
+  return date.replace(/-/g, '');
+};
+
 const ArticleImport = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [file, setFile] = useState(null);
@@ -53,21 +61,16 @@ const ArticleImport = () => {
     const { source, destination } = result;
     if (!destination) return;
 
-    // Empêcher le drag and drop dans le même cadre pour les articles à importer
     if (source.droppableId === 'unstructured' && destination.droppableId === 'unstructured') {
       return;
     }
 
-    // Empêcher le drag and drop dans le même cadre pour la structure de la législation
     if (source.droppableId === 'structure' && destination.droppableId === 'structure') {
-      // Autoriser le mouvement de drag and drop dans le même cadre pour la structure de la législation
-      // mais uniquement si le mouvement est vertical
       if (source.index !== destination.index) {
         const sourceList = [...legislationStructure];
         const [removed] = sourceList.splice(source.index, 1);
         sourceList.splice(destination.index, 0, removed);
 
-        // Mise à jour des positions
         const updatedSourceList = sourceList.map((item, index) => ({
           ...item,
           position: index + 1
@@ -84,7 +87,6 @@ const ArticleImport = () => {
     const [removed] = sourceList.splice(source.index, 1);
     destList.splice(destination.index, 0, removed);
 
-    // Mise à jour des positions
     const updatedDestList = destList.map((item, index) => ({
       ...item,
       position: index + 1
@@ -103,8 +105,6 @@ const ArticleImport = () => {
       }
     }
   }, [legislationStructure, unstructuredArticles]);
-
-
 
   useEffect(() => {
     if (currentStep === 3 && selectedLegislation) {
@@ -170,6 +170,7 @@ const ArticleImport = () => {
           } else {
             setParsedArticles(cleanedData);
             setError(null);
+            checkExistingArticles(cleanedData);
           }
         }
       });
@@ -181,11 +182,49 @@ const ArticleImport = () => {
     return requiredColumns.every(column => data[0].hasOwnProperty(column) && data[0][column] !== '');
   };
 
+  const checkExistingArticles = async (articles) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/articles`);
+      const existingArticles = response.data;
+      
+      const updatedArticles = articles.map(article => {
+        const existingArticle = existingArticles.find(existing => 
+          existing.title.rendered === article.Title &&
+          formatDate(existing.acf.date_entree) === formatDate(article.Date_entree)
+        );
+
+        if (existingArticle) {
+          return { ...article, exists: true, id: existingArticle.id };
+        }
+
+        const sameTitle = existingArticles.find(existing => 
+          existing.title.rendered === article.Title &&
+          formatDate(existing.acf.date_entree) !== formatDate(article.Date_entree)
+        );
+
+        if (sameTitle) {
+          return { ...article, newVersion: true, originalId: sameTitle.id };
+        }
+
+        return article;
+      });
+
+      setParsedArticles(updatedArticles);
+    } catch (error) {
+      console.error("Erreur lors de la vérification des articles existants:", error);
+      setError("Impossible de vérifier les articles existants");
+    }
+  };
+
   const handleArticleSelection = useCallback((index) => {
+    const article = parsedArticles[index];
+    if (article.exists) {
+      return;
+    }
     setSelectedArticles(prev => 
       prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
     );
-  }, []);
+  }, [parsedArticles]);
 
   const handleLinkedText = useCallback((selectedIndex, newLinkedTexts, type) => {
     setSelectedLinkedTexts(prev => {
@@ -241,17 +280,20 @@ const ArticleImport = () => {
       }
   
       const structureItem = legislationStructure.find(item => item.id === index.toString());
-      exportRow.Position_legislation = structureItem ? structureItem.position : '';
+      if (structureItem) {
+        exportRow.Position_legislation = structureItem.position;
+      }
   
       return exportRow;
     });
   
     const csv = Papa.unparse(exportData, {
-      encoding: 'UTF-8' // Ajout de l'encodage UTF-8 pour l'export
+      encoding: 'UTF-8'
     });
     const blob = new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]), csv], { type: 'text/csv;charset=utf-8;' });
     return { csv, blob };
   }, [selectedArticles, parsedArticles, selectedLinkedTexts, selectedLegislation, legislationStructure]);
+  
 
   const fetchAvailableTexts = useCallback(async () => {
     const textTypes = ["Législation", "Décision", "Commentaire"];
@@ -310,7 +352,9 @@ const ArticleImport = () => {
   
       setSelectedLinkedTexts(newSelectedLinkedTexts);
   
-      if (parsedArticles.length > 0 && parsedArticles[0].ID_legislation) {
+      if (parsedArticles.length >
+
+ 0 && parsedArticles[0].ID_legislation) {
         const legislationId = parsedArticles[0].ID_legislation;
         const legislation = availableTexts["Législation"]?.find(t => t.value === legislationId);
         if (legislation) {
@@ -441,7 +485,7 @@ const ArticleImport = () => {
             <div className="bg-white p-4 rounded-md shadow max-h-96 overflow-y-auto">
               <div className="flex justify-between mb-4">
                 <button
-                  onClick={() => setSelectedArticles(parsedArticles.map((_, index) => index))}
+                  onClick={() => setSelectedArticles(parsedArticles.map((_, index) => index).filter(index => !parsedArticles[index].exists))}
                   className="text-green-500"
                 >
                   Tout sélectionner
@@ -454,7 +498,7 @@ const ArticleImport = () => {
                 </button>
               </div>
               {parsedArticles.map((article, index) => (
-                <div key={index} className="mb-4 p-3 border-b last:border-b-0">
+                <div key={index} className={`mb-4 p-3 border-b last:border-b-0 ${article.exists ? 'bg-red-100' : article.newVersion ? 'bg-green-100' : ''}`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
                       <input
@@ -462,17 +506,24 @@ const ArticleImport = () => {
                         id={`article-${index}`}
                         checked={selectedArticles.includes(index)}
                         onChange={() => handleArticleSelection(index)}
+                        disabled={article.exists}
                         className="mr-3 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                       />
                       <label htmlFor={`article-${index}`} className="text-sm font-medium text-gray-700">
                         {article.Title} - <span className="text-gray-500">{article.Date_entree}</span>
                       </label>
                     </div>
-                    {(article.ID_decision || article.ID_commentaire || article.ID_legislation) && (
-                      <span className="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Déjà lié</span>
+                    {article.exists && (
+                      <span className="bg-red-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Existant</span>
+                    )}
+                    {article.newVersion && (
+                      <span className="bg-green-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Nouvelle version</span>
                     )}
                   </div>
                   <p className="mt-2 text-sm text-gray-500">{article.Content.substring(0, 100)}...</p>
+                  {article.newVersion && (
+                    <p className="mt-1 text-xs text-green-600">Nouvelle version de l'article (ID: {article.originalId})</p>
+                  )}
                 </div>
               ))}
             </div>
@@ -834,7 +885,6 @@ const ArticleImport = () => {
       )}
     </div>
   )
-
 }
 
 export default ArticleImport
