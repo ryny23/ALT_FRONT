@@ -18,7 +18,7 @@ const SingleDecision = () => {
         const res = await axios.get(`https://alt.back.qilinsa.com/wp-json/wp/v2/decisions/${id}`);
         setDecision(res.data);
 
-        const commentIdentifiers = res.data.acf.commentaire.slice(0, 3); // Récupère uniquement les 3 premiers commentaires
+        const commentIdentifiers = res.data.acf.commentaire_decision.slice(0, 3); // Récupère uniquement les 3 premiers commentaires
 
         const fetchComments = async (id) => {
           try {

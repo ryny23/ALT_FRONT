@@ -48,7 +48,7 @@ const SettingsPage = () => {
       const userData = response.data;
       if (userData.acf) {
         if (userData.acf.preferences) {
-          setSelectedDomains(userData.acf.preferences);
+          setSelectedDomains(userData.acf.preferences); 
         }
         if (userData.acf.notifemail !== undefined) {
           setNotifications(userData.acf.notifemail);

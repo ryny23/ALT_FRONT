@@ -186,7 +186,7 @@ const Nav = () => {
               </Link>
               <Link to="/authform?tab=register" className="bg-green-600 text-white py-2 px-4 transition-all duration-300 rounded hover:bg-gray-600">
                 Inscription
-              </Link>
+              </Link> 
             </>
           )}
         </div>

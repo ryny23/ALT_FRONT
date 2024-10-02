@@ -1,75 +1,69 @@
 import React, { useState } from 'react';
-import Papa from 'papaparse';
 
-const JsonToCsv = () => {
-  const [csvData, setCsvData] = useState(null);
+const JsonlToCsvConverter = () => {
+  const [csvContent, setCsvContent] = useState('');
 
-  // Fonction pour traiter le fichier JSON uploadé
+  // Gestion de la sélection de fichier JSONL
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        const fileContent = e.target.result;
-
-        // Essayer de parser le JSON et gérer les erreurs
-        try {
-          const json = JSON.parse(fileContent);
-          console.log("JSON parsed successfully:", json); // Log pour vérifier le JSON
-          convertToCsv(json); // Convertir le JSON en CSV
-        } catch (error) {
-          console.error('Error parsing JSON, but continuing:', error);
-
-          // Ignorer le parsing incorrect et continuer avec un objet par défaut ou des valeurs
-          const fallbackData = {
-            input: "Invalid input",
-            result: "Invalid result due to parsing error"
-          };
-          convertToCsv(fallbackData); // Convertir des données par défaut
-        }
+        const jsonlData = e.target.result.split('\n').filter(Boolean); // Split by lines, ignoring empty lines
+        const jsonData = jsonlData.map(line => JSON.parse(line)); // Parse each line as JSON
+        convertToCsv(jsonData);
       };
-      reader.readAsText(file); // Lire le fichier comme texte
+      reader.readAsText(file);
     }
   };
 
-  // Fonction pour convertir JSON en CSV
-  const convertToCsv = (data) => {
-    if (data && typeof data === 'object') {
-      const dataToConvert = Array.isArray(data) ? data : [data]; // S'assurer que c'est un tableau
-      const csv = Papa.unparse(dataToConvert);
-      setCsvData(csv);
-    } else {
-      console.error('Invalid data structure. Expected an object or an array of objects.');
-    }
+  // Conversion JSON vers CSV sans dépendance
+  const convertToCsv = (jsonData) => {
+    if (jsonData.length === 0) return;
+
+    // Extraire les en-têtes (clés du premier objet)
+    const headers = Object.keys(jsonData[0]);
+
+    // Générer les lignes CSV
+    const csvRows = [
+      headers.join(','), // Ligne des en-têtes
+      ...jsonData.map(row => headers.map(field => JSON.stringify(row[field], replacer)).join(',')) // Lignes des données
+    ];
+
+    setCsvContent(csvRows.join('\n'));
   };
 
-  // Fonction pour télécharger le fichier CSV
+  // Échapper les caractères spéciaux pour CSV
+  const replacer = (key, value) => {
+    if (typeof value === 'string' && (value.includes(',') || value.includes('"') || value.includes('\n'))) {
+      return `"${value.replace(/"/g, '""')}"`; // Double quotes pour échapper les valeurs contenant des virgules, guillemets ou nouvelles lignes
+    }
+    return value;
+  };
+
+  // Téléchargement du fichier CSV
   const downloadCsv = () => {
-    if (csvData) {
-      const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'data.csv'); // nom du fichier
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', 'converted_file.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
     <div>
-      <h1>Convertisseur JSON en CSV</h1>
-      <input
-        type="file"
-        accept=".json" // N'accepte que les fichiers JSON
-        onChange={handleFileChange}
-      />
-      {csvData && (
-        <button onClick={downloadCsv}>Télécharger le CSV</button>
+      <h2>Convertisseur JSONL en CSV</h2>
+      <input type="file" accept=".jsonl" onChange={handleFileChange} />
+      {csvContent && (
+        <>
+          <button onClick={downloadCsv}>Télécharger le fichier CSV</button>
+          <pre>{csvContent}</pre>
+        </>
       )}
     </div>
   );
 };
 
-export default JsonToCsv;
+export default JsonlToCsvConverter;

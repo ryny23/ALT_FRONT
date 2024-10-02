@@ -50,6 +50,7 @@ import ImportPage from "./Pages/ImportPage";
 import CsvDecisionImporter from "./Pages/CsvDecisionImporter";
 import CsvArticleImporter from "./Pages/CsvArticleImporter";
 import ArticleImporter from "./Pages/ArticleImporter";
+import ZenscrapeComponent from "./Pages/ZenscrapeComponent";
 
 
 
@@ -116,6 +117,7 @@ const router = createBrowserRouter(
                 <Route path="legal-text-manager" element={<LegalTextManager2 />} />
                 <Route path="articleimporter" element={<ArticleImporter />} />
                 <Route path="DataFetcherAndUploader" element={<DataFetcherAndUploader />} />
+                <Route path="ZenscrapeComponent" element={<ZenscrapeComponent />} />
                 
                 
                 
